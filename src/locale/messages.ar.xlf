@@ -23866,6 +23866,7 @@
       </trans-unit>
       <trans-unit id="search.heading" datatype="html">
         <source> Recherche dans le dossier </source>
+        <target state="translated"> البحث في الملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">5,7</context>
@@ -23874,6 +23875,7 @@
       </trans-unit>
       <trans-unit id="search.scope" datatype="html">
         <source> dans le dossier de <x id="INTERPOLATION" equiv-text="{{ patientName() }}"/> · champ de recherche en haut de page (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>) </source>
+        <target state="translated"> في ملف <x id="INTERPOLATION" equiv-text="{{ patientName() }}"/> · حقل البحث أعلى الصفحة (<x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>/<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/>) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">8,10</context>
@@ -23882,6 +23884,7 @@
       </trans-unit>
       <trans-unit id="search.close" datatype="html">
         <source> Fermer la recherche <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Échap<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/></source>
+        <target state="translated"> إغلاق البحث <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Esc<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">17,19</context>
@@ -23890,6 +23893,7 @@
       </trans-unit>
       <trans-unit id="search.period.label" datatype="html">
         <source>Période</source>
+        <target state="translated">الفترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">31,33</context>
@@ -23898,6 +23902,7 @@
       </trans-unit>
       <trans-unit id="search.session.select" datatype="html">
         <source>Séance</source>
+        <target state="translated">الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">44,46</context>
@@ -23906,6 +23911,7 @@
       </trans-unit>
       <trans-unit id="search.session.all" datatype="html">
         <source> Toutes </source>
+        <target state="translated"> كل الجلسات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">52,54</context>
@@ -23914,6 +23920,7 @@
       </trans-unit>
       <trans-unit id="search.session.loading" datatype="html">
         <source> Chargement des séances… </source>
+        <target state="translated"> جارٍ تحميل الجلسات… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">61,65</context>
@@ -23922,6 +23929,7 @@
       </trans-unit>
       <trans-unit id="search.session.error" datatype="html">
         <source>Séances indisponibles</source>
+        <target state="translated">الجلسات غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">67,70</context>
@@ -23930,6 +23938,7 @@
       </trans-unit>
       <trans-unit id="search.session.retry" datatype="html">
         <source> Réessayer </source>
+        <target state="translated"> إعادة المحاولة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">73,76</context>
@@ -23938,6 +23947,7 @@
       </trans-unit>
       <trans-unit id="search.archived" datatype="html">
         <source>inclure les entrées archivées</source>
+        <target state="translated">تضمين المُدخَلات المؤرشفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">84,88</context>
@@ -23946,6 +23956,7 @@
       </trans-unit>
       <trans-unit id="search.idle.title" datatype="html">
         <source>Que cherchez-vous ?</source>
+        <target state="translated">ما موضوع البحث؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">98,99</context>
@@ -23954,6 +23965,7 @@
       </trans-unit>
       <trans-unit id="search.idle.message" datatype="html">
         <source> Tapez au moins 2 caractères dans le champ de recherche en haut de page : un mot, un tag, une émotion ou une période. La recherche ignore les accents et tolère les fautes. </source>
+        <target state="translated"> يُرجى كتابة حرفين على الأقل في حقل البحث أعلى الصفحة: كلمة أو وسم أو شعور أو فترة. يتجاهل البحث النبرات (accents) ويتسامح مع الأخطاء الإملائية. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">100,103</context>
@@ -23962,6 +23974,7 @@
       </trans-unit>
       <trans-unit id="search.empty.message" datatype="html">
         <source>Vérifiez l&apos;orthographe, retirez un filtre ou essayez la syntaxe ci-dessous.</source>
+        <target state="translated">يمكن التحقّق من الإملاء، أو إزالة أحد عوامل التصفية، أو تجربة الصيغة أدناه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">109,110</context>
@@ -23970,6 +23983,7 @@
       </trans-unit>
       <trans-unit id="search.error.title" datatype="html">
         <source>Recherche indisponible</source>
+        <target state="translated">البحث غير متاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">118,119</context>
@@ -23981,6 +23995,10 @@
               =1 {Afficher le résultat suivant}
               other {Afficher les {{ store.nextCount() }} résultats suivants}
             }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>) </source>
+        <target state="translated"> <x id="ICU" equiv-text="{store.nextCount(), plural,
+              =1 {Afficher le résultat suivant}
+              other {Afficher les {{ store.nextCount() }} résultats suivants}
+            }" xid="1559026508360962188"/> (<x id="ICU_1" equiv-text="{store.remaining(), plural, =1 {1 restant} other {{{ store.remaining() }} restants}}" xid="2414671900317649748"/>) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">143,150</context>
@@ -23989,6 +24007,7 @@
       </trans-unit>
       <trans-unit id="970324615134966178" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Afficher le résultat suivant} other {Afficher les <x id="INTERPOLATION"/> résultats suivants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {عرض النتائج التالية} one {عرض النتيجة التالية} two {عرض النتيجتين التاليتين} few {عرض <x id="INTERPOLATION"/> نتائج تالية} many {عرض <x id="INTERPOLATION"/> نتيجة تالية} other {عرض <x id="INTERPOLATION"/> نتيجة تالية}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">143,145</context>
@@ -23996,6 +24015,7 @@
       </trans-unit>
       <trans-unit id="1110506048880539534" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 restant} other {<x id="INTERPOLATION"/> restants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا نتائج متبقّية} one {نتيجة واحدة متبقّية} two {نتيجتان متبقّيتان} few {<x id="INTERPOLATION"/> نتائج متبقّية} many {<x id="INTERPOLATION"/> نتيجة متبقّية} other {<x id="INTERPOLATION"/> نتيجة متبقّية}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">147</context>
@@ -24003,6 +24023,7 @@
       </trans-unit>
       <trans-unit id="search.more.error" datatype="html">
         <source> Les résultats suivants n&apos;ont pas pu être chargés. Réessayez. </source>
+        <target state="translated"> تعذّر تحميل النتائج التالية. يُرجى إعادة المحاولة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.html</context>
           <context context-type="linenumber">152,158</context>
@@ -24011,6 +24032,7 @@
       </trans-unit>
       <trans-unit id="search.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
           <context context-type="linenumber">147</context>
@@ -24019,6 +24041,7 @@
       </trans-unit>
       <trans-unit id="search.selection" datatype="html">
         <source>Sélection : <x id="title" equiv-text="title"/>, <x id="position" equiv-text="position"/> sur <x id="count" equiv-text="hits.length"/></source>
+        <target state="translated">التحديد: <x id="title" equiv-text="title"/>، <x id="position" equiv-text="position"/> من <x id="count" equiv-text="hits.length"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
           <context context-type="linenumber">164</context>
@@ -24027,6 +24050,7 @@
       </trans-unit>
       <trans-unit id="search.empty.title" datatype="html">
         <source>Aucun résultat pour « <x id="query" equiv-text="this.store.effectiveQuery()"/> »</source>
+        <target state="translated">لا نتائج لـ« <x id="query" equiv-text="this.store.effectiveQuery()"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
           <context context-type="linenumber">169</context>
@@ -24035,6 +24059,7 @@
       </trans-unit>
       <trans-unit id="search.shortcut.escape" datatype="html">
         <source>Fermer la recherche</source>
+        <target state="translated">إغلاق البحث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/pages/patient-search.page.ts</context>
           <context context-type="linenumber">210</context>
@@ -24043,6 +24068,7 @@
       </trans-unit>
       <trans-unit id="search.bar.placeholder" datatype="html">
         <source>Rechercher dans le dossier</source>
+        <target state="translated">البحث في الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/search-bar.ts</context>
           <context context-type="linenumber">53</context>
@@ -24051,6 +24077,7 @@
       </trans-unit>
       <trans-unit id="search.type.note" datatype="html">
         <source>Notes</source>
+        <target state="translated">ملاحظات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">12</context>
@@ -24059,6 +24086,7 @@
       </trans-unit>
       <trans-unit id="search.type.event" datatype="html">
         <source>Événements</source>
+        <target state="translated">أحداث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">14</context>
@@ -24067,6 +24095,7 @@
       </trans-unit>
       <trans-unit id="search.type.situation" datatype="html">
         <source>Situations</source>
+        <target state="translated">وضعيات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">16</context>
@@ -24075,6 +24104,7 @@
       </trans-unit>
       <trans-unit id="search.type.feeling" datatype="html">
         <source>Ressentis</source>
+        <target state="translated">مشاعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">18</context>
@@ -24083,6 +24113,7 @@
       </trans-unit>
       <trans-unit id="search.type.session" datatype="html">
         <source>Séances</source>
+        <target state="translated">جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">20</context>
@@ -24091,6 +24122,7 @@
       </trans-unit>
       <trans-unit id="search.type.medication" datatype="html">
         <source>Médicaments</source>
+        <target state="translated">أدوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">22</context>
@@ -24099,6 +24131,7 @@
       </trans-unit>
       <trans-unit id="search.period.all" datatype="html">
         <source>Tout le dossier</source>
+        <target state="translated">الملف كاملًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">29</context>
@@ -24107,6 +24140,7 @@
       </trans-unit>
       <trans-unit id="search.period.30d" datatype="html">
         <source>30 derniers jours</source>
+        <target state="translated">آخر 30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">31</context>
@@ -24115,6 +24149,7 @@
       </trans-unit>
       <trans-unit id="search.period.90d" datatype="html">
         <source>90 derniers jours</source>
+        <target state="translated">آخر 90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">33</context>
@@ -24123,6 +24158,7 @@
       </trans-unit>
       <trans-unit id="search.period.12m" datatype="html">
         <source>12 derniers mois</source>
+        <target state="translated">آخر 12 شهرًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">35</context>
@@ -24131,6 +24167,7 @@
       </trans-unit>
       <trans-unit id="search.period.custom" datatype="html">
         <source>Période choisie</source>
+        <target state="translated">الفترة المختارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">37</context>
@@ -24139,6 +24176,7 @@
       </trans-unit>
       <trans-unit id="search.precision.day" datatype="html">
         <source>précision jour</source>
+        <target state="translated">دقّة اليوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">47</context>
@@ -24147,6 +24185,7 @@
       </trans-unit>
       <trans-unit id="search.precision.month" datatype="html">
         <source>précision mois</source>
+        <target state="translated">دقّة الشهر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">49</context>
@@ -24155,6 +24194,7 @@
       </trans-unit>
       <trans-unit id="search.precision.year" datatype="html">
         <source>précision année</source>
+        <target state="translated">دقّة السنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">51</context>
@@ -24163,6 +24203,7 @@
       </trans-unit>
       <trans-unit id="search.precision.period" datatype="html">
         <source>période</source>
+        <target state="translated">فترة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">53</context>
@@ -24171,6 +24212,7 @@
       </trans-unit>
       <trans-unit id="search.precision.lifePhase" datatype="html">
         <source>phase de vie</source>
+        <target state="translated">مرحلة عمرية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">55</context>
@@ -24179,6 +24221,7 @@
       </trans-unit>
       <trans-unit id="search.session.label" datatype="html">
         <source>Séance du <x id="day" equiv-text="day"/></source>
+        <target state="translated">جلسة <x id="day" equiv-text="day"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">73</context>
@@ -24187,6 +24230,7 @@
       </trans-unit>
       <trans-unit id="search.visibility.private" datatype="html">
         <source>privée</source>
+        <target state="translated">خاص</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">108</context>
@@ -24195,6 +24239,7 @@
       </trans-unit>
       <trans-unit id="search.visibility.clinical" datatype="html">
         <source>clinique</source>
+        <target state="translated">سريري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">109</context>
@@ -24203,6 +24248,7 @@
       </trans-unit>
       <trans-unit id="search.summary.approximateOne" datatype="html">
         <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · 1 résultat approché (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">لا نتائج مطابقة تمامًا لـ« <x id="query" equiv-text="text"/> » · نتيجة تقريبية واحدة (مقاطع ثلاثية) · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">124</context>
@@ -24211,6 +24257,7 @@
       </trans-unit>
       <trans-unit id="search.summary.approximateOnly" datatype="html">
         <source>Aucun résultat exact pour « <x id="query" equiv-text="text"/> » · <x id="count" equiv-text="approximate"/> résultats approchés (trigrammes) · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">لا نتائج مطابقة تمامًا لـ« <x id="query" equiv-text="text"/> » · النتائج التقريبية: <x id="count" equiv-text="approximate"/> (مقاطع ثلاثية) · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">127</context>
@@ -24219,6 +24266,7 @@
       </trans-unit>
       <trans-unit id="search.summary.none" datatype="html">
         <source>Aucun résultat pour « <x id="query" equiv-text="text"/> »</source>
+        <target state="translated">لا نتائج لـ« <x id="query" equiv-text="text"/> »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">130</context>
@@ -24227,6 +24275,7 @@
       </trans-unit>
       <trans-unit id="search.summary.one" datatype="html">
         <source>1 résultat pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">نتيجة واحدة لـ« <x id="query" equiv-text="text"/> » · دون اعتبار للنبرات ولا لحالة الأحرف · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">133</context>
@@ -24235,6 +24284,7 @@
       </trans-unit>
       <trans-unit id="search.summary.many" datatype="html">
         <source><x id="count" equiv-text="total"/> résultats pour « <x id="query" equiv-text="text"/> » · sans accents ni casse · <x id="ms" equiv-text="tookMs"/> ms</source>
+        <target state="translated">عدد النتائج لـ« <x id="query" equiv-text="text"/> »: <x id="count" equiv-text="total"/> · دون اعتبار للنبرات ولا لحالة الأحرف · <x id="ms" equiv-text="tookMs"/> ms</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">134</context>
@@ -24243,6 +24293,7 @@
       </trans-unit>
       <trans-unit id="search.error.invalidDate" datatype="html">
         <source>Date invalide dans avant: ou après: (format AAAA, AAAA-MM ou AAAA-MM-JJ).</source>
+        <target state="translated">تاريخ غير صالح في before: أو after: (الصيغة YYYY أو YYYY-MM أو YYYY-MM-DD).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">152</context>
@@ -24251,6 +24302,7 @@
       </trans-unit>
       <trans-unit id="search.error.tooLong" datatype="html">
         <source>La recherche dépasse 200 caractères.</source>
+        <target state="translated">يتجاوز البحث 200 حرف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">155</context>
@@ -24259,6 +24311,7 @@
       </trans-unit>
       <trans-unit id="search.error.period" datatype="html">
         <source>La période de l&apos;adresse est invalide. Revenez à tout le dossier.</source>
+        <target state="translated">الفترة الواردة في الرابط غير صالحة. يمكن العودة إلى الملف كاملًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">158</context>
@@ -24267,6 +24320,7 @@
       </trans-unit>
       <trans-unit id="search.error.generic" datatype="html">
         <source>La recherche est indisponible pour le moment. Votre saisie est conservée.</source>
+        <target state="translated">البحث غير متاح حاليًا. ما أدخلته محفوظ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-labels.ts</context>
           <context context-type="linenumber">161</context>
@@ -24275,6 +24329,7 @@
       </trans-unit>
       <trans-unit id="search.preview.label" datatype="html">
         <source>Aperçu de l&apos;entrée sélectionnée</source>
+        <target state="translated">معاينة المُدخَل المحدَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">3,4</context>
@@ -24283,6 +24338,7 @@
       </trans-unit>
       <trans-unit id="search.preview.when" datatype="html">
         <source>Quand</source>
+        <target state="translated">متى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">14,16</context>
@@ -24291,6 +24347,7 @@
       </trans-unit>
       <trans-unit id="search.preview.session" datatype="html">
         <source>Séance</source>
+        <target state="translated">الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">18,20</context>
@@ -24299,6 +24356,7 @@
       </trans-unit>
       <trans-unit id="search.preview.noSession" datatype="html">
         <source>aucune</source>
+        <target state="translated">لا توجد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">23,28</context>
@@ -24307,6 +24365,7 @@
       </trans-unit>
       <trans-unit id="search.preview.recorded" datatype="html">
         <source>Saisi</source>
+        <target state="translated">تاريخ الإدخال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">28,30</context>
@@ -24315,6 +24374,7 @@
       </trans-unit>
       <trans-unit id="search.preview.version" datatype="html">
         <source>v<x id="INTERPOLATION" equiv-text="{{ entry.version }}"/></source>
+        <target state="translated">v<x id="INTERPOLATION" equiv-text="{{ entry.version }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">31,32</context>
@@ -24323,6 +24383,7 @@
       </trans-unit>
       <trans-unit id="search.preview.visibility" datatype="html">
         <source>Visibilité</source>
+        <target state="translated">الظهور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">35,37</context>
@@ -24331,6 +24392,7 @@
       </trans-unit>
       <trans-unit id="search.hit.archived" datatype="html">
         <source>archivée</source>
+        <target state="translated">مؤرشف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">39,43</context>
@@ -24343,6 +24405,7 @@
       </trans-unit>
       <trans-unit id="search.preview.intensity" datatype="html">
         <source>Intensité</source>
+        <target state="translated">الشدّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">45,46</context>
@@ -24351,6 +24414,7 @@
       </trans-unit>
       <trans-unit id="search.preview.links" datatype="html">
         <source> Liens · <x id="INTERPOLATION" equiv-text="{{ entry.links.length }}"/> </source>
+        <target state="translated"> الروابط · <x id="INTERPOLATION" equiv-text="{{ entry.links.length }}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">56,58</context>
@@ -24359,6 +24423,7 @@
       </trans-unit>
       <trans-unit id="search.preview.openTimeline" datatype="html">
         <source> Ouvrir dans la timeline </source>
+        <target state="translated"> فتح في الخط الزمني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">72,76</context>
@@ -24367,6 +24432,7 @@
       </trans-unit>
       <trans-unit id="search.preview.openGraph" datatype="html">
         <source> Voir dans le graphe </source>
+        <target state="translated"> عرض في شبكة الروابط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">79,82</context>
@@ -24375,6 +24441,7 @@
       </trans-unit>
       <trans-unit id="search.preview.edit" datatype="html">
         <source> Modifier </source>
+        <target state="translated"> تعديل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">86,90</context>
@@ -24383,6 +24450,7 @@
       </trans-unit>
       <trans-unit id="search.preview.errorTitle" datatype="html">
         <source>Aperçu indisponible</source>
+        <target state="translated">المعاينة غير متاحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.html</context>
           <context context-type="linenumber">95,96</context>
@@ -24391,6 +24459,7 @@
       </trans-unit>
       <trans-unit id="search.preview.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-preview.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -24399,6 +24468,7 @@
       </trans-unit>
       <trans-unit id="search.hit.private" datatype="html">
         <source>privée</source>
+        <target state="translated">خاص</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
           <context context-type="linenumber">45,48</context>
@@ -24407,6 +24477,7 @@
       </trans-unit>
       <trans-unit id="search.results.label" datatype="html">
         <source>Résultats</source>
+        <target state="translated">النتائج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
           <context context-type="linenumber">61,62</context>
@@ -24415,6 +24486,7 @@
       </trans-unit>
       <trans-unit id="search.approximate.title" datatype="html">
         <source> Résultats approchés </source>
+        <target state="translated"> نتائج تقريبية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
           <context context-type="linenumber">76,78</context>
@@ -24423,6 +24495,7 @@
       </trans-unit>
       <trans-unit id="search.approximate.note" datatype="html">
         <source> Orthographe proche (tolérance aux fautes de frappe). </source>
+        <target state="translated"> إملاء قريب (تسامح مع الأخطاء المطبعية). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
           <context context-type="linenumber">79,83</context>
@@ -24431,6 +24504,7 @@
       </trans-unit>
       <trans-unit id="search.approximate.label" datatype="html">
         <source>Résultats approchés</source>
+        <target state="translated">نتائج تقريبية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/search-results.component.html</context>
           <context context-type="linenumber">83,84</context>
@@ -24439,6 +24513,7 @@
       </trans-unit>
       <trans-unit id="search.help.keys" datatype="html">
         <source> ↑ ↓ pour parcourir les résultats · Entrée ouvre dans la timeline · Échap revient à l&apos;écran précédent </source>
+        <target state="translated"> ↑ ↓ للتنقّل بين النتائج · Enter للفتح في الخط الزمني · Esc للعودة إلى الشاشة السابقة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">11,16</context>
@@ -24447,6 +24522,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.tag" datatype="html">
         <source>tag:travail</source>
+        <target state="translated">tag:عمل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">17,19</context>
@@ -24455,6 +24531,7 @@
       </trans-unit>
       <trans-unit id="search.help.tag" datatype="html">
         <source>entrées portant ce tag</source>
+        <target state="translated">المُدخَلات التي تحمل هذا الوسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">19,23</context>
@@ -24463,6 +24540,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.emotion" datatype="html">
         <source>émotion:anxiété</source>
+        <target state="translated">emotion:anxiety</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">26,29</context>
@@ -24471,6 +24549,7 @@
       </trans-unit>
       <trans-unit id="search.help.emotion" datatype="html">
         <source>ressentis de cette émotion</source>
+        <target state="translated">المشاعر المدوَّنة بهذا الاسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">29,33</context>
@@ -24479,6 +24558,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.before" datatype="html">
         <source>avant:2026-09</source>
+        <target state="translated">before:2026-09</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">35,38</context>
@@ -24487,6 +24567,7 @@
       </trans-unit>
       <trans-unit id="search.help.before" datatype="html">
         <source>avant septembre 2026</source>
+        <target state="translated">قبل سبتمبر 2026</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">38,42</context>
@@ -24495,6 +24576,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.after" datatype="html">
         <source>après:2026-06</source>
+        <target state="translated">after:2026-06</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">43,46</context>
@@ -24503,6 +24585,7 @@
       </trans-unit>
       <trans-unit id="search.help.after" datatype="html">
         <source>à partir de juillet 2026</source>
+        <target state="translated">ابتداءً من يوليو 2026</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">46,50</context>
@@ -24511,6 +24594,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.phrase" datatype="html">
         <source>&quot;mot exact&quot;</source>
+        <target state="translated">"عبارة دقيقة"</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">50,52</context>
@@ -24519,6 +24603,7 @@
       </trans-unit>
       <trans-unit id="search.help.phrase" datatype="html">
         <source>expression exacte</source>
+        <target state="translated">عبارة مطابقة تمامًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">52,56</context>
@@ -24527,6 +24612,7 @@
       </trans-unit>
       <trans-unit id="search.help.example.exclude" datatype="html">
         <source>-mot</source>
+        <target state="translated">-كلمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">56,58</context>
@@ -24535,6 +24621,7 @@
       </trans-unit>
       <trans-unit id="search.help.exclude" datatype="html">
         <source>exclut ce mot</source>
+        <target state="translated">يستبعد هذه الكلمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/syntax-help.component.ts</context>
           <context context-type="linenumber">58,63</context>
@@ -24543,6 +24630,7 @@
       </trans-unit>
       <trans-unit id="search.types.label" datatype="html">
         <source>Types</source>
+        <target state="translated">الأنواع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/type-chips.component.ts</context>
           <context context-type="linenumber">18,22</context>
@@ -24551,6 +24639,7 @@
       </trans-unit>
       <trans-unit id="search.types.all" datatype="html">
         <source>Tous</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/search/ui/type-chips.component.ts</context>
           <context context-type="linenumber">26,28</context>
