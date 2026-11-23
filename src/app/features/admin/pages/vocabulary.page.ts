@@ -6,6 +6,7 @@ import {
   ElementRef,
   inject,
   input,
+  LOCALE_ID,
   signal,
   untracked,
 } from '@angular/core';
@@ -14,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { ApiProblem } from '../../../core/http';
+import { textDirection } from '../../../core/i18n';
 import { StateAction, StateComponent, ToastService } from '../../../shared/ui';
 import { isRefreshing, stateKind } from '../../../shared/util';
 import {
@@ -25,6 +27,7 @@ import {
 } from '../data/admin.model';
 import { VocabularyStore } from '../data/vocabulary.store';
 import { AddEntryFormComponent } from '../ui/add-entry-form.component';
+import { isolated } from '../ui/admin-labels';
 import { DeactivateDialogComponent, DeactivateDialogData } from '../ui/deactivate-dialog.component';
 import { RenamePanelComponent } from '../ui/rename-panel.component';
 
@@ -54,6 +57,10 @@ export class VocabularyPage {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly locale = inject(LOCALE_ID);
+  /** Onglet suivant : flèche droite, flèche gauche en arabe (Q81, docs/design/arabe.md §6). */
+  private readonly nextKey = textDirection(this.locale) === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
+  private readonly previousKey = this.nextKey === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
 
   protected readonly tabs = VOCABULARY_TABS;
   protected readonly tab = computed<VocabularyTab>(() =>
@@ -148,12 +155,15 @@ export class VocabularyPage {
     this.navigate({ kind: tab === 'specialty' ? null : tab });
   }
 
-  /** Flèches gauche / droite, Début, Fin entre les sous-onglets (fiche 28). */
+  /**
+   * Flèches gauche / droite, Début, Fin entre les sous-onglets (fiche 28) ; en arabe, flèche gauche
+   * vers l'onglet suivant, flèche droite vers le précédent (Q81).
+   */
   protected onTabKey(event: KeyboardEvent): void {
     const index = VOCABULARY_TABS.indexOf(this.tab());
     let next = index;
-    if (event.key === 'ArrowRight') next = (index + 1) % VOCABULARY_TABS.length;
-    else if (event.key === 'ArrowLeft')
+    if (event.key === this.nextKey) next = (index + 1) % VOCABULARY_TABS.length;
+    else if (event.key === this.previousKey)
       next = (index - 1 + VOCABULARY_TABS.length) % VOCABULARY_TABS.length;
     else if (event.key === 'Home') next = 0;
     else if (event.key === 'End') next = VOCABULARY_TABS.length - 1;
@@ -234,8 +244,9 @@ export class VocabularyPage {
           $localize`:Erreur de réactivation d'une entrée@@admin.vocabulary.reactivateError:La réactivation n'a pas pu être enregistrée. Rien n'a été modifié.`,
       );
     } else {
+      const label = isolated(entry.labelFr, this.locale);
       this.toast.success(
-        $localize`:Toast après réactivation d'une entrée@@admin.vocabulary.reactivatedToast:« ${entry.labelFr}:label: » réactivée · visible immédiatement dans l'annuaire`,
+        $localize`:Toast après réactivation d'une entrée@@admin.vocabulary.reactivatedToast:« ${label}:label: » réactivée · visible immédiatement dans l'annuaire`,
       );
     }
   }

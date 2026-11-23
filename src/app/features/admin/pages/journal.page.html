@@ -208,17 +208,19 @@
 
 <ng-template #line let-row let-group="group" let-open="open" let-nested="nested">
   <tr tabindex="-1" [attr.data-id]="row.id" [class.nested]="nested">
-    <td class="mono nowrap">{{ row.time }}</td>
+    <td class="mono date nowrap">{{ row.time }}</td>
     <td class="nowrap">
       <span class="badge" [class]="row.category.tone">{{ row.category.label }}</span>
-      <span class="mono kind">{{ row.kind }}</span>
+      <span class="mono kind"
+        ><bdi dir="ltr">{{ row.kind }}</bdi></span
+      >
     </td>
     <td>
       <div class="event">
         @if (group && group.count > 1) {
           <span class="times mono">{{ group.count }} ×</span>
         }
-        <span>{{ row.text }}</span>
+        <span dir="auto">{{ row.text }}</span>
         @if (row.practitionerDisplayName && row.practitionerId) {
           <span aria-hidden="true">·</span>
           <button
@@ -226,8 +228,8 @@
             class="link pm-link-target"
             (click)="filterPractitioner(row.practitionerId)"
           >
-            {{ row.practitionerDisplayName }}
-            <span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
+            &ngsp;<bdi>{{ row.practitionerDisplayName }}</bdi
+            >&ngsp;<span class="sr-only" i18n="Action d'un nom du journal@@admin.journal.filterBy"
               >: voir seulement ses événements</span
             >
           </button>
@@ -257,11 +259,13 @@
               }</span
             >
           }
-          <span class="mono range">{{ group.range }}</span>
+          <span class="mono range" dir="ltr">{{ group.range }}</span>
         </button>
       }
     </td>
-    <td>{{ row.by }}</td>
+    <td>
+      <bdi>{{ row.by }}</bdi>
+    </td>
     @if (hasContext()) {
       <td>
         @if (row.context) {

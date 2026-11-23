@@ -23,10 +23,12 @@ import { decisionLabel, formatDay } from './admin-labels';
         <li>
           <div class="body">
             <div class="head">
-              <span class="name">{{ appeal.practitionerDisplayName }}</span>
+              <span class="name"
+                ><bdi>{{ appeal.practitionerDisplayName }}</bdi></span
+              >
               <span class="context">{{ appeal.context }}</span>
             </div>
-            <blockquote>{{ appeal.message }}</blockquote>
+            <blockquote dir="auto">{{ appeal.message }}</blockquote>
           </div>
           <div class="actions">
             <button
@@ -59,7 +61,7 @@ import { decisionLabel, formatDay } from './admin-labels';
       list-style: none;
     }
 
-    /* Une ligne par recours (UX-E2) : nom, contexte et message à gauche, actions à droite. */
+    /* Une ligne par recours (UX-E2) : nom, contexte et message au début, actions à la fin. */
     li {
       display: flex;
       flex-wrap: wrap;
@@ -95,8 +97,8 @@ import { decisionLabel, formatDay } from './admin-labels';
 
     blockquote {
       margin: 0;
-      padding-left: 12px;
-      border-left: 3px solid var(--border-strong);
+      padding-inline-start: 12px;
+      border-inline-start: 3px solid var(--border-strong);
       font: var(--mat-sys-body-medium);
       white-space: pre-line;
     }

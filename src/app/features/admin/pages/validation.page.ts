@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   input,
+  LOCALE_ID,
   untracked,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +16,7 @@ import { isRefreshing, stateKind } from '../../../shared/util';
 import { DecisionInput, QUEUE_STATUSES, QueueStatus } from '../data/admin.model';
 import { DossierStore } from '../data/dossier.store';
 import { VerificationQueueStore } from '../data/verification-queue.store';
+import { isolated } from '../ui/admin-labels';
 import { DecisionFormComponent } from '../ui/decision-form.component';
 import { DocumentListComponent } from '../ui/document-list.component';
 import { DocumentViewerComponent } from '../ui/document-viewer.component';
@@ -52,6 +54,7 @@ export class ValidationPage {
   protected readonly dossier = inject(DossierStore);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
+  private readonly locale = inject(LOCALE_ID);
 
   protected readonly statuses = QUEUE_STATUSES;
   /** Nom de la région du dossier tant qu'aucun dossier n'est chargé (vide, chargement, erreur). */
@@ -140,7 +143,7 @@ export class ValidationPage {
 
   protected async onDecide(input: DecisionInput): Promise<void> {
     const id = this.practitionerId();
-    const name = this.dossier.dossier().data?.displayName ?? '';
+    const name = isolated(this.dossier.dossier().data?.displayName ?? '', this.locale);
     if (!id) return;
     const next = this.queue.neighbourOf(id);
     if (!(await this.dossier.decide(input))) return;

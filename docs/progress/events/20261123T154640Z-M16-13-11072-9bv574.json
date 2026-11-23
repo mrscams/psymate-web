@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T15:46:40.699Z",
+  "task": "M16-13",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "admin de droite à gauche : 11 déclarations converties, dir=auto/ltr et bdi, isolats FSI/PDI en arabe pour toasts et titres, onglets inversés en RTL, Intl.ListFormat en arabe, e2e/arabe/admin (ignoré en CI sans compte admin)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/132",
+  "branch": "M16-13-admin-rtl",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}
