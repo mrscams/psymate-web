@@ -14442,6 +14442,7 @@
       </trans-unit>
       <trans-unit id="graph.heading" datatype="html">
         <source> Graphe des liens </source>
+        <target state="translated"> شبكة الروابط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">3,7</context>
@@ -14450,6 +14451,7 @@
       </trans-unit>
       <trans-unit id="graph.depth.label" datatype="html">
         <source>Profondeur</source>
+        <target state="translated">العمق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">21,24</context>
@@ -14458,6 +14460,7 @@
       </trans-unit>
       <trans-unit id="graph.reading.label" datatype="html">
         <source>Lecture</source>
+        <target state="translated">القراءة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">40,43</context>
@@ -14466,6 +14469,7 @@
       </trans-unit>
       <trans-unit id="graph.direction.label" datatype="html">
         <source>Sens</source>
+        <target state="translated">الاتجاه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">61,64</context>
@@ -14474,6 +14478,7 @@
       </trans-unit>
       <trans-unit id="graph.linkNames" datatype="html">
         <source>Nom des liens</source>
+        <target state="translated">أسماء الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">85,89</context>
@@ -14482,6 +14487,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.allTypes" datatype="html">
         <source>Tous les types</source>
+        <target state="translated">كل الأنواع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">104,107</context>
@@ -14490,6 +14496,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.allLinks" datatype="html">
         <source>Tous les liens</source>
+        <target state="translated">كل الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">137,139</context>
@@ -14498,6 +14505,7 @@
       </trans-unit>
       <trans-unit id="graph.relayout" datatype="html">
         <source> Recentrer </source>
+        <target state="translated"> إعادة التوسيط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">199,203</context>
@@ -14506,6 +14514,7 @@
       </trans-unit>
       <trans-unit id="graph.list.toggle" datatype="html">
         <source> Liste des liens </source>
+        <target state="translated"> قائمة الروابط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">209,213</context>
@@ -14514,6 +14523,7 @@
       </trans-unit>
       <trans-unit id="graph.toolbar.link" datatype="html">
         <source>Lier</source>
+        <target state="translated">ربط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">222,225</context>
@@ -14522,6 +14532,7 @@
       </trans-unit>
       <trans-unit id="graph.truncated" datatype="html">
         <source> Graphe partiel : au-delà de 150 nœuds, des entrées sont regroupées ou retirées. </source>
+        <target state="translated"> شبكة جزئية: بعد 150 عقدة، تُجمَّع بعض المُدخَلات أو تُستبعَد. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">233,237</context>
@@ -14530,6 +14541,7 @@
       </trans-unit>
       <trans-unit id="graph.stale" datatype="html">
         <source>Le dernier graphe reçu reste affiché.</source>
+        <target state="translated">تبقى آخر شبكة مستلَمة معروضة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.html</context>
           <context context-type="linenumber">240,242</context>
@@ -14538,6 +14550,7 @@
       </trans-unit>
       <trans-unit id="graph.root.allWarning" datatype="html">
         <source>jusqu&apos;à 150 nœuds, étiquettes masquées</source>
+        <target state="translated">حتى 150 عقدة، التسميات مخفية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">141</context>
@@ -14546,6 +14559,7 @@
       </trans-unit>
       <trans-unit id="graph.toolbar.linkDisabled" datatype="html">
         <source>Choisissez d&apos;abord une entrée dans le graphe.</source>
+        <target state="translated">يُرجى أولًا اختيار مُدخَل في الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">142</context>
@@ -14554,6 +14568,7 @@
       </trans-unit>
       <trans-unit id="graph.proposed" datatype="html">
         <source>suggéré</source>
+        <target state="translated">مقترح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">175</context>
@@ -14562,6 +14577,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.period" datatype="html">
         <source>Période : <x id="period" equiv-text="label"/></source>
+        <target state="translated">الفترة: <x id="period" equiv-text="label"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">224</context>
@@ -14570,6 +14586,7 @@
       </trans-unit>
       <trans-unit id="graph.wholeFolder.note" datatype="html">
         <source>Tout le dossier : <x id="count" equiv-text="count"/> nœuds, étiquettes masquées. Choisissez une entrée dans « Centré sur » pour lire le graphe.</source>
+        <target state="translated">الملف كاملًا (العُقد: <x id="count" equiv-text="count"/>)، التسميات مخفية. لقراءة الشبكة، يُرجى اختيار مُدخَل في « المركز ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">235</context>
@@ -14578,6 +14595,7 @@
       </trans-unit>
       <trans-unit id="graph.count" datatype="html">
         <source><x id="nodes" equiv-text="nodes"/> nœuds · <x id="edges" equiv-text="edges"/> liens</source>
+        <target state="translated">العُقد: <x id="nodes" equiv-text="nodes"/> · الروابط: <x id="edges" equiv-text="edges"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">260</context>
@@ -14586,6 +14604,7 @@
       </trans-unit>
       <trans-unit id="graph.canvas.label" datatype="html">
         <source>Graphe des liens : <x id="nodes" equiv-text="nodes"/> nœuds, <x id="edges" equiv-text="edges"/> liens. Le bouton « Liste des liens » en donne la version texte.</source>
+        <target state="translated">شبكة الروابط (العُقد: <x id="nodes" equiv-text="nodes"/>، الروابط: <x id="edges" equiv-text="edges"/>). يعرض زرّ « قائمة الروابط » نسختها النصية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">265</context>
@@ -14594,6 +14613,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.typesAll" datatype="html">
         <source>Types d&apos;entrées : tous</source>
+        <target state="translated">أنواع المُدخَلات: الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">271</context>
@@ -14602,6 +14622,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.typesSome" datatype="html">
         <source>Types d&apos;entrées : <x id="count" equiv-text="count"/></source>
+        <target state="translated">أنواع المُدخَلات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">274</context>
@@ -14610,6 +14631,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.linksAll" datatype="html">
         <source>Liens : tous</source>
+        <target state="translated">الروابط: الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">280</context>
@@ -14618,6 +14640,7 @@
       </trans-unit>
       <trans-unit id="graph.filter.linksSome" datatype="html">
         <source>Liens : <x id="count" equiv-text="count"/></source>
+        <target state="translated">الروابط: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">282</context>
@@ -14626,6 +14649,7 @@
       </trans-unit>
       <trans-unit id="graph.empty.filtered" datatype="html">
         <source>Aucun lien entre les types d&apos;entrées retenus</source>
+        <target state="translated">لا روابط بين أنواع المُدخَلات المختارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">307</context>
@@ -14634,6 +14658,7 @@
       </trans-unit>
       <trans-unit id="graph.empty.root" datatype="html">
         <source>Aucun lien autour de cette entrée</source>
+        <target state="translated">لا روابط حول هذا المُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">310</context>
@@ -14642,6 +14667,7 @@
       </trans-unit>
       <trans-unit id="graph.empty.title" datatype="html">
         <source>Les liens que vous créez apparaîtront ici</source>
+        <target state="translated">ستظهر هنا الروابط المُنشأة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">311</context>
@@ -14650,6 +14676,7 @@
       </trans-unit>
       <trans-unit id="graph.empty.message" datatype="html">
         <source>Liez deux entrées depuis la timeline ou l&apos;éditeur d&apos;entrée, ou glissez un nœud sur un autre.</source>
+        <target state="translated">يمكن ربط مُدخَلين من الخط الزمني أو من محرّر المُدخَل، أو بسحب عقدة إلى أخرى.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">324</context>
@@ -14658,6 +14685,7 @@
       </trans-unit>
       <trans-unit id="graph.announce.group" datatype="html">
         <source>Groupe sélectionné : <x id="label" equiv-text="label"/></source>
+        <target state="translated">المجموعة المحدَّدة: <x id="label" equiv-text="label"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">369</context>
@@ -14666,6 +14694,7 @@
       </trans-unit>
       <trans-unit id="graph.announce.node" datatype="html">
         <source>Entrée sélectionnée : <x id="name" equiv-text="name"/>, <x id="type" equiv-text="type"/></source>
+        <target state="translated">المُدخَل المحدَّد: <x id="name" equiv-text="name"/>، <x id="type" equiv-text="type"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">375</context>
@@ -14674,6 +14703,7 @@
       </trans-unit>
       <trans-unit id="graph.catalog.error" datatype="html">
         <source>Impossible de charger les types de liens</source>
+        <target state="translated">تعذّر تحميل أنواع الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">390</context>
@@ -14682,6 +14712,7 @@
       </trans-unit>
       <trans-unit id="graph.root.pending" datatype="html">
         <source>Entrée choisie</source>
+        <target state="translated">المُدخَل المختار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">391</context>
@@ -14690,6 +14721,7 @@
       </trans-unit>
       <trans-unit id="graph.action.wholeFolder" datatype="html">
         <source>Voir tout le dossier</source>
+        <target state="translated">عرض الملف كاملًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">392</context>
@@ -14698,6 +14730,7 @@
       </trans-unit>
       <trans-unit id="graph.action.resetFilters" datatype="html">
         <source>Filtres par défaut</source>
+        <target state="translated">العودة إلى عوامل التصفية الافتراضية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">393</context>
@@ -14706,6 +14739,7 @@
       </trans-unit>
       <trans-unit id="graph.action.allTypes" datatype="html">
         <source>Montrer tous les types</source>
+        <target state="translated">عرض كل الأنواع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">394</context>
@@ -14714,6 +14748,7 @@
       </trans-unit>
       <trans-unit id="graph.action.timeline" datatype="html">
         <source>Ouvrir la timeline</source>
+        <target state="translated">فتح الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">395</context>
@@ -14722,6 +14757,7 @@
       </trans-unit>
       <trans-unit id="graph.canvas.loading" datatype="html">
         <source>Préparation du graphe…</source>
+        <target state="translated">جارٍ تجهيز الشبكة…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">396</context>
@@ -14730,6 +14766,7 @@
       </trans-unit>
       <trans-unit id="graph.canvas.failed" datatype="html">
         <source>Impossible d&apos;afficher le graphe</source>
+        <target state="translated">تعذّر عرض الشبكة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">397</context>
@@ -14742,6 +14779,7 @@
       </trans-unit>
       <trans-unit id="graph.canvas.failedMessage" datatype="html">
         <source>Rechargez la page pour réessayer. La liste des liens reste disponible (bouton « Liste des liens »).</source>
+        <target state="translated">يُرجى إعادة تحميل الصفحة للمحاولة مجددًا. تبقى قائمة الروابط متاحة (زرّ « قائمة الروابط »).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">398</context>
@@ -15118,6 +15156,7 @@
       </trans-unit>
       <trans-unit id="graph.zoom.group" datatype="html">
         <source>Zoom du graphe</source>
+        <target state="translated">تكبير الشبكة وتصغيرها</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-canvas.component.ts</context>
           <context context-type="linenumber">146</context>
@@ -15126,6 +15165,7 @@
       </trans-unit>
       <trans-unit id="graph.zoom.in" datatype="html">
         <source>Zoom avant</source>
+        <target state="translated">تكبير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-canvas.component.ts</context>
           <context context-type="linenumber">147</context>
@@ -15134,6 +15174,7 @@
       </trans-unit>
       <trans-unit id="graph.zoom.out" datatype="html">
         <source>Zoom arrière</source>
+        <target state="translated">تصغير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-canvas.component.ts</context>
           <context context-type="linenumber">148</context>
@@ -15142,6 +15183,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.expand" datatype="html">
         <source> Déplier </source>
+        <target state="translated"> توسيع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">27,31</context>
@@ -15150,6 +15192,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.recenterNeighbor" datatype="html">
         <source> Recentrer sur l&apos;entrée voisine </source>
+        <target state="translated"> إعادة التوسيط على المُدخَل المجاور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">35,39</context>
@@ -15158,6 +15201,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.when" datatype="html">
         <source>Quand</source>
+        <target state="translated">متى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">51,55</context>
@@ -15166,6 +15210,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.emotion" datatype="html">
         <source> Émotion </source>
+        <target state="translated"> الشعور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">58,61</context>
@@ -15174,6 +15219,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.link" datatype="html">
         <source> Lier (L) </source>
+        <target state="translated"> ربط (L) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">92,96</context>
@@ -15182,6 +15228,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.timeline" datatype="html">
         <source> Voir dans la timeline </source>
+        <target state="translated"> عرض في الخط الزمني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">100,104</context>
@@ -15190,6 +15237,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.recenter" datatype="html">
         <source> Recentrer le graphe ici </source>
+        <target state="translated"> إعادة توسيط الشبكة هنا </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">109,114</context>
@@ -15198,6 +15246,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.edit" datatype="html">
         <source> Corriger l&apos;entrée </source>
+        <target state="translated"> تصحيح المُدخَل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">118,124</context>
@@ -15206,6 +15255,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.help" datatype="html">
         <source> Glisser un nœud sur un autre crée un lien · double-clic : ouvrir dans la timeline </source>
+        <target state="translated"> سحب عقدة إلى أخرى يُنشئ رابطًا · نقر مزدوج: الفتح في الخط الزمني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.html</context>
           <context context-type="linenumber">125,128</context>
@@ -15214,6 +15264,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.emotionValue" datatype="html">
         <source><x id="emotion" equiv-text="label"/> · intensité <x id="intensity" equiv-text="node.intensity"/>/10</source>
+        <target state="translated"><x id="emotion" equiv-text="label"/> · الشدّة <x id="intensity" equiv-text="node.intensity"/>/10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">94</context>
@@ -15222,6 +15273,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.links" datatype="html">
         <source>Liens de cette entrée · <x id="count" equiv-text="count"/></source>
+        <target state="translated">روابط هذا المُدخَل · <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">110</context>
@@ -15230,6 +15282,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.groupText" datatype="html">
         <source><x id="count" equiv-text="count"/> <x id="types" equiv-text="types"/> reliés à la même entrée et à elle seule, regroupés pour garder le graphe lisible.</source>
+        <target state="translated"><x id="types" equiv-text="types"/> (العدد: <x id="count" equiv-text="count"/>) مرتبطة بالمُدخَل نفسه وحده، وجُمعت للحفاظ على وضوح الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">118</context>
@@ -15238,6 +15291,7 @@
       </trans-unit>
       <trans-unit id="graph.expand.gone" datatype="html">
         <source>Ce groupe n&apos;existe plus : le graphe a été relu.</source>
+        <target state="translated">هذه المجموعة لم تعد موجودة: أُعيدت قراءة الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">139</context>
@@ -15246,6 +15300,7 @@
       </trans-unit>
       <trans-unit id="graph.expand.failed" datatype="html">
         <source>Le groupe n&apos;a pas pu être déplié. Réessayez.</source>
+        <target state="translated">تعذّر توسيع المجموعة. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">140</context>
@@ -15254,6 +15309,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.error" datatype="html">
         <source>Impossible de charger cette entrée</source>
+        <target state="translated">تعذّر تحميل هذا المُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">143</context>
@@ -15262,6 +15318,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.close" datatype="html">
         <source>Fermer le détail</source>
+        <target state="translated">إغلاق التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">144</context>
@@ -15270,6 +15327,7 @@
       </trans-unit>
       <trans-unit id="graph.detail.noLinks" datatype="html">
         <source>Aucun lien sur cette entrée pour le moment.</source>
+        <target state="translated">لا روابط لهذا المُدخَل حتى الآن.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-detail.component.ts</context>
           <context context-type="linenumber">145</context>
@@ -15278,6 +15336,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.note" datatype="html">
         <source>notes</source>
+        <target state="translated">ملاحظات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">53</context>
@@ -15286,6 +15345,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.event" datatype="html">
         <source>événements</source>
+        <target state="translated">أحداث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">55</context>
@@ -15294,6 +15354,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.situation" datatype="html">
         <source>situations</source>
+        <target state="translated">وضعيات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">57</context>
@@ -15302,6 +15363,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.feeling" datatype="html">
         <source>ressentis</source>
+        <target state="translated">مشاعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">59</context>
@@ -15310,6 +15372,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.session" datatype="html">
         <source>séances</source>
+        <target state="translated">جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">61</context>
@@ -15318,6 +15381,7 @@
       </trans-unit>
       <trans-unit id="graph.plural.medication" datatype="html">
         <source>médicaments</source>
+        <target state="translated">أدوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">63</context>
@@ -15326,6 +15390,7 @@
       </trans-unit>
       <trans-unit id="graph.group.label" datatype="html">
         <source><x id="count" equiv-text="count"/> <x id="types" equiv-text="types"/> regroupés</source>
+        <target state="translated"><x id="types" equiv-text="types"/> مجمّعة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">71</context>
@@ -15334,6 +15399,7 @@
       </trans-unit>
       <trans-unit id="graph.group.emotion" datatype="html">
         <source><x id="emotion" equiv-text="emotion"/> majoritaire</source>
+        <target state="translated">الغالب: <x id="emotion" equiv-text="emotion"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">77</context>
@@ -15342,6 +15408,7 @@
       </trans-unit>
       <trans-unit id="graph.reading.causal" datatype="html">
         <source>Chaîne causale</source>
+        <target state="translated">السلسلة السببية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">85</context>
@@ -15350,6 +15417,7 @@
       </trans-unit>
       <trans-unit id="graph.reading.type" datatype="html">
         <source>Colonnes par type</source>
+        <target state="translated">أعمدة حسب النوع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">87</context>
@@ -15358,6 +15426,7 @@
       </trans-unit>
       <trans-unit id="graph.reading.time" datatype="html">
         <source>Chronologie</source>
+        <target state="translated">التسلسل الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">89</context>
@@ -15366,6 +15435,7 @@
       </trans-unit>
       <trans-unit id="graph.direction.right" datatype="html">
         <source>Gauche → droite</source>
+        <target state="translated">في اتجاه القراءة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">97</context>
@@ -15374,6 +15444,7 @@
       </trans-unit>
       <trans-unit id="graph.direction.down" datatype="html">
         <source>Haut → bas</source>
+        <target state="translated">من الأعلى إلى الأسفل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">99</context>
@@ -15382,6 +15453,7 @@
       </trans-unit>
       <trans-unit id="graph.column.events" datatype="html">
         <source>Événements</source>
+        <target state="translated">الأحداث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">107</context>
@@ -15390,6 +15462,7 @@
       </trans-unit>
       <trans-unit id="graph.column.situations" datatype="html">
         <source>Situations</source>
+        <target state="translated">الوضعيات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">109</context>
@@ -15398,6 +15471,7 @@
       </trans-unit>
       <trans-unit id="graph.column.feelings" datatype="html">
         <source>Ressentis et notes</source>
+        <target state="translated">المشاعر والملاحظات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">111</context>
@@ -15406,6 +15480,7 @@
       </trans-unit>
       <trans-unit id="graph.column.responses" datatype="html">
         <source>Réponses · traitements, séances</source>
+        <target state="translated">الاستجابات · العلاجات، الجلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">113</context>
@@ -15414,6 +15489,7 @@
       </trans-unit>
       <trans-unit id="graph.month.none" datatype="html">
         <source>Sans date</source>
+        <target state="translated">دون تاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">120</context>
@@ -15422,6 +15498,7 @@
       </trans-unit>
       <trans-unit id="graph.period.all" datatype="html">
         <source>Toute la période</source>
+        <target state="translated">الفترة كاملة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">131</context>
@@ -15430,6 +15507,7 @@
       </trans-unit>
       <trans-unit id="graph.period.30d" datatype="html">
         <source>30 derniers jours</source>
+        <target state="translated">آخر 30 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">133</context>
@@ -15438,6 +15516,7 @@
       </trans-unit>
       <trans-unit id="graph.period.90d" datatype="html">
         <source>90 derniers jours</source>
+        <target state="translated">آخر 90 يومًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">135</context>
@@ -15446,6 +15525,7 @@
       </trans-unit>
       <trans-unit id="graph.period.12m" datatype="html">
         <source>12 derniers mois</source>
+        <target state="translated">آخر 12 شهرًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">137</context>
@@ -15454,6 +15534,7 @@
       </trans-unit>
       <trans-unit id="graph.provenance.manual" datatype="html">
         <source>manuel</source>
+        <target state="translated">يدوي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">144</context>
@@ -15462,6 +15543,7 @@
       </trans-unit>
       <trans-unit id="graph.provenance.aiSuggested" datatype="html">
         <source>suggéré</source>
+        <target state="translated">مقترح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">146</context>
@@ -15470,6 +15552,7 @@
       </trans-unit>
       <trans-unit id="graph.provenance.aiConfirmed" datatype="html">
         <source>suggéré, confirmé</source>
+        <target state="translated">مقترح، مؤكَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">148</context>
@@ -15478,6 +15561,7 @@
       </trans-unit>
       <trans-unit id="graph.status.accepted" datatype="html">
         <source>accepté</source>
+        <target state="translated">مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">157</context>
@@ -15486,6 +15570,7 @@
       </trans-unit>
       <trans-unit id="graph.status.proposed" datatype="html">
         <source>suggéré</source>
+        <target state="translated">مقترح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">159</context>
@@ -15494,6 +15579,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.otherPatient" datatype="html">
         <source>Cette entrée n&apos;appartient pas à ce dossier</source>
+        <target state="translated">هذا المُدخَل لا ينتمي إلى هذا الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">181</context>
@@ -15502,6 +15588,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.notFound" datatype="html">
         <source>Cette entrée n&apos;existe plus</source>
+        <target state="translated">هذا المُدخَل لم يعد موجودًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">185</context>
@@ -15510,6 +15597,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.archived" datatype="html">
         <source>Cette entrée est archivée</source>
+        <target state="translated">هذا المُدخَل مؤرشف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">187</context>
@@ -15518,6 +15606,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.invalid" datatype="html">
         <source>Ces filtres ne sont pas valides</source>
+        <target state="translated">عوامل التصفية هذه غير صالحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">189</context>
@@ -15526,6 +15615,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.forbidden" datatype="html">
         <source>Ce dossier n&apos;est pas accessible</source>
+        <target state="translated">لا يمكن الوصول إلى هذا الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">192</context>
@@ -15534,6 +15624,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.title" datatype="html">
         <source>Impossible de charger le graphe</source>
+        <target state="translated">تعذّر تحميل شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">194</context>
@@ -15542,6 +15633,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.rootMessage" datatype="html">
         <source>Le graphe peut se centrer sur tout le dossier.</source>
+        <target state="translated">يمكن توسيط الشبكة على الملف كاملًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">201</context>
@@ -15550,6 +15642,7 @@
       </trans-unit>
       <trans-unit id="graph.problem.invalidMessage" datatype="html">
         <source>Revenez aux filtres par défaut.</source>
+        <target state="translated">يمكن العودة إلى عوامل التصفية الافتراضية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-labels.ts</context>
           <context context-type="linenumber">207</context>
@@ -15558,6 +15651,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.toggle" datatype="html">
         <source>Légende</source>
+        <target state="translated">مفتاح الرسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">31,36</context>
@@ -15566,6 +15660,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.root" datatype="html">
         <source>Racine</source>
+        <target state="translated">الجذر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">56,59</context>
@@ -15574,6 +15669,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.group" datatype="html">
         <source>Groupe d&apos;entrées (à déplier)</source>
+        <target state="translated">مجموعة مُدخَلات (قابلة للتوسيع)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">61,65</context>
@@ -15582,6 +15678,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.shapes" datatype="html">
         <source>Formes des entrées</source>
+        <target state="translated">أشكال المُدخَلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">190</context>
@@ -15590,6 +15687,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.lines" datatype="html">
         <source>Traits des liens</source>
+        <target state="translated">خطوط الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">191</context>
@@ -15598,6 +15696,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.feelingSize" datatype="html">
         <source>Ressenti · taille et chiffre = intensité</source>
+        <target state="translated">شعور · الحجم والرقم = الشدّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">193</context>
@@ -15606,6 +15705,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.solidName" datatype="html">
         <source>trait plein</source>
+        <target state="translated">خط متّصل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">201</context>
@@ -15614,6 +15714,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.solidTypes" datatype="html">
         <source>déclenche, est causé par</source>
+        <target state="translated">يُثير، ناتج عن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">202</context>
@@ -15622,6 +15723,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.longDashName" datatype="html">
         <source>tirets longs</source>
+        <target state="translated">شرطات طويلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">208</context>
@@ -15630,6 +15732,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.longDashTypes" datatype="html">
         <source>aggrave</source>
+        <target state="translated">يُفاقِم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">209</context>
@@ -15638,6 +15741,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.shortDashName" datatype="html">
         <source>tirets courts</source>
+        <target state="translated">شرطات قصيرة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">215</context>
@@ -15646,6 +15750,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.shortDashTypes" datatype="html">
         <source>soulage</source>
+        <target state="translated">يُخفِّف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">216</context>
@@ -15654,6 +15759,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.dottedName" datatype="html">
         <source>pointillé sans flèche</source>
+        <target state="translated">خط منقّط دون سهم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">222</context>
@@ -15662,6 +15768,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.dottedTypes" datatype="html">
         <source>co-occurrence</source>
+        <target state="translated">يتزامن مع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">223</context>
@@ -15670,6 +15777,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.thinName" datatype="html">
         <source>trait fin</source>
+        <target state="translated">خط رفيع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">229</context>
@@ -15678,6 +15786,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.thinTypes" datatype="html">
         <source>suit, fait partie de</source>
+        <target state="translated">يلي، جزء من</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">230</context>
@@ -15686,6 +15795,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.doubleName" datatype="html">
         <source>trait double</source>
+        <target state="translated">خط مزدوج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">236</context>
@@ -15694,6 +15804,7 @@
       </trans-unit>
       <trans-unit id="graph.legend.doubleTypes" datatype="html">
         <source>traite</source>
+        <target state="translated">يُعالِج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-legend.component.ts</context>
           <context context-type="linenumber">237</context>
@@ -15702,6 +15813,7 @@
       </trans-unit>
       <trans-unit id="graph.table.source" datatype="html">
         <source> Source </source>
+        <target state="translated"> المصدر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">38,40</context>
@@ -15710,6 +15822,7 @@
       </trans-unit>
       <trans-unit id="graph.table.type" datatype="html">
         <source>Lien</source>
+        <target state="translated">الرابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">40,41</context>
@@ -15718,6 +15831,7 @@
       </trans-unit>
       <trans-unit id="graph.table.target" datatype="html">
         <source> Cible </source>
+        <target state="translated"> الهدف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">42,44</context>
@@ -15726,6 +15840,7 @@
       </trans-unit>
       <trans-unit id="graph.table.provenance" datatype="html">
         <source> Provenance </source>
+        <target state="translated"> الأصل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">45,47</context>
@@ -15734,6 +15849,7 @@
       </trans-unit>
       <trans-unit id="graph.table.status" datatype="html">
         <source> Statut </source>
+        <target state="translated"> الحالة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">48,52</context>
@@ -15742,6 +15858,7 @@
       </trans-unit>
       <trans-unit id="graph.table.previous" datatype="html">
         <source> Précédents </source>
+        <target state="translated"> السابق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">83,85</context>
@@ -15750,6 +15867,7 @@
       </trans-unit>
       <trans-unit id="graph.table.next" datatype="html">
         <source> Suivants </source>
+        <target state="translated"> التالي </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">93,97</context>
@@ -15758,6 +15876,7 @@
       </trans-unit>
       <trans-unit id="graph.table.group" datatype="html">
         <source> Groupe </source>
+        <target state="translated"> المجموعة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">110,112</context>
@@ -15766,6 +15885,7 @@
       </trans-unit>
       <trans-unit id="graph.table.neighbor" datatype="html">
         <source> Relié à </source>
+        <target state="translated"> مرتبط بـ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">113,115</context>
@@ -15774,6 +15894,7 @@
       </trans-unit>
       <trans-unit id="graph.table.action" datatype="html">
         <source> Action </source>
+        <target state="translated"> الإجراء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">116,120</context>
@@ -15782,6 +15903,7 @@
       </trans-unit>
       <trans-unit id="graph.table.expand" datatype="html">
         <source> Déplier </source>
+        <target state="translated"> توسيع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">144,147</context>
@@ -15790,6 +15912,7 @@
       </trans-unit>
       <trans-unit id="graph.table.caption" datatype="html">
         <source>Liens du graphe (même contenu que le canevas)</source>
+        <target state="translated">روابط الشبكة (المحتوى نفسه المعروض في الرسم)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">249</context>
@@ -15798,6 +15921,7 @@
       </trans-unit>
       <trans-unit id="graph.table.empty" datatype="html">
         <source>Aucun lien dans ce graphe</source>
+        <target state="translated">لا روابط في هذه الشبكة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">250</context>
@@ -15806,6 +15930,7 @@
       </trans-unit>
       <trans-unit id="graph.table.groupsCaption" datatype="html">
         <source>Groupes d&apos;entrées regroupées (à déplier)</source>
+        <target state="translated">مجموعات المُدخَلات المجمّعة (قابلة للتوسيع)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">251</context>
@@ -15814,6 +15939,7 @@
       </trans-unit>
       <trans-unit id="graph.table.pager" datatype="html">
         <source>Pages de la liste des liens</source>
+        <target state="translated">صفحات قائمة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">252</context>
@@ -15822,6 +15948,7 @@
       </trans-unit>
       <trans-unit id="graph.table.range" datatype="html">
         <source>Liens <x id="first" equiv-text="first"/> à <x id="last" equiv-text="last"/> sur <x id="total" equiv-text="total"/></source>
+        <target state="translated">الروابط من <x id="first" equiv-text="first"/> إلى <x id="last" equiv-text="last"/> من أصل <x id="total" equiv-text="total"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">273</context>
@@ -15830,6 +15957,7 @@
       </trans-unit>
       <trans-unit id="graph.table.expandLabel" datatype="html">
         <source>Déplier : <x id="label" equiv-text="label"/></source>
+        <target state="translated">توسيع: <x id="label" equiv-text="label"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/graph-links-table.component.ts</context>
           <context context-type="linenumber">297</context>
@@ -16058,6 +16186,7 @@
       </trans-unit>
       <trans-unit id="graph.root.label" datatype="html">
         <source>Centré sur</source>
+        <target state="translated">المركز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">59,63</context>
@@ -16066,6 +16195,7 @@
       </trans-unit>
       <trans-unit id="graph.root.none" datatype="html">
         <source> Aucune entrée ne correspond. </source>
+        <target state="translated"> لا مُدخَل مطابق. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">158,161</context>
@@ -16074,6 +16204,7 @@
       </trans-unit>
       <trans-unit id="graph.root.all" datatype="html">
         <source>Tout le dossier</source>
+        <target state="translated">الملف كاملًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">199</context>
@@ -16082,6 +16213,7 @@
       </trans-unit>
       <trans-unit id="graph.root.searchLabel" datatype="html">
         <source>Chercher l&apos;entrée au centre du graphe</source>
+        <target state="translated">البحث عن المُدخَل الذي تتمركز حوله الشبكة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">200</context>
@@ -16090,6 +16222,7 @@
       </trans-unit>
       <trans-unit id="graph.root.searchPlaceholder" datatype="html">
         <source>Titre, type ou date…</source>
+        <target state="translated">العنوان أو النوع أو التاريخ…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">201</context>
@@ -16098,6 +16231,7 @@
       </trans-unit>
       <trans-unit id="graph.root.listLabel" datatype="html">
         <source>Entrées du dossier</source>
+        <target state="translated">مُدخَلات الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">202</context>
@@ -16106,6 +16240,7 @@
       </trans-unit>
       <trans-unit id="graph.root.searching" datatype="html">
         <source>Recherche dans tout le dossier…</source>
+        <target state="translated">جارٍ البحث في الملف كاملًا…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">254</context>
@@ -16114,6 +16249,7 @@
       </trans-unit>
       <trans-unit id="graph.root.searchFailed" datatype="html">
         <source>La recherche dans le dossier a échoué ; seules les entrées du graphe sont proposées.</source>
+        <target state="translated">تعذّر البحث في الملف؛ لا تُقترح إلا مُدخَلات الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">257</context>
@@ -16122,6 +16258,7 @@
       </trans-unit>
       <trans-unit id="graph.root.count" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées proposées</source>
+        <target state="translated">المُدخَلات المقترحة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/root-picker.component.ts</context>
           <context context-type="linenumber">260</context>
