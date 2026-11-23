@@ -4,12 +4,15 @@
     <p class="description" dir="auto">{{ options.description }}</p>
   }
   @if (options.confirmWord) {
+    <!-- Nom retapé dans son sens (dir="auto", Q77). placeholder=" " : vide, le champ prend le sens
+         de la page (src/theme/arabic.scss, docs/design/arabe.md §5) ; rien de visible. -->
     <mat-form-field class="word" appearance="outline">
       <mat-label>{{ wordLabel }}</mat-label>
       <input
         matInput
         type="text"
         dir="auto"
+        placeholder=" "
         autocomplete="off"
         cdkFocusInitial
         [ngModel]="typed()"

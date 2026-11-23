@@ -33,6 +33,7 @@
     <textarea
       class="field"
       [id]="inputId"
+      dir="auto"
       rows="2"
       autocomplete="off"
       spellcheck="true"
@@ -160,6 +161,7 @@
               <input
                 class="sel wide"
                 type="text"
+                dir="auto"
                 [id]="ids.title"
                 [attr.aria-describedby]="noteId('title')"
                 [attr.aria-invalid]="invalid('title') ? 'true' : null"
@@ -209,6 +211,7 @@
               <input
                 class="sel wide"
                 type="text"
+                dir="auto"
                 [id]="ids.title"
                 [attr.aria-describedby]="noteId('title')"
                 [attr.aria-invalid]="invalid('title') ? 'true' : null"
@@ -296,6 +299,7 @@
               <input
                 class="sel"
                 type="text"
+                dir="auto"
                 [id]="ids.molecule"
                 [attr.aria-describedby]="noteId('molecule')"
                 [attr.aria-invalid]="invalid('molecule') ? 'true' : null"
@@ -322,6 +326,7 @@
               <input
                 class="sel"
                 type="text"
+                dir="auto"
                 [id]="ids.dosage"
                 [attr.aria-describedby]="noteId('dosage')"
                 [attr.aria-invalid]="invalid('dosage') ? 'true' : null"
@@ -461,7 +466,7 @@
 
     <div class="acts">
       <span class="keys" i18n="Raccourcis du bloc de saisie@@capture.bar.keys"
-        ><kbd>Ctrl+⏎</kbd> détaille · <kbd>Ctrl+S</kbd> brouillon</span
+        ><kbd dir="ltr">Ctrl+⏎</kbd> détaille · <kbd dir="ltr">Ctrl+S</kbd> brouillon</span
       >
       <button
         type="button"
@@ -473,7 +478,7 @@
       </button>
       <button type="button" class="save" [disabled]="!canSave()" (click)="submit('final')">
         <span i18n="Bouton d'enregistrement du bloc@@capture.actions.save">Enregistrer</span>
-        <kbd aria-hidden="true">↵</kbd>
+        <kbd dir="ltr" aria-hidden="true">↵</kbd>
       </button>
     </div>
   }

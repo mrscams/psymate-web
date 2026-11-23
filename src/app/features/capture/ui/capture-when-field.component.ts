@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
+import { formatLocale } from '../../../core/i18n';
 import { DateFieldComponent, MonthFieldComponent } from '../../../shared/ui/date-field';
 import { formatOccurred, OccurredPrecision } from '../../../shared/util';
 import { civilDay, dayOccurred, monthOccurred, yearOccurred } from '../data/capture.model';
@@ -104,6 +105,7 @@ type Precision = 'day' | 'month' | 'year';
           <input
             class="sel year"
             type="text"
+            dir="ltr"
             inputmode="numeric"
             maxlength="4"
             placeholder="aaaa"
@@ -171,7 +173,7 @@ export class CaptureWhenFieldComponent {
 
   readonly changed = output<ParsedOccurred | null>();
 
-  private readonly locale = inject(LOCALE_ID);
+  private readonly locale = formatLocale(inject(LOCALE_ID));
   protected readonly precisions: readonly Precision[] = ['day', 'month', 'year'];
   protected readonly precisionAria = $localize`:Liste des précisions du moment dans le bloc@@capture.when.precision:Précision de la date`;
   protected readonly yearAria = $localize`:Champ année du moment dans le bloc@@capture.when.year:Année`;

@@ -27,6 +27,14 @@
 //    retenue, les suivantes restent dans le texte (AMBIGUOUS_DATE). Sans date : `now`, précision
 //    exact (la plus fine du contrat).
 // 6. Texte : le reste, espaces normalisés.
+//
+// En arabe (locale « ar », Q81, M16-20), la barre ne lit aucune date, quelle que soit la langue du
+// texte saisi : l'étape 5 n'a pas lieu (ni date relative, ni date en chiffres, ni INVALID_TIME_ZONE),
+// le moment reste `now` et se règle dans le champ « Quand ». L'étape 4 ne devine pas non plus une
+// émotion inconnue (UNKNOWN_EMOTION) : ce garde-fou s'appuie sur les unités et les mots vides français
+// et anglais (« 8 heures » n'est pas une intensité), qui ne protègent pas un texte arabe (« نمت 8
+// ساعات »). Restent reconnus : guillemets, cible `>`, préfixes de type, émotion du vocabulaire (code ou
+// libellé) suivie d'une intensité, et leurs avertissements.
 
 import { civilDay, isValidTimeZone } from './calendar';
 import { matchEmotion } from './emotion-match';
@@ -176,6 +184,7 @@ function readFeeling(
   options: ParseOptions,
   consumed: Set<number>,
   warnings: ParseWarning[],
+  guessUnknown: boolean,
 ): Typed {
   const words = leadingWords(tokens, start);
   if (!words.length) return NOTE;
@@ -193,7 +202,7 @@ function readFeeling(
   };
 
   if (match.kind === 'none') {
-    if (!inRange || !LETTER.test(word) || isStopWord(words[0])) return NOTE;
+    if (!guessUnknown || !inRange || !LETTER.test(word) || isStopWord(words[0])) return NOTE;
     take();
     warnings.push(parseWarning('UNKNOWN_EMOTION', { word }));
     return { type: 'feeling', intensity: value };
@@ -256,20 +265,26 @@ export function parse(input: string, options: ParseOptions): ParseResult {
     }
   }
 
-  // 4. Émotion et intensité.
+  // 4. Émotion et intensité ; en arabe, aucune émotion inconnue devinée.
+  const language = grammarLanguage(options.locale);
   const typed: Typed = prefixed
     ? { type: prefixed }
-    : readFeeling(tokens, start, options, consumed, warnings);
+    : readFeeling(tokens, start, options, consumed, warnings, language !== 'ar');
 
-  // 5. Date, dans le jour civil du fuseau injecté (UTC s'il est inconnu).
-  const zoneKnown = isValidTimeZone(options.timeZone);
-  if (!zoneKnown) warnings.push(parseWarning('INVALID_TIME_ZONE', { timeZone: options.timeZone }));
-  const context: DateContext = {
-    now: options.now,
-    today: civilDay(options.now, zoneKnown ? options.timeZone : 'UTC'),
-    lexicon: LEXICONS[grammarLanguage(options.locale)],
-  };
-  const dates = findDates(tokens, consumed, context, warnings);
+  // 5. Date, dans le jour civil du fuseau injecté (UTC s'il est inconnu) ; aucune en arabe.
+  let dates: FoundDate[] = [];
+  if (language !== 'ar') {
+    const zoneKnown = isValidTimeZone(options.timeZone);
+    if (!zoneKnown) {
+      warnings.push(parseWarning('INVALID_TIME_ZONE', { timeZone: options.timeZone }));
+    }
+    const context: DateContext = {
+      now: options.now,
+      today: civilDay(options.now, zoneKnown ? options.timeZone : 'UTC'),
+      lexicon: LEXICONS[language],
+    };
+    dates = findDates(tokens, consumed, context, warnings);
+  }
   let occurred: ParsedOccurred = { from: options.now.toISOString(), precision: 'exact' };
   let dateExpression: string | undefined;
   if (dates.length) {
