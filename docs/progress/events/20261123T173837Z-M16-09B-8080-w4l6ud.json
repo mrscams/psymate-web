@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-23T17:38:37.198Z",
+  "task": "M16-09B",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Partie B : shared/ui par chemin direct dans les 4 fichiers du graphe initial, bundle initial 999,85 -> 801,62 kB, garde-fou ESLint ; partie A (thème arabe) à suivre après fusion",
+  "notes": "Seuils proposés : avertissement 900 kB, erreur 920 kB",
+  "pr": "https://github.com/mrscams/psymate-web/pull/137",
+  "branch": "M16-09B-bundle-initial",
+  "checkout": "agent-a62c9fa128a85fd4f"
+}
