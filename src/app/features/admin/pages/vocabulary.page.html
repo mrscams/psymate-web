@@ -104,9 +104,15 @@
           <tbody>
             @for (entry of entries(); track key(entry)) {
               <tr [class.disabled]="!entry.active">
-                <td class="mono code">{{ entry.code }}</td>
-                <td class="label">{{ entry.labelFr }}</td>
-                <td>{{ entry.labelEn ?? '—' }}</td>
+                <td class="mono code">
+                  <bdi dir="ltr">{{ entry.code }}</bdi>
+                </td>
+                <td class="label">
+                  <bdi>{{ entry.labelFr }}</bdi>
+                </td>
+                <td>
+                  <bdi>{{ entry.labelEn ?? '—' }}</bdi>
+                </td>
                 <td class="mono">{{ entry.sortOrder }}</td>
                 <td>
                   <span i18n="Utilisation d'une entrée@@admin.vocabulary.usage"
@@ -202,9 +208,15 @@
           <tbody>
             @for (entry of fixedEntries(); track entry.code) {
               <tr>
-                <td class="mono code">{{ entry.code }}</td>
-                <td>{{ entry.labelFr }}</td>
-                <td>{{ entry.labelEn ?? '—' }}</td>
+                <td class="mono code">
+                  <bdi dir="ltr">{{ entry.code }}</bdi>
+                </td>
+                <td>
+                  <bdi>{{ entry.labelFr }}</bdi>
+                </td>
+                <td>
+                  <bdi>{{ entry.labelEn ?? '—' }}</bdi>
+                </td>
               </tr>
             }
           </tbody>

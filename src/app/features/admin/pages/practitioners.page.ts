@@ -29,7 +29,14 @@ import {
 } from '../data/admin.model';
 import { AppealsStore } from '../data/appeals.store';
 import { PractitionerFilters, PractitionersStore } from '../data/practitioners.store';
-import { formatAge, formatDay, professionLabel, statusLabel, statusTone } from '../ui/admin-labels';
+import {
+  formatAge,
+  formatDay,
+  isolated,
+  professionLabel,
+  statusLabel,
+  statusTone,
+} from '../ui/admin-labels';
 import { AppealListComponent } from '../ui/appeal-list.component';
 import { ReasonDialogComponent, ReasonDialogData } from '../ui/reason-dialog.component';
 
@@ -198,8 +205,9 @@ export class PractitionersPage {
   }
 
   protected async suspend(account: AccountItem): Promise<void> {
+    const name = isolated(account.displayName, this.locale);
     const done = await this.openReason({
-      title: $localize`:Titre de la suspension@@admin.suspend.title:Suspendre ${account.displayName}:name: ?`,
+      title: $localize`:Titre de la suspension@@admin.suspend.title:Suspendre ${name}:name: ?`,
       description: $localize`:Effets de la suspension@@admin.suspend.description:Toutes ses sessions sont révoquées, la connexion est bloquée et sa fiche publique est retirée de l'annuaire. Le praticien reçoit le motif par e-mail et peut déposer un recours.`,
       label: $localize`:Champ motif de suspension@@admin.suspend.label:Motif de la suspension`,
       minLength: REASON_MIN_LENGTH,
@@ -210,18 +218,19 @@ export class PractitionersPage {
     });
     if (done) {
       this.toast.success(
-        $localize`:Toast après suspension@@admin.suspend.toast:${account.displayName}:name: suspendu · sessions révoquées, e-mail envoyé`,
+        $localize`:Toast après suspension@@admin.suspend.toast:${name}:name: suspendu · sessions révoquées, e-mail envoyé`,
       );
     }
   }
 
   protected async reactivate(account: AccountItem): Promise<void> {
+    const name = isolated(account.displayName, this.locale);
     const description =
       account.status === 'rejected'
         ? $localize`:Effets d'une réactivation après refus@@admin.reactivate.rejected:Le dossier avait été refusé : le compte revient à « justificatifs à déposer », le praticien doit redéposer ses pièces.`
         : $localize`:Effets d'une réactivation@@admin.reactivate.description:Le compte retrouve le statut qu'il avait avant la suspension. Le praticien est prévenu par e-mail.`;
     const done = await this.openReason({
-      title: $localize`:Titre de la réactivation@@admin.reactivate.title:Réactiver ${account.displayName}:name: ?`,
+      title: $localize`:Titre de la réactivation@@admin.reactivate.title:Réactiver ${name}:name: ?`,
       description,
       label: $localize`:Champ motif de réactivation@@admin.reactivate.label:Motif de la réactivation`,
       minLength: REASON_MIN_LENGTH,
@@ -230,17 +239,18 @@ export class PractitionersPage {
     });
     if (done) {
       this.toast.success(
-        $localize`:Toast après réactivation@@admin.reactivate.toast:${account.displayName}:name: réactivé · e-mail envoyé`,
+        $localize`:Toast après réactivation@@admin.reactivate.toast:${name}:name: réactivé · e-mail envoyé`,
       );
     }
   }
 
   protected async decideAppeal(appeal: Appeal, outcome: AppealOutcome): Promise<void> {
     const accepted = outcome === 'accepted';
+    const name = isolated(appeal.practitionerDisplayName, this.locale);
     const done = await this.openReason({
       title: accepted
-        ? $localize`:Titre de l'acceptation d'un recours@@admin.appeals.acceptTitle:Accepter le recours de ${appeal.practitionerDisplayName}:name: ?`
-        : $localize`:Titre du rejet d'un recours@@admin.appeals.dismissTitle:Écarter le recours de ${appeal.practitionerDisplayName}:name: ?`,
+        ? $localize`:Titre de l'acceptation d'un recours@@admin.appeals.acceptTitle:Accepter le recours de ${name}:name: ?`
+        : $localize`:Titre du rejet d'un recours@@admin.appeals.dismissTitle:Écarter le recours de ${name}:name: ?`,
       description: accepted
         ? $localize`:Effets de l'acceptation d'un recours@@admin.appeals.acceptDescription:Le compte est réactivé (statut d'avant la suspension, ou justificatifs à déposer après un refus). Votre réponse est envoyée par e-mail.`
         : $localize`:Effets du rejet d'un recours@@admin.appeals.dismissDescription:Le compte reste en l'état. Votre réponse est envoyée par e-mail ; le recours est clos.`,

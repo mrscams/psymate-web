@@ -28,7 +28,9 @@ import { DossierDocument } from '../data/admin.model';
   imports: [MatButtonModule, StateComponent],
   template: `
     <div class="toolbar">
-      <span class="file">{{ document()?.title ?? '—' }}</span>
+      <span class="file" [attr.dir]="document() ? 'auto' : null">{{
+        document()?.title ?? '—'
+      }}</span>
       @if (isImage()) {
         <span class="tools">
           <button
@@ -39,7 +41,7 @@ import { DossierDocument } from '../data/admin.model';
           >
             Zoom −
           </button>
-          <span class="mono" aria-live="polite">{{ zoomText() }}</span>
+          <span class="mono" dir="ltr" aria-live="polite">{{ zoomText() }}</span>
           <button
             type="button"
             (click)="zoomBy(0.25)"
