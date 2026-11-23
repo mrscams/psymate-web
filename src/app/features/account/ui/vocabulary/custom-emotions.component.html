@@ -26,6 +26,7 @@
             </label>
             <input
               class="inline-input"
+              dir="auto"
               type="text"
               [id]="'rename-input-' + emotion.code"
               [ngModel]="draft()"
@@ -36,7 +37,7 @@
               [attr.aria-describedby]="rowError() ? 'row-error-' + emotion.code : null"
             />
           } @else {
-            <span class="name">{{ emotion.labelFr }}</span>
+            <span class="name" dir="auto">{{ emotion.labelFr }}</span>
             <span class="badge-perso" i18n="Badge émotion personnalisée@@vocabulary.badge.custom"
               >perso</span
             >

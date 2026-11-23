@@ -76,6 +76,7 @@ let nextEditorId = 0;
                         }}</label>
                         <input
                           class="time"
+                          dir="ltr"
                           type="text"
                           inputmode="numeric"
                           maxlength="5"
@@ -92,6 +93,7 @@ let nextEditorId = 0;
                         }}</label>
                         <input
                           class="time"
+                          dir="ltr"
                           type="text"
                           inputmode="numeric"
                           maxlength="5"
@@ -307,7 +309,7 @@ let nextEditorId = 0;
       stroke-linejoin: round;
     }
     .wd-add svg {
-      margin-right: 6px;
+      margin-inline-end: 6px;
     }
     .wd-foot {
       display: flex;

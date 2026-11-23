@@ -74,4 +74,11 @@ describe('RecoveryCodesComponent', () => {
       vi.unstubAllGlobals();
     }
   });
+
+  it('M16-12 : chaque code en dir="ltr", lu dans l’ordre en arabe', () => {
+    const { el } = render();
+    const codes = [...el.querySelectorAll('ul code')];
+    expect(codes).toHaveLength(10);
+    expect(codes.every((code) => code.getAttribute('dir') === 'ltr')).toBe(true);
+  });
 });

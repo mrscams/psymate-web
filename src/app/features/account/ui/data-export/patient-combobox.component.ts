@@ -30,6 +30,7 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
       <input
         type="text"
         role="combobox"
+        dir="auto"
         autocomplete="off"
         aria-autocomplete="list"
         [id]="inputId"
@@ -62,7 +63,7 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
             (click)="choose(option)"
             (keydown.enter)="choose(option)"
           >
-            <span class="name">{{ option.displayName }}</span>
+            <span class="name" dir="auto">{{ option.displayName }}</span>
             <span class="detail">{{ detail(option) }}</span>
           </li>
         }
@@ -117,8 +118,7 @@ export const PATIENT_SEARCH_DEBOUNCE_MS = 200;
       position: absolute;
       z-index: 2;
       top: calc(100% + 4px);
-      left: 0;
-      right: 0;
+      inset-inline: 0;
       max-height: 280px;
       overflow-y: auto;
       margin: 0;

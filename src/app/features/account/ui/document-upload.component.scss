@@ -127,7 +127,7 @@ select {
 }
 
 .submit {
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .file-name {
@@ -141,6 +141,11 @@ select {
   .mono {
     color: var(--text-primary);
     overflow-wrap: anywhere;
+  }
+
+  // Nom du fichier choisi : des lettres, saisies par le praticien (police d'interface en arabe).
+  .mono.name {
+    font-family: var(--font-mono-text) !important;
   }
 }
 

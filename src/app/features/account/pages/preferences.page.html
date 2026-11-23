@@ -554,7 +554,9 @@
         <dl class="summary">
           <div class="tile">
             <dt i18n="E-mail de connexion@@preferences.security.email">E-mail de connexion</dt>
-            <dd class="value">{{ session.me()?.email }}</dd>
+            <dd class="value">
+              <bdi dir="ltr">{{ session.me()?.email }}</bdi>
+            </dd>
             <dd class="tile-action">
               <a
                 [routerLink]="paths.security"

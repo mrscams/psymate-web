@@ -103,7 +103,7 @@
                   Nom indicatif du fichier exporté (le serveur fixe le nom
                   réel)@@account.data.patient.expectedFile"
                 >Fichier attendu :</span
-              >&ngsp;<span class="mono file">{{ file }}</span
+              >&ngsp;<span class="mono file" dir="ltr">{{ file }}</span
               >&ngsp;<span i18n="Contenu du fichier exporté@@account.data.patient.fileNoteShort"
                 >· séances et entrées en ordre chronologique, texte de la version courante</span
               >
@@ -117,12 +117,26 @@
         }
       }
 
-      <p class="reminder" i18n="Rappel des règles d'export@@account.data.patient.reminder">
-        <strong>Les entrées privées ne sont jamais exportées</strong>, ni les entrées archivées ; un
-        lien vers une entrée non exportée est omis · <strong>thème clair</strong> pour le PDF quel
-        que soit votre réglage · <strong>ordre chronologique</strong> · langue du document : celle
-        de l'interface.
-      </p>
+      @if (exportInFrench) {
+        <p
+          class="reminder"
+          i18n="
+            Rappel des règles d'export, interface en arabe : le document reste en français (API
+            Q102)@@account.data.patient.reminderFrenchDocument"
+        >
+          <strong>Les entrées privées ne sont jamais exportées</strong>, ni les entrées archivées ;
+          un lien vers une entrée non exportée est omis · <strong>thème clair</strong> pour le PDF
+          quel que soit votre réglage · <strong>ordre chronologique</strong> · langue du document :
+          le français, l'export en arabe n'est pas encore proposé.
+        </p>
+      } @else {
+        <p class="reminder" i18n="Rappel des règles d'export@@account.data.patient.reminder">
+          <strong>Les entrées privées ne sont jamais exportées</strong>, ni les entrées archivées ;
+          un lien vers une entrée non exportée est omis · <strong>thème clair</strong> pour le PDF
+          quel que soit votre réglage · <strong>ordre chronologique</strong> · langue du document :
+          celle de l'interface.
+        </p>
+      }
     </section>
 
     <!-- Exporter tout mon compte -->
