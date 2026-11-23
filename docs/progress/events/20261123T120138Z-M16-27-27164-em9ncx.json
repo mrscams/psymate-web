@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T12:01:38.873Z",
+  "task": "M16-27",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Première moitié du dossier patient en arabe : 708 unités (patients, patientShell, patientHeader, sessionBar, subject, overview, timeline, 3 sous-messages ICU), glossaire complété ; seconde moitié (graph, links, entries, entry, capture, search, profile360) à suivre",
+  "pr": "https://github.com/mrscams/psymate-web/pull/119",
+  "branch": "M16-27a-traduction-dossier",
+  "checkout": "agent-a425d5c82a439d295"
+}
