@@ -19,10 +19,17 @@
     @let props = propsFrom(arg);
     @if (props.kind === 'busy') {
       <span class="busy-title">{{ props.busyTitle }}</span>
-      <span class="busy-time mono">{{ props.time }}</span>
+      <span class="busy-time mono"
+        ><span dir="ltr">{{ props.time }}</span></span
+      >
     } @else if (arg.view.type === 'listThirty') {
-      <span class="list-time mono">{{ props.time }}</span>
-      <span class="list-name">{{ props.name }}</span>
+      <!-- Cellules de grille : l'isolement porte sur le texte, la cellule garde le sens de la page. -->
+      <span class="list-time mono"
+        ><span dir="ltr">{{ props.time }}</span></span
+      >
+      <span class="list-name"
+        ><span dir="auto">{{ props.name }}</span></span
+      >
       <span class="list-meta">
         {{ props.modality }}
         @if (props.suffixKind === 'status') {
@@ -35,7 +42,7 @@
       </span>
     } @else if (arg.view.type === 'dayGridMonth') {
       <span class="chip-time mono">{{ props.startTime }}</span>
-      <span class="chip-name">{{ props.name }}</span>
+      <span class="chip-name" dir="auto">{{ props.name }}</span>
       <span class="sr-only"> · {{ props.modality }}</span>
       <!-- Vue Mois : le pictogramme seul, nommé pour le lecteur d'écran. -->
       @if (props.online) {
@@ -46,13 +53,13 @@
       @if (props.online) {
         <span class="online-slot"></span>
       }
-      <span class="name">{{ props.name }}</span>
+      <span class="name" dir="auto">{{ props.name }}</span>
       @if (props.suffix; as suffix) {
         <span class="suffix" [class.status]="props.suffixKind === 'status'"> · {{ suffix }}</span>
       } @else {
         <span class="sr-only"> · {{ props.modality }}</span>
       }
-      <br /><span class="time mono">{{ props.time }}</span>
+      <br /><span class="time mono" dir="ltr">{{ props.time }}</span>
       <!-- Grille : une ligne « Demande en ligne » ; bloc court ou colonne étroite : le globe seul. -->
       @if (props.online) {
         <span class="sr-only">, </span

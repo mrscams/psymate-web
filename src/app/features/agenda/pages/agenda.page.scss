@@ -87,7 +87,7 @@
     cursor: pointer;
 
     & + button {
-      border-left: 1px solid var(--border-subtle);
+      border-inline-start: 1px solid var(--border-subtle);
     }
 
     &:hover {
@@ -132,7 +132,7 @@
     cursor: pointer;
 
     & + button {
-      border-left: 1px solid var(--border-subtle);
+      border-inline-start: 1px solid var(--border-subtle);
     }
 
     &:hover {

@@ -44,12 +44,7 @@ import {
 } from '../panels/new-appointment.panel';
 import { AgendaCalendarComponent, Rescheduled } from '../ui/agenda-calendar.component';
 import { AgendaCalendarsComponent } from '../ui/agenda-calendars.component';
-import {
-  conflictMessage,
-  periodLabel,
-  rangeSegments,
-  sessionCountLabel,
-} from '../ui/agenda-format';
+import { conflictMessage, periodLabel, rangeSegments } from '../ui/agenda-format';
 import { AppointmentDetailComponent, problemText } from '../ui/appointment-detail.component';
 import { MiniMonthComponent } from '../ui/mini-month.component';
 import { OnlineRequestsComponent } from '../ui/online-requests.component';
@@ -211,14 +206,17 @@ export class AgendaPage {
   protected readonly rangeSegments = computed(() =>
     rangeSegments(this.store.view(), this.store.range(), this.locale),
   );
-  /** « · semaine 44 · 14 séances » (vue semaine), « · 14 séances » (jour, mois)… */
-  protected readonly meta = computed(() => {
-    const parts = [periodLabel(this.store.view(), this.store.range())].filter(
-      (part): part is string => part !== null,
-    );
-    if (this.store.data().status !== 'idle')
-      parts.push(sessionCountLabel(this.store.sessionCount()));
-    return parts.map((part) => `· ${part}`).join(' ');
+  /** Le compte des séances s'affiche dès la première lecture de la plage. */
+  protected readonly sessionsShown = computed(() => this.store.data().status !== 'idle');
+  /**
+   * « · semaine 44 · 14 séances » (vue semaine), « · 14 séances » (jour, mois)… : ce qui précède le
+   * compte des séances, que le gabarit écrit au pluriel (ICU, six formes en arabe).
+   */
+  protected readonly metaPrefix = computed(() => {
+    const period = periodLabel(this.store.view(), this.store.range());
+    const parts = period === null ? [] : [`· ${period}`];
+    if (this.sessionsShown()) parts.push('· ');
+    return parts.join(' ');
   });
   protected readonly stepLabels = computed(() => {
     switch (this.store.view()) {
@@ -486,18 +484,30 @@ export class AgendaPage {
     });
   }
 
-  /** « 4 rendez-vous planifiés », « Rendez-vous planifié », « …, 1 chevauchement ». */
+  /**
+   * « 4 rendez-vous planifiés », « Rendez-vous planifié », « …, 1 chevauchement » : un message
+   * entier par cas (création d'un ou de plusieurs rendez-vous, sans, avec un ou plusieurs
+   * chevauchements). Un toast est un texte : pas de pluriel ICU, d'où les messages séparés.
+   */
   private createdMessage(created: CreatedAppointments): string {
     const count = created.appointments.length;
-    const base =
-      count > 1
-        ? $localize`:Toast après une création, plusieurs rendez-vous@@agenda.toast.createdMany:${count}:count: rendez-vous planifiés`
-        : $localize`:Toast après une création, un rendez-vous@@agenda.toast.createdOne:Rendez-vous planifié`;
     const overlaps = new Set(created.conflicts.map((item) => item.appointmentId)).size;
-    if (overlaps === 0) return base;
-    return overlaps > 1
-      ? $localize`:Toast après une création avec chevauchements@@agenda.toast.createdOverlaps:${base}:base:, ${overlaps}:count: chevauchements`
-      : $localize`:Toast après une création avec un chevauchement@@agenda.toast.createdOverlap:${base}:base:, 1 chevauchement`;
+    if (count > 1) {
+      if (overlaps > 1) {
+        return $localize`:Toast après une création de plusieurs rendez-vous avec chevauchements@@agenda.toast.createdManyOverlaps:${count}:count: rendez-vous planifiés, ${overlaps}:overlaps: chevauchements`;
+      }
+      return overlaps === 1
+        ? $localize`:Toast après une création de plusieurs rendez-vous avec un chevauchement@@agenda.toast.createdManyOverlap:${count}:count: rendez-vous planifiés, 1 chevauchement`
+        : $localize`:Toast après une création, plusieurs rendez-vous@@agenda.toast.createdMany:${count}:count: rendez-vous planifiés`;
+    }
+    // Le compte porte sur les rendez-vous existants chevauchés (ConflictDto.appointmentId) : un seul
+    // rendez-vous créé peut en chevaucher plusieurs.
+    if (overlaps > 1) {
+      return $localize`:Toast après une création d'un rendez-vous avec chevauchements@@agenda.toast.createdOneOverlaps:Rendez-vous planifié, ${overlaps}:overlaps: chevauchements`;
+    }
+    return overlaps === 1
+      ? $localize`:Toast après une création d'un rendez-vous avec un chevauchement@@agenda.toast.createdOneOverlap:Rendez-vous planifié, 1 chevauchement`
+      : $localize`:Toast après une création, un rendez-vous@@agenda.toast.createdOne:Rendez-vous planifié`;
   }
 
   private async undoCreate(created: CreatedAppointments): Promise<void> {

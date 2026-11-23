@@ -5,8 +5,9 @@
       ×
     </button>
   </div>
-  @if (countLine(); as line) {
-    <p class="count-line" role="status">{{ line }}</p>
+  @if (count() > 0) {
+    <!-- prettier-ignore -->
+    <p class="count-line" role="status" i18n="Panneau des demandes en ligne, nombre de demandes en attente@@agenda.requests.count">{count(), plural, =1 {1 demande attend votre réponse.} other {{{ count() }} demandes attendent votre réponse.}}</p>
   }
 </div>
 
@@ -26,9 +27,11 @@
       <li>
         <button type="button" class="req" (click)="picked.emit(row.appointment)">
           <span class="when"
-            >{{ row.date }} · <span class="mono">{{ row.time }}</span></span
+            >{{ row.date }} · <span class="mono" dir="ltr">{{ row.time }}</span></span
           >
-          <span class="who">{{ row.who }}</span>
+          <span class="who"
+            ><span dir="auto">{{ row.name }}</span> · {{ row.modality }}</span
+          >
         </button>
       </li>
     }

@@ -637,3 +637,94 @@ describe('AgendaPage', () => {
     });
   });
 });
+
+describe('AgendaPage, textes au pluriel et messages entiers (M16-23)', () => {
+  afterEach(() => {
+    document.querySelectorAll('pm-host').forEach((node) => node.remove());
+  });
+
+  const reset = () => {
+    TestBed.resetTestingModule();
+    document.querySelectorAll('pm-host').forEach((node) => node.remove());
+  };
+
+  it('compte des séances au pluriel ICU : texte rendu identique, caractère pour caractère', async () => {
+    const week = await render('/agenda?view=week&date=2026-10-26');
+    expect(week.el.querySelector('.meta')!.textContent).toBe('· semaine 44 · 14 séances');
+    reset();
+
+    const one = await render('/agenda?view=week&date=2026-10-26', {
+      api: {
+        load: vi.fn((range: AgendaRange) => {
+          const data = weekAgenda(range);
+          return Promise.resolve({ ...data, appointments: data.appointments.slice(0, 1) });
+        }),
+      },
+    });
+    expect(one.el.querySelector('.meta')!.textContent).toBe('· semaine 44 · 1 séance');
+    reset();
+
+    const none = await render('/agenda?view=month&date=2026-10-26', {
+      api: {
+        load: vi.fn((range: AgendaRange) =>
+          Promise.resolve({ ...weekAgenda(range), appointments: [] }),
+        ),
+      },
+    });
+    expect(none.el.querySelector('.meta')!.textContent).toBe('· aucune séance');
+  });
+
+  it('toast de création : un message entier par cas de chevauchement', async () => {
+    const at = (day: number) => new Date(2026, 9, day, 9).toISOString();
+    const conflict = (appointmentId: string) => ({
+      appointmentId,
+      patientDisplayName: 'Théo B.',
+      startsAt: at(27),
+      endsAt: at(27),
+      occurrenceStartsAt: at(27),
+    });
+    const series = (count: number) =>
+      Array.from({ length: count }, (_, index) =>
+        appointmentOf({
+          id: `n-${index + 1}`,
+          seriesId: count > 1 ? 's' : null,
+          startsAt: at(27 + index),
+        }),
+      );
+    // Les conflits désignent des rendez-vous existants chevauchés (ConflictDto.appointmentId),
+    // jamais ceux qu'on crée ; deux conflits sur le même existant comptent pour un.
+    const cases: [CreatedAppointments, string][] = [
+      [{ appointments: series(1), conflicts: [] }, 'Rendez-vous planifié'],
+      [
+        { appointments: series(1), conflicts: [conflict('x-1'), conflict('x-1')] },
+        'Rendez-vous planifié, 1 chevauchement',
+      ],
+      [
+        { appointments: series(1), conflicts: [conflict('x-1'), conflict('x-2')] },
+        'Rendez-vous planifié, 2 chevauchements',
+      ],
+      [{ appointments: series(2), conflicts: [] }, '2 rendez-vous planifiés'],
+      [
+        { appointments: series(2), conflicts: [conflict('x-1'), conflict('x-1')] },
+        '2 rendez-vous planifiés, 1 chevauchement',
+      ],
+      [
+        {
+          appointments: series(3),
+          conflicts: [conflict('x-1'), conflict('x-2'), conflict('x-2')],
+        },
+        '3 rendez-vous planifiés, 2 chevauchements',
+      ],
+    ];
+    for (const [created, message] of cases) {
+      const { fixture, el, toasts } = await render('/agenda?view=week&date=2026-10-26', {
+        api: { get: vi.fn().mockResolvedValue(created.appointments[0]) },
+        panelResult: { created },
+      });
+      el.querySelector<HTMLButtonElement>('.toolbar .tb-btn.primary')!.click();
+      await settle(fixture);
+      expect(toasts.toasts()[0].message).toBe(message);
+      reset();
+    }
+  });
+});

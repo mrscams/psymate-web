@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 
+import { SubjectLabel } from '../../../core/i18n';
 import { initials, uniqueId } from '../../../shared/util';
 import { PatientOption } from '../data/agenda.model';
 import { PatientSearchStore } from '../data/patient-search.store';
@@ -48,15 +49,31 @@ export class PatientPickerComponent {
    * recherche, pour que le piège de focus du panneau les prenne à l'ouverture.
    */
   readonly focusInitial = input(false);
+  /**
+   * Désignation de la personne suivie : le panneau « Nouveau rendez-vous » passe celle des
+   * préférences (il la montre déjà ailleurs) ; « Rattacher à un patient » garde « patient ».
+   */
+  readonly subject = input<SubjectLabel>('patient');
   readonly picked = output<PatientOption>();
 
   protected readonly store = inject(PatientSearchStore);
   private readonly searchInput = viewChild<ElementRef<HTMLInputElement>>('search');
 
   protected readonly listboxId = uniqueId('agenda-patients');
-  protected readonly searchPlaceholder = $localize`:Champ de recherche d'un patient@@agenda.new.searchPlaceholder:Rechercher un patient…`;
-  protected readonly otherPlaceholder = $localize`:Champ de recherche d'un autre patient@@agenda.new.searchOther:Ou rechercher un autre patient…`;
-  protected readonly noResults = $localize`:Recherche de patient sans résultat@@agenda.new.noResults:Aucun patient actif ne correspond.`;
+  /** Textes qui nomment la personne suivie : un message entier par désignation. */
+  protected readonly texts = computed(() =>
+    this.subject() === 'client'
+      ? {
+          search: $localize`:Champ de recherche d'un client (coach)@@agenda.new.searchPlaceholderClient:Rechercher un client…`,
+          other: $localize`:Champ de recherche d'un autre client (coach)@@agenda.new.searchOtherClient:Ou rechercher un autre client…`,
+          none: $localize`:Recherche de client sans résultat (coach)@@agenda.new.noResultsClient:Aucun client actif ne correspond.`,
+        }
+      : {
+          search: $localize`:Champ de recherche d'un patient@@agenda.new.searchPlaceholder:Rechercher un patient…`,
+          other: $localize`:Champ de recherche d'un autre patient@@agenda.new.searchOther:Ou rechercher un autre patient…`,
+          none: $localize`:Recherche de patient sans résultat@@agenda.new.noResults:Aucun patient actif ne correspond.`,
+        },
+  );
   protected readonly searching = $localize`:Recherche de patient en cours@@agenda.new.searching:Recherche…`;
   protected readonly searchFailed = $localize`:Recherche de patient en erreur@@agenda.new.searchFailed:La recherche n'a pas abouti. Réessayez.`;
 
