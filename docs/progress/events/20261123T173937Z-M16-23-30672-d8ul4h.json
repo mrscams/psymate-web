@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T17:39:37.407Z",
+  "task": "M16-23",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "features/agenda de droite à gauche : 21 déclarations logiques, FullCalendar en arabe (rtl, lundi à droite, 24 h, chiffres latins), formats par formatLocale, dir auto et ltr, messages entiers par désignation, pluriels ICU, e2e arabe",
+  "pr": "138",
+  "branch": "M16-23-agenda-rtl",
+  "checkout": "agent-a6c157e8db41ee82e"
+}
