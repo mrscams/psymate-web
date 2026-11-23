@@ -1,17 +1,17 @@
 // Surlignage des correspondances du filtre (fiche 01 : --search-highlight).
 
-import { normalizeText } from '../data/patient.model';
+import { searchKey } from '../data/patient.model';
 
 /** Découpe un nom en morceaux surlignés ou non selon la recherche (accents et casse ignorés). */
 export function highlightParts(text: string, query: string): { text: string; match: boolean }[] {
-  const needle = normalizeText(query.trim());
+  const needle = searchKey(query.trim());
   if (!needle) return [{ text, match: false }];
   // Normalise caractère par caractère pour garder la correspondance avec le texte d'origine.
   const chars = [...text];
   const normalized: string[] = [];
   const origin: number[] = [];
   chars.forEach((char, index) => {
-    for (const piece of normalizeText(char)) {
+    for (const piece of searchKey(char)) {
       normalized.push(piece);
       origin.push(index);
     }

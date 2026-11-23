@@ -19382,7 +19382,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.shownOneClient" datatype="html">
         <source><x id="count" equiv-text="count"/> client affiché</source>
-        <target state="translated">عدد العملاء المعروضين: <x id="count" equiv-text="count"/></target>
+        <target state="translated">العملاء المعروضون: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">171</context>
@@ -19391,7 +19391,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.shownOnePatient" datatype="html">
         <source><x id="count" equiv-text="count"/> patient affiché</source>
-        <target state="translated">عدد المرضى المعروضين: <x id="count" equiv-text="count"/></target>
+        <target state="translated">المرضى المعروضون: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">172</context>
@@ -20348,7 +20348,7 @@
       </trans-unit>
       <trans-unit id="patients.card.sinceOne" datatype="html">
         <source><x id="count" equiv-text="count"/> entrée</source>
-        <target state="translated"><x id="count" equiv-text="count"/> مُدخَل</target>
+        <target state="translated">مُدخَل واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">209</context>
@@ -20357,7 +20357,7 @@
       </trans-unit>
       <trans-unit id="patients.card.sinceMany" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées</source>
-        <target state="translated"><x id="count" equiv-text="count"/> مُدخَلات</target>
+        <target state="translated">عدد المُدخَلات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">210</context>

@@ -255,18 +255,18 @@ export async function withoutIntakeOpenSession(
 /**
  * Projection vue d'ensemble → résumé d'une ligne. Les libellés d'émotion suivent la langue du
  * bundle (Q78, `catalogLabel`) : la série porte le français et l'anglais, pas encore l'arabe
- * (contrat 0.16.0, M16-25), d'où le repli sur le français en arabe ; le code si l'API ne donne aucun
- * libellé.
+ * (contrat 0.16.0, M16-25), d'où le repli sur le français en arabe ; sans libellé dans la série,
+ * le libellé de la dominante (top.label), puis le code.
  */
 export function toActivity(dto: OverviewDto, locale: AppLocale = 'fr'): PatientActivity {
   const series = dto.feelings?.series ?? [];
   const labels = new Map<string, string>();
   for (const entry of series) {
     if (!entry.emotionCode) continue;
-    const label =
-      catalogLabel({ labelFr: entry.label ?? '', labelEn: entry.labelEn }, locale) ||
-      entry.emotionCode;
-    labels.set(entry.emotionCode, label);
+    // Sans libellé dans la série, pas d'entrée : chaque usage garde son propre repli (code pour le
+    // ressenti le plus fort, top.label puis code pour la dominante), comme avant M16-14.
+    const label = catalogLabel({ labelFr: entry.label ?? '', labelEn: entry.labelEn }, locale);
+    if (label) labels.set(entry.emotionCode, label);
   }
   const points = dto.feelings?.points ?? [];
   const intensityOf = new Map<string, { code: string; intensity: number }>();

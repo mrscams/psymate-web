@@ -54,19 +54,26 @@ describe('patients en arabe (M16-14)', () => {
     expect(many.cardLine).toBe('20+ entrées');
   });
 
-  it('émotion dominante : flèche dans un message, français inchangé', () => {
-    const view = rowView(
-      {
-        patient: patient(),
-        cell: loaded(activity()),
-        activity: activity({ dominant: { label: 'Anxiété', delta: 2 } }),
-      },
-      '',
-      'fr',
-      NOW,
-    );
-    expect(view.dominant?.text).toBe('anxiété ↑');
-  });
+  it.each([
+    [2, 'anxiété ↑', 'anxiété en hausse'],
+    [-1, 'anxiété ↓', 'anxiété en baisse'],
+    [0, 'anxiété =', 'anxiété stable'],
+  ])(
+    'émotion dominante (delta %d) : « %s », un message par cas, français inchangé',
+    (delta, text, spoken) => {
+      const view = rowView(
+        {
+          patient: patient(),
+          cell: loaded(activity()),
+          activity: activity({ dominant: { label: 'Anxiété', delta } }),
+        },
+        '',
+        'fr',
+        NOW,
+      );
+      expect(view.dominant).toEqual({ text, spoken });
+    },
+  );
 
   it.each(['ar', ARABIC_FORMAT_LOCALE])(
     'formats de la ligne en %s : chiffres latins, mois en arabe, 24 h',

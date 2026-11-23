@@ -5,6 +5,7 @@ import {
   emptyForm,
   normalizeText,
   PatientFormValue,
+  searchKey,
   toCreateInput,
   toFormValue,
   versionDiffs,
@@ -179,7 +180,7 @@ describe('patient.model', () => {
     expect(highlightParts(text, query)).toEqual(expected);
   });
 
-  describe('normalizeText en arabe (M16-14)', () => {
+  describe('searchKey : recherche locale en arabe (M16-14)', () => {
     it.each([
       ['أحمد', 'احمد'],
       ['إيمان', 'ايمان'],
@@ -189,19 +190,26 @@ describe('patient.model', () => {
       ['ليلى', 'ليلي'],
       ['مـحـمـد', 'محمد'],
       ['أَحْمَد', 'احمد'],
-    ])('normalizeText(%s) = %s', (input, expected) => {
-      expect(normalizeText(input)).toBe(expected);
+    ])('searchKey(%s) = %s', (input, expected) => {
+      expect(searchKey(input)).toBe(expected);
     });
 
     it('« احمد » trouve « أحمد », « فاطمه » trouve « فاطمة », « ليلي » trouve « ليلى »', () => {
-      expect(normalizeText('أحمد بن علي')).toContain(normalizeText('احمد'));
-      expect(normalizeText('فاطمة الزهراء')).toContain(normalizeText('فاطمه'));
-      expect(normalizeText('ليلى')).toContain(normalizeText('ليلي'));
+      expect(searchKey('أحمد بن علي')).toContain(searchKey('احمد'));
+      expect(searchKey('فاطمة الزهراء')).toContain(searchKey('فاطمه'));
+      expect(searchKey('ليلى')).toContain(searchKey('ليلي'));
     });
 
-    it('un texte latin ne change pas', () => {
-      expect(normalizeText('  Éloïse   Ç. ')).toBe(' eloise c. ');
-      expect(normalizeText('Zoë-Anne DUPONT')).toBe('zoe-anne dupont');
+    it('un texte latin : même clé que normalizeText', () => {
+      for (const text of ['  Éloïse   Ç. ', 'Zoë-Anne DUPONT', 'Marié']) {
+        expect(searchKey(text)).toBe(normalizeText(text));
+      }
+    });
+
+    it('identité des tags (normalizeText) : aucun repli arabe, « على » et « علي » restent distincts', () => {
+      expect(normalizeText('على')).not.toBe(normalizeText('علي'));
+      expect(normalizeText('فاطمة')).not.toBe(normalizeText('فاطمه'));
+      expect(normalizeText('مـحـمـد')).not.toBe(normalizeText('محمد'));
     });
 
     it('surligne le nom arabe d’origine, voyelles brèves et tatweel compris', () => {
