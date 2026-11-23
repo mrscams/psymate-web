@@ -22449,14 +22449,23 @@
         </context-group>
         <note priority="1" from="description">Titre du menu des rubriques</note>
       </trans-unit>
-      <trans-unit id="profile360.menu.item" datatype="html">
-        <source><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></source>
-        <target state="translated"><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/></target>
+      <trans-unit id="profile360.menu.itemOne" datatype="html">
+        <source><x id="label" equiv-text="label"/> 1 information</source>
+        <target state="translated"><x id="label" equiv-text="label"/> 1 (معلومة واحدة)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">78</context>
         </context-group>
-        <note priority="1" from="description">Nom lu d&apos;une rubrique du menu (libellé, nombre d&apos;informations)</note>
+        <note priority="1" from="description">Nom lu d&apos;une rubrique du menu, une information ; doit commencer par le libellé puis le nombre, comme le texte visible</note>
+      </trans-unit>
+      <trans-unit id="profile360.menu.itemMany" datatype="html">
+        <source><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/> informations</source>
+        <target state="translated"><x id="label" equiv-text="label"/> <x id="count" equiv-text="count"/> (عدد المعلومات)</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/profile360/ui/profile-menu.component.ts</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <note priority="1" from="description">Nom lu d&apos;une rubrique du menu, 0 ou plusieurs informations ; doit commencer par le libellé puis le nombre, comme le texte visible</note>
       </trans-unit>
       <trans-unit id="profile360.rubric.empty" datatype="html">
         <source>Rien dans cette rubrique pour l&apos;instant</source>

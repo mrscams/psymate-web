@@ -133,6 +133,13 @@ describe('Profile360Page', () => {
     ]);
     expect(links[1].getAttribute('aria-label')).toBe('Famille et entourage 2 informations');
     expect(links[3].getAttribute('aria-label')).toBe('Valeurs et projets 1 information');
+    // Le nom lu commence par le texte visible, libellé puis nombre (WCAG 2.5.3, vérifié par axe en e2e).
+    for (const link of links) {
+      const visible = [link.querySelector('.n'), link.querySelector('.c')]
+        .map((part) => part?.textContent?.trim())
+        .join(' ');
+      expect(link.getAttribute('aria-label')?.startsWith(visible)).toBe(true);
+    }
     expect(links[1].getAttribute('href')).toBe('/patients/p-1/profile?rubrique=family');
   });
 
