@@ -192,6 +192,7 @@
       </trans-unit>
       <trans-unit id="account.verification.pageTitle" datatype="html">
         <source>Dossier professionnel · PsyMate</source>
+        <target state="translated">الملف المهني · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">18</context>
@@ -232,6 +233,7 @@
       </trans-unit>
       <trans-unit id="account.security.pageTitle" datatype="html">
         <source>Compte et sécurité · PsyMate</source>
+        <target state="translated">الحساب والأمان · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">43</context>
@@ -240,6 +242,7 @@
       </trans-unit>
       <trans-unit id="account.data.pageTitle" datatype="html">
         <source>Données et export · PsyMate</source>
+        <target state="translated">البيانات والتصدير · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/account.routes.ts</context>
           <context context-type="linenumber">50</context>
@@ -248,6 +251,7 @@
       </trans-unit>
       <trans-unit id="account.data.title" datatype="html">
         <source>Données et export</source>
+        <target state="translated">البيانات والتصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">10,11</context>
@@ -256,6 +260,7 @@
       </trans-unit>
       <trans-unit id="account.data.intro" datatype="html">
         <source> Récupérez vos dossiers dans des formats ouverts. Un export ne modifie et n&apos;efface rien : vos données restent dans PsyMate. </source>
+        <target state="translated"> استرجاع ملفاتك بصيغ مفتوحة. التصدير لا يعدّل شيئًا ولا يمحو شيئًا: تبقى بياناتك في PsyMate. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">12,17</context>
@@ -264,6 +269,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.title" datatype="html">
         <source> Exporter un dossier </source>
+        <target state="translated"> تصدير ملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">21,23</context>
@@ -272,6 +278,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.help" datatype="html">
         <source> Un seul dossier, téléchargé immédiatement. Le même export est disponible depuis la fiche de chaque dossier. </source>
+        <target state="translated"> ملف واحد يُنزَّل فورًا. التصدير نفسه متاح من بطاقة كل ملف. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">24,29</context>
@@ -280,6 +287,7 @@
       </trans-unit>
       <trans-unit id="account.data.format" datatype="html">
         <source>Format</source>
+        <target state="translated">الصيغة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">62,64</context>
@@ -288,6 +296,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.searchError" datatype="html">
         <source> La recherche n&apos;a pas abouti : modifiez le texte pour réessayer. </source>
+        <target state="translated"> لم يكتمل البحث: يُرجى تعديل النص لإعادة المحاولة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">83,87</context>
@@ -296,6 +305,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.export" datatype="html">
         <source> Exporter </source>
+        <target state="translated"> تصدير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">96,98</context>
@@ -304,6 +314,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.expectedFile" datatype="html">
         <source>Fichier attendu :</source>
+        <target state="translated">الملف المتوقَّع:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">105,107</context>
@@ -313,6 +324,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.fileNoteShort" datatype="html">
         <source>· séances et entrées en ordre chronologique, texte de la version courante</source>
+        <target state="translated">· الجلسات والمُدخَلات حسب التسلسل الزمني، بنصّ النسخة الحالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">108,112</context>
@@ -321,6 +333,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.reminder" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Les entrées privées ne sont jamais exportées<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ni les entrées archivées ; un lien vers une entrée non exportée est omis · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>thème clair<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> pour le PDF quel que soit votre réglage · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>ordre chronologique<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · langue du document : celle de l&apos;interface. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>المُدخَلات الخاصة لا تُصدَّر أبدًا<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>، ولا المُدخَلات المؤرشفة؛ ويُحذف أي رابط نحو مُدخَل غير مُصدَّر · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>المظهر الفاتح<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> لملف PDF أيًّا كان الإعداد · <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>حسب التسلسل الزمني<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> · لغة المستند: لغة الواجهة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">121,126</context>
@@ -329,6 +342,7 @@
       </trans-unit>
       <trans-unit id="account.data.account.title" datatype="html">
         <source> Exporter tout mon compte </source>
+        <target state="translated"> تصدير حسابي بالكامل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">132,134</context>
@@ -337,6 +351,7 @@
       </trans-unit>
       <trans-unit id="account.data.account.help" datatype="html">
         <source> Une archive complète, préparée en arrière-plan. Vous pouvez quitter la page : l&apos;état de l&apos;export est repris à votre retour. </source>
+        <target state="translated"> أرشيف كامل يُحضَّر في الخلفية. يمكن مغادرة الصفحة: تُستعاد حالة التصدير عند العودة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">135,140</context>
@@ -345,6 +360,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.content.title" datatype="html">
         <source>Archive zip</source>
+        <target state="translated">أرشيف مضغوط (zip)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">141,142</context>
@@ -353,6 +369,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.content.body" datatype="html">
         <source>Pour chaque dossier, le PDF et le Markdown (comme l&apos;export individuel), plus <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>, la liste de vos dossiers.</source>
+        <target state="translated">لكل ملف، ملف PDF وملف Markdown (كما في التصدير الفردي)، إضافة إلى <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/>patients.md<x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>، وهو قائمة ملفاتك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">143,145</context>
@@ -361,6 +378,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.link.title" datatype="html">
         <source>Lien valable 7 jours</source>
+        <target state="translated">رابط صالح لمدة 7 أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">149,151</context>
@@ -369,6 +387,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.link.body" datatype="html">
         <source>Après l&apos;échéance, le fichier est purgé et le lien répond « expiré ». Il suffit de relancer un export.</source>
+        <target state="translated">بعد انقضاء المدة، يُحذف الملف ويُظهر الرابط « منتهي الصلاحية ». يكفي إعادة إطلاق التصدير.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">152,157</context>
@@ -377,6 +396,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.nothing.title" datatype="html">
         <source>Rien n&apos;est effacé</source>
+        <target state="translated">لا يُمحى شيء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">158,160</context>
@@ -385,6 +405,7 @@
       </trans-unit>
       <trans-unit id="account.data.tile.nothing.body" datatype="html">
         <source>Exporter ne modifie ni ne supprime aucune donnée. Les entrées privées ne font pas partie de l&apos;archive.</source>
+        <target state="translated">التصدير لا يعدّل أي بيانات ولا يحذفها. المُدخَلات الخاصة ليست جزءًا من الأرشيف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">161,166</context>
@@ -393,6 +414,7 @@
       </trans-unit>
       <trans-unit id="account.data.account.prepare" datatype="html">
         <source> Préparer l&apos;export </source>
+        <target state="translated"> تحضير التصدير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">176,179</context>
@@ -401,6 +423,7 @@
       </trans-unit>
       <trans-unit id="account.data.account.pendingNote" datatype="html">
         <source>Un seul export à la fois : un export est en préparation. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <target state="translated">تصدير واحد في كل مرة: يجري تحضير تصدير حاليًا. يُعاد تفعيل الزر بمجرد انتهائه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">183,188</context>
@@ -409,6 +432,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.title" datatype="html">
         <source> Dernier export </source>
+        <target state="translated"> آخر تصدير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">200,202</context>
@@ -417,6 +441,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.patientNote" datatype="html">
         <source> Les exports d&apos;un seul dossier sont téléchargés immédiatement : ils ne sont pas conservés et n&apos;apparaissent pas ici. </source>
+        <target state="translated"> صادرات الملف الواحد تُنزَّل فورًا: لا تُحفظ ولا تظهر هنا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">235,241</context>
@@ -425,6 +450,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.title" datatype="html">
         <source>Vos données</source>
+        <target state="translated">بياناتك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">242,245</context>
@@ -433,6 +459,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.hosting.title" datatype="html">
         <source>Hébergement</source>
+        <target state="translated">الاستضافة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">245,246</context>
@@ -441,6 +468,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.hosting.body" datatype="html">
         <source> Données hébergées en France, chiffrées au repos. Les archives d&apos;export le sont aussi, jusqu&apos;à leur purge. </source>
+        <target state="translated"> بيانات مستضافة في فرنسا، مشفّرة أثناء التخزين. وكذلك أرشيفات التصدير، إلى حين حذفها. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">247,252</context>
@@ -449,6 +477,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.journal.title" datatype="html">
         <source>Journal des accès</source>
+        <target state="translated">سجلّ الوصول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">252,253</context>
@@ -457,6 +486,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.journal.body" datatype="html">
         <source> Chaque export et chaque téléchargement sont consignés avec la date et l&apos;appareil. </source>
+        <target state="translated"> يُسجَّل كل تصدير وكل تنزيل مع التاريخ والجهاز. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">254,258</context>
@@ -465,6 +495,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.nothing.title" datatype="html">
         <source> Rien n&apos;est effacé </source>
+        <target state="translated"> لا يُمحى شيء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">259,262</context>
@@ -473,6 +504,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.nothing.body" datatype="html">
         <source>Exporter ne supprime rien ; aucune donnée clinique n&apos;est jamais supprimée physiquement.</source>
+        <target state="translated">التصدير لا يحذف شيئًا؛ ولا تُحذف أي بيانات سريرية حذفًا فعليًا أبدًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">263,267</context>
@@ -481,6 +513,7 @@
       </trans-unit>
       <trans-unit id="account.data.yours.howItWorks" datatype="html">
         <source>Comment ça marche</source>
+        <target state="translated">كيف يعمل PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.html</context>
           <context context-type="linenumber">269,274</context>
@@ -489,6 +522,7 @@
       </trans-unit>
       <trans-unit id="account.data.format.pdf" datatype="html">
         <source>PDF</source>
+        <target state="translated">PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">45</context>
@@ -497,6 +531,7 @@
       </trans-unit>
       <trans-unit id="account.data.format.md" datatype="html">
         <source>Markdown</source>
+        <target state="translated">Markdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">46</context>
@@ -505,6 +540,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.hint" datatype="html">
         <source>Tapez un nom ; les dossiers archivés sont en gris.</source>
+        <target state="translated">يُرجى كتابة اسم؛ الملفات المؤرشفة باللون الرمادي.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">94</context>
@@ -513,6 +549,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.chooseFirst" datatype="html">
         <source>Choisissez un <x id="subject" equiv-text="subject"/> pour exporter.</source>
+        <target state="translated">يُرجى اختيار <x id="subject" equiv-text="subject"/> للتصدير.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">98</context>
@@ -681,6 +718,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.emptyTitle" datatype="html">
         <source>Aucun dossier à exporter</source>
+        <target state="translated">لا يوجد ملف للتصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">119</context>
@@ -689,6 +727,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.emptyMessage" datatype="html">
         <source>Les dossiers que vous créez apparaîtront ici.</source>
+        <target state="translated">ستظهر هنا الملفات المُنشأة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">120</context>
@@ -697,6 +736,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.errorTitle" datatype="html">
         <source>Impossible de charger vos dossiers</source>
+        <target state="translated">تعذّر تحميل ملفاتك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">121</context>
@@ -705,6 +745,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.downloadInvalid" datatype="html">
         <source>Le lien de téléchargement n&apos;était plus valide : il vient d&apos;être relu. Réessayez.</source>
+        <target state="translated">لم يعد رابط التنزيل صالحًا: أُعيدت قراءته للتو. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">139</context>
@@ -713,6 +754,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.downloadError" datatype="html">
         <source>Téléchargement impossible pour le moment. Le lien reste valable : réessayez dans un instant.</source>
+        <target state="translated">يتعذّر التنزيل حاليًا. يبقى الرابط صالحًا: يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">140</context>
@@ -721,6 +763,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.elsewhereTitle" datatype="html">
         <source>Un export est en préparation ailleurs</source>
+        <target state="translated">يجري تحضير تصدير في مكان آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">152</context>
@@ -729,6 +772,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.emptyTitle" datatype="html">
         <source>Aucun export de compte en cours</source>
+        <target state="translated">لا يوجد تصدير للحساب قيد التنفيذ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">153</context>
@@ -737,6 +781,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.elsewhereMessage" datatype="html">
         <source>Il a été lancé depuis un autre appareil ou une autre session : son état et son lien s&apos;affichent là où il a été lancé.</source>
+        <target state="translated">أُطلق من جهاز آخر أو من جلسة أخرى: تظهر حالته ورابطه حيث أُطلق.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">157</context>
@@ -745,6 +790,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.emptyMessage" datatype="html">
         <source>Le dernier export lancé depuis ce navigateur s&apos;affichera ici, avec son lien de téléchargement.</source>
+        <target state="translated">سيظهر هنا آخر تصدير أُطلق من هذا المتصفح، مع رابط التنزيل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">158</context>
@@ -753,6 +799,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.errorTitle" datatype="html">
         <source>Impossible de lire l&apos;état de l&apos;export</source>
+        <target state="translated">تتعذّر قراءة حالة التصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">160</context>
@@ -761,6 +808,7 @@
       </trans-unit>
       <trans-unit id="account.data.dialog.title" datatype="html">
         <source>Préparer l&apos;export du compte</source>
+        <target state="translated">تحضير تصدير الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">222</context>
@@ -769,6 +817,7 @@
       </trans-unit>
       <trans-unit id="account.data.dialog.body" datatype="html">
         <source>L&apos;archive zip contient patients.md, la liste de vos dossiers, puis le PDF et le Markdown de chaque dossier ; les entrées privées et archivées n&apos;en font pas partie. Elle est préparée en arrière-plan et son lien de téléchargement est valable 7 jours. Rien n&apos;est modifié ni supprimé dans vos dossiers.</source>
+        <target state="translated">يتضمّن الأرشيف المضغوط patients.md، وهو قائمة ملفاتك، ثم ملف PDF وملف Markdown لكل ملف؛ ولا تدخل فيه المُدخَلات الخاصة والمؤرشفة. يُحضَّر في الخلفية ويبقى رابط تنزيله صالحًا لمدة 7 أيام. لا يُعدَّل شيء ولا يُحذف شيء في ملفاتك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">223</context>
@@ -777,6 +826,7 @@
       </trans-unit>
       <trans-unit id="account.data.dialog.confirm" datatype="html">
         <source>Lancer l&apos;export</source>
+        <target state="translated">إطلاق التصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">224</context>
@@ -785,6 +835,7 @@
       </trans-unit>
       <trans-unit id="account.data.dialog.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">225</context>
@@ -793,6 +844,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.error.offline" datatype="html">
         <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <target state="translated">انقطع الاتصال: يُرجى إعادة المحاولة عند عودة الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">257</context>
@@ -801,6 +853,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.error.forbidden" datatype="html">
         <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <target state="translated">لا يمكن الوصول إلى هذا الملف من حسابك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">259</context>
@@ -809,6 +862,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.error.notFound" datatype="html">
         <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <target state="translated">هذا الملف غير موجود أو لم يعد موجودًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">261</context>
@@ -817,6 +871,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.error.rateLimited" datatype="html">
         <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <target state="translated">طلبات متقاربة كثيرة جدًا: يُرجى إعادة المحاولة بعد لحظات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">263</context>
@@ -825,6 +880,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.error.failed" datatype="html">
         <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">فشل إنشاء الملف. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">265</context>
@@ -833,6 +889,7 @@
       </trans-unit>
       <trans-unit id="account.data.launch.inProgressKnown" datatype="html">
         <source>Un export est déjà en cours : il est affiché ci-dessous. Le bouton se réactive dès qu&apos;il est terminé.</source>
+        <target state="translated">يوجد تصدير قيد التنفيذ بالفعل: وهو معروض أدناه. يُعاد تفعيل الزر بمجرد انتهائه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">274</context>
@@ -841,6 +898,7 @@
       </trans-unit>
       <trans-unit id="account.data.launch.inProgress" datatype="html">
         <source>Un export de votre compte est déjà en préparation, lancé depuis un autre appareil ou une autre session. Vous pourrez relancer un export ici dans un instant.</source>
+        <target state="translated">يجري بالفعل تحضير تصدير لحسابك، أُطلق من جهاز آخر أو من جلسة أخرى. سيمكن إطلاق تصدير جديد من هنا بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">275</context>
@@ -849,6 +907,7 @@
       </trans-unit>
       <trans-unit id="account.data.launch.error" datatype="html">
         <source>Export impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">يتعذّر التصدير حاليًا. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">277</context>
@@ -1381,6 +1440,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.errorTitle" datatype="html">
         <source>Impossible de charger vos sessions</source>
+        <target state="translated">تعذّر تحميل جلساتك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
           <context context-type="linenumber">117</context>
@@ -1393,6 +1453,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/preferences.page.ts</context>
           <context context-type="linenumber">119</context>
@@ -2061,6 +2122,7 @@
       </trans-unit>
       <trans-unit id="account.security.title" datatype="html">
         <source>Compte et sécurité</source>
+        <target state="translated">الحساب والأمان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">10,11</context>
@@ -2069,6 +2131,7 @@
       </trans-unit>
       <trans-unit id="account.security.intro" datatype="html">
         <source> Identifiants, double authentification et appareils connectés. Chaque opération sensible est consignée dans votre journal de sécurité. </source>
+        <target state="translated"> بيانات الدخول، والمصادقة الثنائية، والأجهزة المتّصلة. تُسجَّل كل عملية حسّاسة في سجلّ الأمان. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">12,17</context>
@@ -2077,6 +2140,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.card" datatype="html">
         <source> E-mail de connexion </source>
+        <target state="translated"> البريد الإلكتروني لتسجيل الدخول </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">20,23</context>
@@ -2085,6 +2149,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.current" datatype="html">
         <source>Adresse actuelle</source>
+        <target state="translated">العنوان الحالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">25,27</context>
@@ -2093,6 +2158,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.help" datatype="html">
         <source>Sert à la connexion et aux notifications.</source>
+        <target state="translated">يُستخدم لتسجيل الدخول وللإشعارات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">28,32</context>
@@ -2101,6 +2167,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.confirmed" datatype="html">
         <source>Confirmée</source>
+        <target state="translated">مؤكَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">37,41</context>
@@ -2109,6 +2176,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.edit" datatype="html">
         <source> Modifier </source>
+        <target state="translated"> تعديل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">48,51</context>
@@ -2117,6 +2185,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.card" datatype="html">
         <source> Mot de passe </source>
+        <target state="translated"> كلمة المرور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">58,61</context>
@@ -2125,6 +2194,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.label" datatype="html">
         <source>Mot de passe</source>
+        <target state="translated">كلمة المرور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">63,65</context>
@@ -2133,6 +2203,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.help" datatype="html">
         <source>Au moins 12 caractères, majuscules et minuscules, pas un mot de passe courant, ni votre nom ni votre e-mail.</source>
+        <target state="translated">12 حرفًا على الأقل، أحرف كبيرة وصغيرة، وألّا تكون كلمة مرور شائعة، ولا الاسم ولا البريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">66,70</context>
@@ -2141,6 +2212,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.masked" datatype="html">
         <source>Mot de passe enregistré, jamais affiché.</source>
+        <target state="translated">كلمة المرور محفوظة، ولا تُعرض أبدًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">75,80</context>
@@ -2149,6 +2221,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.edit" datatype="html">
         <source> Modifier </source>
+        <target state="translated"> تعديل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">85,90</context>
@@ -2157,6 +2230,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.note" datatype="html">
         <source> Le changement demande votre mot de passe actuel et, si elle est active, un code de double authentification, puis déconnecte tous vos appareils. </source>
+        <target state="translated"> يتطلّب التغيير كلمة المرور الحالية، ورمز المصادقة الثنائية إن كانت مفعّلة، ثم يُسجَّل الخروج من جميع أجهزتك. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">93,99</context>
@@ -2165,6 +2239,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.card" datatype="html">
         <source> Double authentification </source>
+        <target state="translated"> المصادقة الثنائية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">101,105</context>
@@ -2173,6 +2248,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.state" datatype="html">
         <source>État</source>
+        <target state="translated">الحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">105,106</context>
@@ -2181,6 +2257,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.help" datatype="html">
         <source>Un code à 6 chiffres est demandé à chaque connexion.</source>
+        <target state="translated">يُطلب رمز من 6 أرقام عند كل تسجيل دخول.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">107,110</context>
@@ -2189,6 +2266,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.on" datatype="html">
         <source>Activée</source>
+        <target state="translated">مفعّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">113,115</context>
@@ -2197,6 +2275,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.method" datatype="html">
         <source>Application d&apos;authentification</source>
+        <target state="translated">تطبيق المصادقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">116,120</context>
@@ -2205,6 +2284,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.off" datatype="html">
         <source>Non activée</source>
+        <target state="translated">غير مفعّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">122,124</context>
@@ -2213,6 +2293,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.recommended" datatype="html">
         <source>Recommandée pour tout compte contenant des données cliniques.</source>
+        <target state="translated">مستحسنة لأي حساب يتضمّن بيانات سريرية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">125,129</context>
@@ -2221,6 +2302,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.disable" datatype="html">
         <source> Désactiver </source>
+        <target state="translated"> تعطيل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">139,142</context>
@@ -2229,6 +2311,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.enable" datatype="html">
         <source> Activer </source>
+        <target state="translated"> تفعيل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">149,152</context>
@@ -2237,6 +2320,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.label" datatype="html">
         <source>Codes de secours</source>
+        <target state="translated">رموز الاسترداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">158,160</context>
@@ -2245,6 +2329,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.help" datatype="html">
         <source>10 codes à usage unique, si vous perdez votre téléphone.</source>
+        <target state="translated">10 رموز يُستخدم كل منها مرة واحدة، في حال فقدان الهاتف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">161,164</context>
@@ -2253,6 +2338,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.regenerate" datatype="html">
         <source> Régénérer les codes </source>
+        <target state="translated"> إعادة توليد الرموز </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">172,176</context>
@@ -2261,6 +2347,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.noteAdmin" datatype="html">
         <source> Régénérer invalide les anciens codes et en affiche 10 nouveaux, une seule fois. La double authentification est obligatoire pour un administrateur : elle ne peut pas être désactivée. </source>
+        <target state="translated"> إعادة التوليد تُبطل الرموز القديمة وتعرض 10 رموز جديدة، مرة واحدة فقط. المصادقة الثنائية إلزامية لحساب المسؤول: لا يمكن تعطيلها. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">181,186</context>
@@ -2269,6 +2356,7 @@
       </trans-unit>
       <trans-unit id="account.security.twoFactor.note" datatype="html">
         <source> Régénérer invalide les anciens codes et en affiche 10 nouveaux, une seule fois. Désactiver demande votre mot de passe et un code ; les codes de secours sont alors retirés. </source>
+        <target state="translated"> إعادة التوليد تُبطل الرموز القديمة وتعرض 10 رموز جديدة، مرة واحدة فقط. يتطلّب التعطيل كلمة المرور ورمزًا؛ وتُزال عندئذ رموز الاسترداد. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">187,193</context>
@@ -2277,6 +2365,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.card" datatype="html">
         <source>Sessions actives</source>
+        <target state="translated">الجلسات النشطة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">200,203</context>
@@ -2285,6 +2374,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.revokeOthers" datatype="html">
         <source> Déconnecter les autres appareils </source>
+        <target state="translated"> تسجيل الخروج من الأجهزة الأخرى </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">213,217</context>
@@ -2293,6 +2383,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.list" datatype="html">
         <source>Sessions actives</source>
+        <target state="translated">الجلسات النشطة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">231,232</context>
@@ -2304,6 +2395,10 @@
                   =1 {l&apos;autre session}
                   other {les {{ store.olderSessions().length }} autres sessions}
                 }" xid="6250628017317285049"/></source>
+        <target state="translated">إخفاء <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">260,265</context>
@@ -2312,6 +2407,7 @@
       </trans-unit>
       <trans-unit id="8336249631710697339" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {l&apos;autre session} other {les <x id="INTERPOLATION"/> autres sessions}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {الجلسات الأخرى} one {الجلسة الأخرى} two {الجلستين الأخريين} few {الجلسات الأخرى (<x id="INTERPOLATION"/>)} many {الجلسات الأخرى (<x id="INTERPOLATION"/>)} other {الجلسات الأخرى (<x id="INTERPOLATION"/>)}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">260,262</context>
@@ -2326,6 +2422,10 @@
                   =1 {l&apos;autre session}
                   other {les {{ store.olderSessions().length }} autres sessions}
                 }" xid="6250628017317285049"/></source>
+        <target state="translated">عرض <x id="ICU" equiv-text="{store.olderSessions().length, plural,
+                  =1 {l&apos;autre session}
+                  other {les {{ store.olderSessions().length }} autres sessions}
+                }" xid="6250628017317285049"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">268,273</context>
@@ -2334,6 +2434,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.olderList" datatype="html">
         <source>Autres sessions, par appareil</source>
+        <target state="translated">الجلسات الأخرى، حسب الجهاز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">279,281</context>
@@ -2342,6 +2443,7 @@
       </trans-unit>
       <trans-unit id="8686457947694665380" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 session} other {<x id="INTERPOLATION"/> sessions}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {<x id="INTERPOLATION"/> جلسات} many {<x id="INTERPOLATION"/> جلسة} other {<x id="INTERPOLATION"/> جلسة}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">288,290</context>
@@ -2352,6 +2454,10 @@
                         =1 {1 session}
                         other {{{ group.sessions.length }} sessions}
                       }" xid="7755167482662868766"/> · dernière activité <x id="INTERPOLATION_1" equiv-text="{{ ago(group.lastAccessAt) }}"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{group.sessions.length, plural,
+                        =1 {1 session}
+                        other {{{ group.sessions.length }} sessions}
+                      }" xid="7755167482662868766"/> · آخر نشاط <x id="INTERPOLATION_1" equiv-text="{{ ago(group.lastAccessAt) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">288,293</context>
@@ -2360,6 +2466,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.groupHide" datatype="html">
         <source>Masquer le détail</source>
+        <target state="translated">إخفاء التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">305,308</context>
@@ -2368,6 +2475,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.groupShow" datatype="html">
         <source>Voir le détail</source>
+        <target state="translated">عرض التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">310,313</context>
@@ -2376,6 +2484,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.thisDevice" datatype="html">
         <source>Cet appareil</source>
+        <target state="translated">هذا الجهاز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">344,347</context>
@@ -2384,6 +2493,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.currentBadge" datatype="html">
         <source>session courante</source>
+        <target state="translated">الجلسة الحالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">349,352</context>
@@ -2392,6 +2502,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.openedOn" datatype="html">
         <source>Ouverte le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.createdAt) }}"/></source>
+        <target state="translated">تاريخ الفتح: <x id="INTERPOLATION" equiv-text="{{ formatDate(s.createdAt) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">360,361</context>
@@ -2400,6 +2511,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.lastActivity" datatype="html">
         <source>Dernière activité <x id="INTERPOLATION" equiv-text="{{ ago(s.lastAccessAt) }}"/></source>
+        <target state="translated">آخر نشاط <x id="INTERPOLATION" equiv-text="{{ ago(s.lastAccessAt) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">369,370</context>
@@ -2408,6 +2520,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.expiresOn" datatype="html">
         <source>expire le <x id="INTERPOLATION" equiv-text="{{ formatDate(s.expiresAt) }}"/></source>
+        <target state="translated">انتهاء الصلاحية: <x id="INTERPOLATION" equiv-text="{{ formatDate(s.expiresAt) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">372,373</context>
@@ -2416,6 +2529,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.durations" datatype="html">
         <source> Une session dure 12 h d&apos;inactivité, ou 30 jours avec « rester connecté ». « Déconnecter les autres appareils » conserve cet appareil et consigne l&apos;opération. </source>
+        <target state="translated"> تدوم الجلسة 12 ساعة من عدم النشاط، أو 30 يومًا مع « البقاء متّصلًا ». خيار « تسجيل الخروج من الأجهزة الأخرى » يُبقي هذا الجهاز متّصلًا ويُسجِّل العملية. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">395,400</context>
@@ -2424,6 +2538,7 @@
       </trans-unit>
       <trans-unit id="account.security.lastLogin.card" datatype="html">
         <source> Connexion précédente </source>
+        <target state="translated"> تسجيل الدخول السابق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">403,406</context>
@@ -2432,6 +2547,7 @@
       </trans-unit>
       <trans-unit id="account.security.lastLogin.none" datatype="html">
         <source> Aucune connexion antérieure à celle-ci n&apos;est enregistrée. </source>
+        <target state="translated"> لا يوجد أي تسجيل دخول مُسجَّل قبل هذا التسجيل. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.html</context>
           <context context-type="linenumber">423,429</context>
@@ -2440,6 +2556,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.revoke" datatype="html">
         <source>Déconnecter</source>
+        <target state="translated">تسجيل الخروج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">96</context>
@@ -2448,6 +2565,7 @@
       </trans-unit>
       <trans-unit id="account.security.lastLogin.errorTitle" datatype="html">
         <source>Impossible de charger votre connexion précédente</source>
+        <target state="translated">تعذّر تحميل تسجيل الدخول السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">99</context>
@@ -2456,6 +2574,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.confirmTitle" datatype="html">
         <source>Régénérer les codes de secours ?</source>
+        <target state="translated">إعادة توليد رموز الاسترداد؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">165</context>
@@ -2464,6 +2583,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.confirmBody" datatype="html">
         <source>Les 10 anciens codes cesseront de fonctionner. Les 10 nouveaux ne seront affichés qu&apos;une seule fois.</source>
+        <target state="translated">ستتوقف الرموز العشرة القديمة عن العمل. ولن تُعرض الرموز العشرة الجديدة إلا مرة واحدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">166</context>
@@ -2472,6 +2592,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.confirmButton" datatype="html">
         <source>Régénérer</source>
+        <target state="translated">إعادة التوليد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">167</context>
@@ -2480,6 +2601,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.toast" datatype="html">
         <source>Nouveaux codes de secours enregistrés.</source>
+        <target state="translated">تم حفظ رموز الاسترداد الجديدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">173</context>
@@ -2488,6 +2610,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.toast" datatype="html">
         <source>Double authentification désactivée.</source>
+        <target state="translated">تم تعطيل المصادقة الثنائية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">182</context>
@@ -2496,6 +2619,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.toast" datatype="html">
         <source>Mot de passe changé. Reconnectez-vous avec le nouveau mot de passe.</source>
+        <target state="translated">تم تغيير كلمة المرور. يُرجى تسجيل الدخول من جديد بكلمة المرور الجديدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">196</context>
@@ -2504,6 +2628,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.sent" datatype="html">
         <source>Un lien de confirmation a été envoyé à <x id="email" equiv-text="sentTo"/>. L&apos;adresse actuelle reste valable jusqu&apos;à ce qu&apos;il soit ouvert (24 h).</source>
+        <target state="translated">أُرسل رابط تأكيد إلى <x id="email" equiv-text="sentTo"/>. يبقى العنوان الحالي صالحًا إلى حين فتح الرابط (24 ساعة).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">210</context>
@@ -2512,6 +2637,7 @@
       </trans-unit>
       <trans-unit id="account.security.enabled.toast" datatype="html">
         <source>Double authentification activée.</source>
+        <target state="translated">تم تفعيل المصادقة الثنائية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">246</context>
@@ -2520,6 +2646,7 @@
       </trans-unit>
       <trans-unit id="account.security.enabled.unsavedCodes" datatype="html">
         <source>Double authentification activée, mais vos codes de secours n&apos;ont pas été confirmés : régénérez-les pour en obtenir de nouveaux.</source>
+        <target state="translated">تم تفعيل المصادقة الثنائية، لكن حفظ رموز الاسترداد لم يُؤكَّد: يلزم إعادة توليدها للحصول على رموز جديدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">250</context>
@@ -2528,6 +2655,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.notFound" datatype="html">
         <source>Cette session n&apos;existe plus : elle a expiré ou a déjà été fermée.</source>
+        <target state="translated">هذه الجلسة لم تعد موجودة: انتهت صلاحيتها أو أُغلقت من قبل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">265</context>
@@ -2536,6 +2664,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.currentRefused" datatype="html">
         <source>C&apos;est votre session actuelle : utilisez la déconnexion.</source>
+        <target state="translated">هذه هي جلستك الحالية: يُرجى استخدام تسجيل الخروج.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/security.page.ts</context>
           <context context-type="linenumber">267</context>
@@ -2624,6 +2753,7 @@
       </trans-unit>
       <trans-unit id="account.verification.title" datatype="html">
         <source> Dossier professionnel </source>
+        <target state="translated"> الملف المهني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">11,13</context>
@@ -2632,6 +2762,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lead" datatype="html">
         <source> Déposez votre diplôme et une pièce d&apos;identité. Les documents ne sont visibles que par les administrateurs chargés de la vérification, jamais par les visiteurs ni par les autres praticiens. </source>
+        <target state="translated"> يُرجى إيداع الشهادة ووثيقة هوية. لا يطّلع على المستندات إلا المسؤولون المكلّفون بالتحقّق، ولا يراها الزوار ولا الممارسون الآخرون أبدًا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">14,20</context>
@@ -2640,6 +2771,7 @@
       </trans-unit>
       <trans-unit id="account.verification.needsMore.title" datatype="html">
         <source> Un administrateur vous demande un complément. </source>
+        <target state="translated"> يطلب أحد المسؤولين استكمال الملف. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">43,46</context>
@@ -2648,6 +2780,7 @@
       </trans-unit>
       <trans-unit id="account.verification.underReview" datatype="html">
         <source> Dossier soumis le <x id="INTERPOLATION" equiv-text="{{ submittedAtText() }}"/> : en cours de vérification. Vous pouvez utiliser l&apos;application pour vos patients ; l&apos;annuaire public sera disponible après validation. Le dossier n&apos;est plus modifiable. </source>
+        <target state="translated"> أُرسل الملف في <x id="INTERPOLATION" equiv-text="{{ submittedAtText() }}"/>: قيد التحقّق. يمكنك استخدام التطبيق لمرضاك؛ وسيصبح دليل الممارسين متاحًا بعد قبول الملف. لم يعد الملف قابلًا للتعديل. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">56,58</context>
@@ -2656,6 +2789,7 @@
       </trans-unit>
       <trans-unit id="account.verification.approved" datatype="html">
         <source> Dossier approuvé : votre profil peut apparaître dans l&apos;annuaire avec le badge « Profil vérifié ». </source>
+        <target state="translated"> الملف مقبول: يمكن أن يظهر ملفك في دليل الممارسين مع شارة « ملف موثَّق ». </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">67,73</context>
@@ -2664,6 +2798,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.title" datatype="html">
         <source> Informations professionnelles </source>
+        <target state="translated"> المعلومات المهنية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">78,81</context>
@@ -2672,6 +2807,7 @@
       </trans-unit>
       <trans-unit id="account.verification.docs.title" datatype="html">
         <source> Justificatifs </source>
+        <target state="translated"> مستندات الإثبات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">90,92</context>
@@ -2680,6 +2816,7 @@
       </trans-unit>
       <trans-unit id="account.verification.docs.hint" datatype="html">
         <source> PDF, JPG ou PNG, 10 Mo maximum par fichier. Vous pouvez déposer plusieurs documents : diplôme, pièce d&apos;identité, attestation d&apos;inscription, certification, carte professionnelle. </source>
+        <target state="translated"> PDF أو JPG أو PNG، بحدّ أقصى 10 MB لكل ملف. يمكن إيداع عدة مستندات: شهادة، وثيقة هوية، شهادة تسجيل، شهادة اعتماد، بطاقة مهنية. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">93,97</context>
@@ -2688,6 +2825,7 @@
       </trans-unit>
       <trans-unit id="account.verification.actions.title" datatype="html">
         <source> Soumission </source>
+        <target state="translated"> الإرسال </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">131,134</context>
@@ -2696,6 +2834,7 @@
       </trans-unit>
       <trans-unit id="account.verification.submit" datatype="html">
         <source> Soumettre le dossier pour vérification </source>
+        <target state="translated"> إرسال الملف للتحقّق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">140,142</context>
@@ -2704,6 +2843,7 @@
       </trans-unit>
       <trans-unit id="account.verification.later" datatype="html">
         <source>Plus tard — aller à mes patients</source>
+        <target state="translated">لاحقًا — الانتقال إلى مرضاي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">152,157</context>
@@ -2712,6 +2852,7 @@
       </trans-unit>
       <trans-unit id="account.verification.expected.title" datatype="html">
         <source> Justificatifs attendus </source>
+        <target state="translated"> المستندات المطلوبة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">165,167</context>
@@ -2720,6 +2861,7 @@
       </trans-unit>
       <trans-unit id="account.verification.expected.all" datatype="html">
         <source> Toutes les professions : un diplôme et une pièce d&apos;identité. </source>
+        <target state="translated"> لجميع المهن: شهادة ووثيقة هوية. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">168,171</context>
@@ -2728,6 +2870,7 @@
       </trans-unit>
       <trans-unit id="account.profession.psychologist" datatype="html">
         <source>Psychologue</source>
+        <target state="translated">أخصائي نفسي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">171,172</context>
@@ -2740,6 +2883,7 @@
       </trans-unit>
       <trans-unit id="account.verification.expected.psychologist" datatype="html">
         <source> Conseillé : attestation d&apos;inscription ADELI. </source>
+        <target state="translated"> يُستحسن: شهادة التسجيل ADELI. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">173,175</context>
@@ -2748,6 +2892,7 @@
       </trans-unit>
       <trans-unit id="account.profession.psychiatrist" datatype="html">
         <source>Psychiatre</source>
+        <target state="translated">طبيب نفسي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">175,176</context>
@@ -2760,6 +2905,7 @@
       </trans-unit>
       <trans-unit id="account.verification.expected.psychiatrist" datatype="html">
         <source> Conseillé : attestation RPPS ou carte CPS. </source>
+        <target state="translated"> يُستحسن: شهادة RPPS أو بطاقة CPS. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">177,179</context>
@@ -2768,6 +2914,7 @@
       </trans-unit>
       <trans-unit id="account.profession.coach" datatype="html">
         <source>Coach</source>
+        <target state="translated">مدرّب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">179,180</context>
@@ -2780,6 +2927,7 @@
       </trans-unit>
       <trans-unit id="account.verification.expected.coach" datatype="html">
         <source> Conseillé : certification reconnue (ICF, EMCC, RNCP…) ou diplôme universitaire de coaching. </source>
+        <target state="translated"> يُستحسن: شهادة اعتماد معترف بها (ICF، EMCC، RNCP…) أو شهادة جامعية في التدريب. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">181,186</context>
@@ -2788,6 +2936,7 @@
       </trans-unit>
       <trans-unit id="account.verification.how.title" datatype="html">
         <source> Comment ça se passe </source>
+        <target state="translated"> كيف تجري العملية </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">188,190</context>
@@ -2796,6 +2945,7 @@
       </trans-unit>
       <trans-unit id="account.verification.how.body1" datatype="html">
         <source> Un administrateur compare vos documents à votre profession déclarée et, si possible, au registre public (ADELI / RPPS). Il peut vous demander un document supplémentaire par e-mail. </source>
+        <target state="translated"> يقارن أحد المسؤولين مستنداتك بالمهنة المصرَّح بها، وبالسجلّ العام (ADELI / RPPS) إن أمكن. وقد يطلب مستندًا إضافيًا بالبريد الإلكتروني. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">191,194</context>
@@ -2804,6 +2954,7 @@
       </trans-unit>
       <trans-unit id="account.verification.how.body2" datatype="html">
         <source> Décision sous 2 jours ouvrés. En cas de refus, le motif vous est communiqué et vous pouvez compléter le dossier ou faire un recours. </source>
+        <target state="translated"> القرار خلال يومَي عمل. في حال الرفض، يُبلَّغ السبب ويمكن استكمال الملف أو تقديم تظلّم. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">195,199</context>
@@ -2812,6 +2963,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.title" datatype="html">
         <source> États du dossier </source>
+        <target state="translated"> حالات الملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">201,205</context>
@@ -2820,6 +2972,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.col.status" datatype="html">
         <source>État</source>
+        <target state="translated">الحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">206,207</context>
@@ -2828,6 +2981,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.col.tool" datatype="html">
         <source> Patients </source>
+        <target state="translated"> المرضى </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">208,210</context>
@@ -2836,6 +2990,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.col.directory" datatype="html">
         <source> Annuaire </source>
+        <target state="translated"> دليل الممارسين </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.html</context>
           <context context-type="linenumber">211,215</context>
@@ -2844,6 +2999,7 @@
       </trans-unit>
       <trans-unit id="account.verification.errorTitle" datatype="html">
         <source>Impossible de charger votre dossier professionnel</source>
+        <target state="translated">تعذّر تحميل ملفك المهني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">75</context>
@@ -2852,6 +3008,7 @@
       </trans-unit>
       <trans-unit id="account.verification.docs.empty.title" datatype="html">
         <source>Aucun justificatif déposé</source>
+        <target state="translated">لم يُودَع أي مستند إثبات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">76</context>
@@ -2860,6 +3017,7 @@
       </trans-unit>
       <trans-unit id="account.verification.docs.empty.message" datatype="html">
         <source>Ajoutez votre diplôme et votre pièce d&apos;identité avec le formulaire ci-dessous.</source>
+        <target state="translated">يُرجى إضافة الشهادة ووثيقة الهوية عبر النموذج أدناه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">77</context>
@@ -2868,6 +3026,7 @@
       </trans-unit>
       <trans-unit id="account.verification.missing" datatype="html">
         <source>Il manque : <x id="list" equiv-text="missing.map(documentTypeShort).join(&apos;, &apos;)"/>.</source>
+        <target state="translated">المستندات الناقصة: <x id="list" equiv-text="missing.map(documentTypeShort).join(&apos;, &apos;)"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">95</context>
@@ -2876,6 +3035,7 @@
       </trans-unit>
       <trans-unit id="account.verification.recommended" datatype="html">
         <source>Conseillé pour votre profession, sans bloquer la soumission : <x id="list" equiv-text="recommended.map(documentTypeShort).join(&apos;, &apos;)"/>.</source>
+        <target state="translated">يُستحسن لمهنتك، دون أن يمنع الإرسال: <x id="list" equiv-text="recommended.map(documentTypeShort).join(&apos;, &apos;)"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">101</context>
@@ -2884,6 +3044,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.docsPending" datatype="html">
         <source>Justificatifs attendus</source>
+        <target state="translated">بانتظار المستندات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">113</context>
@@ -2892,6 +3053,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.yes" datatype="html">
         <source>oui</source>
+        <target state="translated">نعم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">114</context>
@@ -2912,6 +3074,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.no" datatype="html">
         <source>non</source>
+        <target state="translated">لا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">115</context>
@@ -2932,6 +3095,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.underReview" datatype="html">
         <source>En cours de vérification</source>
+        <target state="translated">قيد التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">118</context>
@@ -2940,6 +3104,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.needsMore" datatype="html">
         <source>Complément demandé</source>
+        <target state="translated">مطلوب استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">123</context>
@@ -2948,6 +3113,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.approved" datatype="html">
         <source>Approuvé</source>
+        <target state="translated">مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">128</context>
@@ -2956,6 +3122,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.yesBadge" datatype="html">
         <source>oui, badge « Profil vérifié »</source>
+        <target state="translated">نعم، مع شارة « ملف موثَّق »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">130</context>
@@ -2964,6 +3131,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.rejected" datatype="html">
         <source>Refusé</source>
+        <target state="translated">مرفوض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">133</context>
@@ -2972,6 +3140,7 @@
       </trans-unit>
       <trans-unit id="account.verification.lock.suspended" datatype="html">
         <source>non (compte suspendu, recours possible)</source>
+        <target state="translated">لا (حساب موقوف، التظلّم ممكن)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">134</context>
@@ -2980,6 +3149,7 @@
       </trans-unit>
       <trans-unit id="account.verification.toast.uploaded" datatype="html">
         <source>Justificatif ajouté au dossier.</source>
+        <target state="translated">أُضيف مستند الإثبات إلى الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">163</context>
@@ -2988,6 +3158,7 @@
       </trans-unit>
       <trans-unit id="account.verification.remove.title" datatype="html">
         <source>Retirer « <x id="title" equiv-text="doc.title"/> » ?</source>
+        <target state="translated">إزالة « <x id="title" equiv-text="doc.title"/> »؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">172</context>
@@ -2996,6 +3167,7 @@
       </trans-unit>
       <trans-unit id="account.verification.remove.description" datatype="html">
         <source>Le fichier est effacé du stockage. Vous pourrez en déposer un autre.</source>
+        <target state="translated">يُمحى الملف من التخزين. ويمكن إيداع ملف آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">173</context>
@@ -3004,6 +3176,7 @@
       </trans-unit>
       <trans-unit id="account.verification.remove.confirm" datatype="html">
         <source>Retirer</source>
+        <target state="translated">إزالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">174</context>
@@ -3012,6 +3185,7 @@
       </trans-unit>
       <trans-unit id="account.verification.toast.removed" datatype="html">
         <source>Justificatif retiré.</source>
+        <target state="translated">أُزيل مستند الإثبات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">180</context>
@@ -3020,6 +3194,7 @@
       </trans-unit>
       <trans-unit id="account.verification.toast.submitted" datatype="html">
         <source>Dossier soumis. Un administrateur le vérifie sous 2 jours ouvrés.</source>
+        <target state="translated">أُرسل الملف. يتحقّق منه أحد المسؤولين خلال يومَي عمل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">193</context>
@@ -3028,6 +3203,7 @@
       </trans-unit>
       <trans-unit id="account.verification.submit.incomplete" datatype="html">
         <source>Le serveur refuse la soumission, il manque : <x id="list" equiv-text="list"/>.</source>
+        <target state="translated">يرفض الخادم الإرسال، المستندات الناقصة: <x id="list" equiv-text="list"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">215</context>
@@ -3036,6 +3212,7 @@
       </trans-unit>
       <trans-unit id="account.verification.submit.incompleteNoList" datatype="html">
         <source>Le serveur refuse la soumission : des justificatifs obligatoires manquent.</source>
+        <target state="translated">يرفض الخادم الإرسال: تنقص مستندات إثبات إلزامية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">216</context>
@@ -3044,6 +3221,7 @@
       </trans-unit>
       <trans-unit id="account.verification.submit.locked" datatype="html">
         <source>Le dossier ne peut pas être soumis dans son état actuel.</source>
+        <target state="translated">لا يمكن إرسال الملف في حالته الحالية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">219</context>
@@ -3052,6 +3230,7 @@
       </trans-unit>
       <trans-unit id="account.verification.submit.failed" datatype="html">
         <source>La soumission a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">فشل الإرسال. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/verification.page.ts</context>
           <context context-type="linenumber">221</context>
@@ -3060,6 +3239,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.intro" datatype="html">
         <source> Vos codes de secours seront retirés et la connexion ne demandera plus de code. Pour confirmer, saisissez votre mot de passe et un code de votre application (ou un code de secours). </source>
+        <target state="translated"> ستُزال رموز الاسترداد، ولن يُطلب أي رمز عند تسجيل الدخول. للتأكيد، يُرجى إدخال كلمة المرور ورمز من التطبيق (أو رمز استرداد). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">39,44</context>
@@ -3068,6 +3248,7 @@
       </trans-unit>
       <trans-unit id="account.security.field.password" datatype="html">
         <source>Mot de passe</source>
+        <target state="translated">كلمة المرور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">47,50</context>
@@ -3080,6 +3261,7 @@
       </trans-unit>
       <trans-unit id="account.security.field.code" datatype="html">
         <source>Code de vérification</source>
+        <target state="translated">رمز التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">68,71</context>
@@ -3092,6 +3274,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.codeHint" datatype="html">
         <source> Les 6 chiffres de l&apos;application, ou l&apos;un de vos codes de secours. </source>
+        <target state="translated"> الأرقام الستة من التطبيق، أو أحد رموز الاسترداد. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">87,89</context>
@@ -3100,6 +3283,7 @@
       </trans-unit>
       <trans-unit id="account.security.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">102,104</context>
@@ -3116,6 +3300,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.submit" datatype="html">
         <source> Désactiver </source>
+        <target state="translated"> تعطيل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">111,116</context>
@@ -3124,6 +3309,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.title" datatype="html">
         <source>Désactiver la double authentification</source>
+        <target state="translated">تعطيل المصادقة الثنائية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">124</context>
@@ -3132,6 +3318,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.admin" datatype="html">
         <source>Un compte administrateur ne peut pas désactiver sa double authentification.</source>
+        <target state="translated">لا يمكن لحساب مسؤول تعطيل المصادقة الثنائية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">182</context>
@@ -3140,6 +3327,7 @@
       </trans-unit>
       <trans-unit id="account.security.disable.notEnabled" datatype="html">
         <source>La double authentification n&apos;est pas active sur ce compte.</source>
+        <target state="translated">المصادقة الثنائية غير مفعّلة على هذا الحساب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/disable-two-factor.panel.ts</context>
           <context context-type="linenumber">183</context>
@@ -3150,6 +3338,9 @@
         <source> Un lien de confirmation sera envoyé à la nouvelle adresse. Votre adresse actuelle (<x id="INTERPOLATION" equiv-text="{{
             currentEmail
           }}"/>) reste valable pour vous connecter jusqu&apos;à ce que le lien soit ouvert (valable 24 h). </source>
+        <target state="translated"> سيُرسَل رابط تأكيد إلى العنوان الجديد. يبقى العنوان الحالي (<x id="INTERPOLATION" equiv-text="{{
+            currentEmail
+          }}"/>) صالحًا لتسجيل الدخول إلى حين فتح الرابط (صالح لمدة 24 ساعة). </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/email-change.panel.ts</context>
           <context context-type="linenumber">44,48</context>
@@ -3158,6 +3349,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.new" datatype="html">
         <source>Nouvelle adresse e-mail</source>
+        <target state="translated">عنوان البريد الإلكتروني الجديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/email-change.panel.ts</context>
           <context context-type="linenumber">52,55</context>
@@ -3166,6 +3358,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.submit" datatype="html">
         <source> Envoyer le lien de confirmation </source>
+        <target state="translated"> إرسال رابط التأكيد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/email-change.panel.ts</context>
           <context context-type="linenumber">108,112</context>
@@ -3174,6 +3367,7 @@
       </trans-unit>
       <trans-unit id="account.security.email.title" datatype="html">
         <source>Modifier l&apos;e-mail de connexion</source>
+        <target state="translated">تعديل البريد الإلكتروني لتسجيل الدخول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/email-change.panel.ts</context>
           <context context-type="linenumber">122</context>
@@ -3182,6 +3376,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.intro" datatype="html">
         <source> Le changement demande votre mot de passe actuel (et un code si la double authentification est active), puis déconnecte tous vos appareils : vous vous reconnecterez avec le nouveau mot de passe. </source>
+        <target state="translated"> يتطلّب التغيير كلمة المرور الحالية (ورمزًا إن كانت المصادقة الثنائية مفعّلة)، ثم يُسجَّل الخروج من جميع أجهزتك: يلزم بعدها تسجيل الدخول بكلمة المرور الجديدة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">7,14</context>
@@ -3190,6 +3385,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.current" datatype="html">
         <source>Mot de passe actuel</source>
+        <target state="translated">كلمة المرور الحالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">16,20</context>
@@ -3198,6 +3394,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.new" datatype="html">
         <source>Nouveau mot de passe</source>
+        <target state="translated">كلمة المرور الجديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">38,42</context>
@@ -3206,6 +3403,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.confirm" datatype="html">
         <source>Confirmer le nouveau mot de passe</source>
+        <target state="translated">تأكيد كلمة المرور الجديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">68,73</context>
@@ -3214,6 +3412,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.otpHint" datatype="html">
         <source> Votre double authentification est active : saisissez les 6 chiffres de l&apos;application ou un code de secours. </source>
+        <target state="translated"> المصادقة الثنائية مفعّلة: يُرجى إدخال الأرقام الستة من التطبيق أو رمز استرداد. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">112,115</context>
@@ -3222,6 +3421,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.submit" datatype="html">
         <source> Changer le mot de passe </source>
+        <target state="translated"> تغيير كلمة المرور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.html</context>
           <context context-type="linenumber">134,139</context>
@@ -3230,6 +3430,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.title" datatype="html">
         <source>Modifier le mot de passe</source>
+        <target state="translated">تعديل كلمة المرور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.ts</context>
           <context context-type="linenumber">68</context>
@@ -3238,6 +3439,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.mismatch" datatype="html">
         <source>La confirmation ne correspond pas au nouveau mot de passe.</source>
+        <target state="translated">التأكيد لا يطابق كلمة المرور الجديدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.ts</context>
           <context context-type="linenumber">70</context>
@@ -3246,6 +3448,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.credentials" datatype="html">
         <source>Mot de passe actuel ou code incorrect.</source>
+        <target state="translated">كلمة المرور الحالية أو الرمز غير صحيح.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/password-change.panel.ts</context>
           <context context-type="linenumber">157</context>
@@ -3254,6 +3457,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.done" datatype="html">
         <source> Les 10 anciens codes ne fonctionnent plus. Conservez ces nouveaux codes en lieu sûr : chacun ne sert qu&apos;une fois et ils ne seront plus affichés. </source>
+        <target state="translated"> لم تعد الرموز العشرة القديمة تعمل. يُرجى حفظ هذه الرموز الجديدة في مكان آمن: يُستخدم كل منها مرة واحدة فقط، ولن تُعرض مرة أخرى. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">38,41</context>
@@ -3262,6 +3466,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.finish" datatype="html">
         <source> Terminer </source>
+        <target state="translated"> إنهاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">52,56</context>
@@ -3274,6 +3479,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.title" datatype="html">
         <source>Nouveaux codes de secours</source>
+        <target state="translated">رموز استرداد جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">79</context>
@@ -3282,6 +3488,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.errorTitle" datatype="html">
         <source>Impossible de générer de nouveaux codes de secours</source>
+        <target state="translated">تعذّر توليد رموز استرداد جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">81</context>
@@ -3290,6 +3497,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">83</context>
@@ -3298,6 +3506,7 @@
       </trans-unit>
       <trans-unit id="account.security.regenerate.notEnabled" datatype="html">
         <source>La double authentification n&apos;est pas active : aucun code à régénérer.</source>
+        <target state="translated">المصادقة الثنائية غير مفعّلة: لا توجد رموز لإعادة توليدها.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/recovery-codes.panel.ts</context>
           <context context-type="linenumber">94</context>
@@ -3306,6 +3515,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">42,46</context>
@@ -3314,6 +3524,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.title" datatype="html">
         <source>Activer la double authentification</source>
+        <target state="translated">تفعيل المصادقة الثنائية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">63</context>
@@ -3322,6 +3533,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.escape" datatype="html">
         <source>Fermer le panneau, après confirmation si l&apos;activation n&apos;est pas terminée</source>
+        <target state="translated">إغلاق اللوحة، بعد التأكيد إن لم يكتمل التفعيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">82</context>
@@ -3330,6 +3542,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.leaveCodes.title" datatype="html">
         <source>Fermer sans avoir enregistré vos codes de secours ?</source>
+        <target state="translated">الإغلاق دون حفظ رموز الاسترداد؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">103</context>
@@ -3338,6 +3551,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.leaveCodes.body" datatype="html">
         <source>La double authentification est déjà active. Ces 10 codes ne seront plus affichés ; vous pourrez en régénérer de nouveaux depuis Compte et sécurité.</source>
+        <target state="translated">المصادقة الثنائية مفعّلة بالفعل. لن تُعرض هذه الرموز العشرة مرة أخرى؛ ويمكن توليد رموز جديدة من « الحساب والأمان ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">104</context>
@@ -3346,6 +3560,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.leaveCodes.confirm" datatype="html">
         <source>Fermer sans enregistrer</source>
+        <target state="translated">الإغلاق دون حفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">105</context>
@@ -3354,6 +3569,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.abandon.title" datatype="html">
         <source>Abandonner l&apos;activation ?</source>
+        <target state="translated">التخلّي عن التفعيل؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">109</context>
@@ -3362,6 +3578,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.abandon.body" datatype="html">
         <source>La double authentification ne sera pas activée. Le secret affiché sera remplacé au prochain essai.</source>
+        <target state="translated">لن تُفعَّل المصادقة الثنائية. سيُستبدل المفتاح السرّي المعروض في المحاولة القادمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">110</context>
@@ -3370,6 +3587,7 @@
       </trans-unit>
       <trans-unit id="account.security.panel.abandon.confirm" datatype="html">
         <source>Abandonner</source>
+        <target state="translated">التخلّي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/panels/two-factor.panel.ts</context>
           <context context-type="linenumber">111</context>
@@ -3378,6 +3596,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.requested" datatype="html">
         <source>Demandé le</source>
+        <target state="translated">تاريخ الطلب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">31,33</context>
@@ -3386,6 +3605,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.queued" datatype="html">
         <source>En attente</source>
+        <target state="translated">قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">38,40</context>
@@ -3394,6 +3614,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.queuedBody" datatype="html">
         <source>La préparation commence dans un instant ; actualisation automatique.</source>
+        <target state="translated">يبدأ التحضير بعد قليل؛ تحديث تلقائي.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">41,44</context>
@@ -3402,6 +3623,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.running" datatype="html">
         <source>En préparation</source>
+        <target state="translated">قيد التحضير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">46,48</context>
@@ -3410,6 +3632,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.runningBody" datatype="html">
         <source>Actualisation automatique.</source>
+        <target state="translated">تحديث تلقائي.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">49,53</context>
@@ -3418,6 +3641,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.ready" datatype="html">
         <source>Prêt</source>
+        <target state="translated">جاهز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">53,54</context>
@@ -3426,6 +3650,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.validUntil" datatype="html">
         <source>lien valable jusqu&apos;au <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ expiresAt() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">الرابط صالح حتى <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ expiresAt() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">55,56</context>
@@ -3434,6 +3659,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.download" datatype="html">
         <source> Télécharger </source>
+        <target state="translated"> تنزيل </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">65,68</context>
@@ -3442,6 +3668,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.expired" datatype="html">
         <source>Expiré</source>
+        <target state="translated">منتهي الصلاحية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">70,72</context>
@@ -3450,6 +3677,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.expiredBody" datatype="html">
         <source>Le lien de 7 jours a expiré et le fichier a été purgé.</source>
+        <target state="translated">انتهت صلاحية رابط الأيام السبعة وحُذف الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">73,76</context>
@@ -3458,6 +3686,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.relaunch" datatype="html">
         <source> Relancer </source>
+        <target state="translated"> إعادة الإطلاق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">83,86</context>
@@ -3470,6 +3699,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.failed" datatype="html">
         <source>Échec</source>
+        <target state="translated">فشل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">88,91</context>
@@ -3478,6 +3708,7 @@
       </trans-unit>
       <trans-unit id="account.data.job.progress" datatype="html">
         <source>Préparation de l&apos;export en cours</source>
+        <target state="translated">جارٍ تحضير التصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/export-job-row.component.ts</context>
           <context context-type="linenumber">177</context>
@@ -3486,6 +3717,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.none" datatype="html">
         <source> Aucun dossier ne correspond à cette recherche. </source>
+        <target state="translated"> لا يوجد ملف مطابق لهذا البحث. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
           <context context-type="linenumber">80,87</context>
@@ -3494,6 +3726,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.placeholder" datatype="html">
         <source>Nom affiché…</source>
+        <target state="translated">الاسم المعروض…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
           <context context-type="linenumber">178</context>
@@ -3502,6 +3735,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.list" datatype="html">
         <source>Dossiers correspondants</source>
+        <target state="translated">الملفات المطابقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
           <context context-type="linenumber">179</context>
@@ -3510,6 +3744,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.archived" datatype="html">
         <source>archivé</source>
+        <target state="translated">مؤرشف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
           <context context-type="linenumber">202</context>
@@ -3518,6 +3753,7 @@
       </trans-unit>
       <trans-unit id="account.data.patient.age" datatype="html">
         <source><x id="age" equiv-text="age"/> ans</source>
+        <target state="translated">العمر: <x id="age" equiv-text="age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/data-export/patient-combobox.component.ts</context>
           <context context-type="linenumber">207</context>
@@ -3526,6 +3762,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.diploma" datatype="html">
         <source>Diplôme</source>
+        <target state="translated">شهادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">8</context>
@@ -3534,6 +3771,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.registration" datatype="html">
         <source>Attestation d&apos;inscription (ADELI / RPPS)</source>
+        <target state="translated">شهادة تسجيل (ADELI / RPPS)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">10</context>
@@ -3542,6 +3780,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.certification" datatype="html">
         <source>Certification (coaching)</source>
+        <target state="translated">شهادة اعتماد (التدريب)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">12</context>
@@ -3550,6 +3789,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.professionalCard" datatype="html">
         <source>Carte professionnelle</source>
+        <target state="translated">بطاقة مهنية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">14</context>
@@ -3558,6 +3798,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.identity" datatype="html">
         <source>Pièce d&apos;identité</source>
+        <target state="translated">وثيقة هوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">16</context>
@@ -3566,6 +3807,7 @@
       </trans-unit>
       <trans-unit id="account.verification.type.other" datatype="html">
         <source>Autre</source>
+        <target state="translated">أخرى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">18</context>
@@ -3574,6 +3816,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.diploma" datatype="html">
         <source>diplôme</source>
+        <target state="translated">شهادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">26</context>
@@ -3582,6 +3825,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.registration" datatype="html">
         <source>attestation ADELI / RPPS</source>
+        <target state="translated">شهادة ADELI / RPPS</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">28</context>
@@ -3590,6 +3834,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.certification" datatype="html">
         <source>certification de coaching</source>
+        <target state="translated">شهادة اعتماد في التدريب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">30</context>
@@ -3598,6 +3843,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.professionalCard" datatype="html">
         <source>carte professionnelle</source>
+        <target state="translated">بطاقة مهنية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">32</context>
@@ -3606,6 +3852,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.identity" datatype="html">
         <source>pièce d&apos;identité</source>
+        <target state="translated">وثيقة هوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">34</context>
@@ -3614,6 +3861,7 @@
       </trans-unit>
       <trans-unit id="account.verification.typeShort.other" datatype="html">
         <source>autre document</source>
+        <target state="translated">مستند آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">36</context>
@@ -3622,6 +3870,7 @@
       </trans-unit>
       <trans-unit id="account.verification.review.conform" datatype="html">
         <source>Conforme</source>
+        <target state="translated">مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">44</context>
@@ -3630,6 +3879,7 @@
       </trans-unit>
       <trans-unit id="account.verification.review.nonConform" datatype="html">
         <source>Non conforme</source>
+        <target state="translated">غير مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">46</context>
@@ -3638,6 +3888,7 @@
       </trans-unit>
       <trans-unit id="account.verification.review.pending" datatype="html">
         <source>En attente de vérification</source>
+        <target state="translated">بانتظار التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">48</context>
@@ -3646,6 +3897,7 @@
       </trans-unit>
       <trans-unit id="account.verification.size.mo" datatype="html">
         <source><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(mo)"/> Mo</source>
+        <target state="translated"><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(mo)"/> MB</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">69</context>
@@ -3654,6 +3906,7 @@
       </trans-unit>
       <trans-unit id="account.verification.size.ko" datatype="html">
         <source><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(bytes / 1024)"/> Ko</source>
+        <target state="translated"><x id="size" equiv-text="new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(bytes / 1024)"/> KB</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-labels.ts</context>
           <context context-type="linenumber">71</context>
@@ -3662,6 +3915,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.uploadedAt" datatype="html">
         <source>déposé le <x id="INTERPOLATION" equiv-text="{{ dateOf(doc) }}"/></source>
+        <target state="translated">تاريخ الإيداع: <x id="INTERPOLATION" equiv-text="{{ dateOf(doc) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">45,46</context>
@@ -3670,6 +3924,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.open" datatype="html">
         <source> Voir </source>
+        <target state="translated"> عرض </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">61,64</context>
@@ -3678,6 +3933,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.remove" datatype="html">
         <source> Retirer </source>
+        <target state="translated"> إزالة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">74,78</context>
@@ -3686,6 +3942,7 @@
       </trans-unit>
       <trans-unit id="account.verification.docs.listLabel" datatype="html">
         <source>Justificatifs déposés</source>
+        <target state="translated">مستندات الإثبات المُودَعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">192</context>
@@ -3694,6 +3951,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.removeLabel" datatype="html">
         <source>Retirer <x id="title" equiv-text="doc.title"/></source>
+        <target state="translated">إزالة <x id="title" equiv-text="doc.title"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">211</context>
@@ -3702,6 +3960,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.openLabel" datatype="html">
         <source>Voir <x id="title" equiv-text="doc.title"/></source>
+        <target state="translated">عرض <x id="title" equiv-text="doc.title"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">215</context>
@@ -3710,6 +3969,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.remove.locked" datatype="html">
         <source>Ce justificatif ne peut plus être retiré : le dossier n&apos;est plus modifiable.</source>
+        <target state="translated">لم يعد من الممكن إزالة مستند الإثبات هذا: لم يعد الملف قابلًا للتعديل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">220</context>
@@ -3718,6 +3978,7 @@
       </trans-unit>
       <trans-unit id="account.verification.doc.remove.failed" datatype="html">
         <source>Le retrait a échoué. Rien n&apos;a été modifié.</source>
+        <target state="translated">فشلت الإزالة. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-list.component.ts</context>
           <context context-type="linenumber">222</context>
@@ -3726,6 +3987,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.title" datatype="html">
         <source> Ajouter un justificatif </source>
+        <target state="translated"> إضافة مستند إثبات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">13,17</context>
@@ -3734,6 +3996,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.type" datatype="html">
         <source>Type de document</source>
+        <target state="translated">نوع المستند</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">18,22</context>
@@ -3742,6 +4005,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.type.placeholder" datatype="html">
         <source> Choisir… </source>
+        <target state="translated"> اختيار… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">32,35</context>
@@ -3750,6 +4014,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.docTitle" datatype="html">
         <source>Intitulé</source>
+        <target state="translated">العنوان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">42,46</context>
@@ -3758,6 +4023,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.issuer" datatype="html">
         <source>Établissement ou organisme</source>
+        <target state="translated">المؤسسة أو الجهة المانحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">58,62</context>
@@ -3766,6 +4032,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.year" datatype="html">
         <source>Année</source>
+        <target state="translated">السنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">71,74</context>
@@ -3774,6 +4041,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.choose" datatype="html">
         <source>Choisir un fichier</source>
+        <target state="translated">اختيار ملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">107,110</context>
@@ -3782,6 +4050,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.dropHint" datatype="html">
         <source>ou glissez-le ici · PDF, JPG ou PNG, 10 Mo maximum</source>
+        <target state="translated">أو سحبه إلى هنا · PDF أو JPG أو PNG، بحدّ أقصى 10 MB</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">111,115</context>
@@ -3790,6 +4059,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.submit" datatype="html">
         <source> Ajouter au dossier </source>
+        <target state="translated"> إضافة إلى الملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">121,124</context>
@@ -3798,6 +4068,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.chosen" datatype="html">
         <source>Fichier choisi :</source>
+        <target state="translated">الملف المختار:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">126,128</context>
@@ -3806,6 +4077,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.none" datatype="html">
         <source>Aucun fichier choisi.</source>
+        <target state="translated">لم يُختر أي ملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">130,134</context>
@@ -3814,6 +4086,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.retention" datatype="html">
         <source> Les fichiers sont chiffrés et supprimés 90 jours après la décision de l&apos;administrateur ; seule la mention « vérifié le … » est conservée. </source>
+        <target state="translated"> الملفات مشفّرة وتُحذف بعد 90 يومًا من قرار المسؤول؛ ولا يُحتفظ إلا بعبارة « تم التحقّق في … ». </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.html</context>
           <context context-type="linenumber">146,150</context>
@@ -3822,6 +4095,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.progress" datatype="html">
         <source>Progression de l&apos;envoi</source>
+        <target state="translated">تقدّم الإرسال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -3830,6 +4104,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.required" datatype="html">
         <source>Choisissez un fichier.</source>
+        <target state="translated">يُرجى اختيار ملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">182</context>
@@ -3838,6 +4113,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.tooLarge" datatype="html">
         <source>Ce fichier dépasse 10 Mo. Réduisez-le ou choisissez un autre fichier ; le dossier n&apos;a pas changé.</source>
+        <target state="translated">يتجاوز هذا الملف 10 MB. يُرجى تصغيره أو اختيار ملف آخر؛ لم يتغيّر الملف المهني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">184</context>
@@ -3846,6 +4122,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.unsupported" datatype="html">
         <source>Seuls les fichiers PDF, JPEG et PNG sont acceptés ; le dossier n&apos;a pas changé.</source>
+        <target state="translated">لا تُقبل إلا ملفات PDF وJPEG وPNG؛ لم يتغيّر الملف المهني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">186</context>
@@ -3854,6 +4131,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.limit" datatype="html">
         <source>Le dossier compte déjà 20 justificatifs : retirez-en un avant d&apos;en ajouter.</source>
+        <target state="translated">يضم الملف 20 مستند إثبات بالفعل: يلزم إزالة أحدها قبل إضافة غيره.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">198</context>
@@ -3862,6 +4140,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.locked" datatype="html">
         <source>Le dossier n&apos;est plus modifiable dans son état actuel.</source>
+        <target state="translated">لم يعد الملف قابلًا للتعديل في حالته الحالية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">199</context>
@@ -3870,6 +4149,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.invalid" datatype="html">
         <source>Fichier vide, illisible ou image trop grande (25 millions de pixels au maximum).</source>
+        <target state="translated">الملف فارغ أو غير مقروء، أو الصورة كبيرة جدًا (25 مليون بكسل كحدّ أقصى).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">203</context>
@@ -3878,6 +4158,7 @@
       </trans-unit>
       <trans-unit id="account.verification.upload.error.failed" datatype="html">
         <source>L&apos;envoi a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">فشل الإرسال. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/document-upload.component.ts</context>
           <context context-type="linenumber">205</context>
@@ -3886,6 +4167,7 @@
       </trans-unit>
       <trans-unit id="account.security.locked" datatype="html">
         <source> Trop d&apos;essais. Réessayez dans <x id="INTERPOLATION" equiv-text="{{ delay() }}"/>. </source>
+        <target state="translated"> محاولات كثيرة جدًا. يُرجى إعادة المحاولة بعد <x id="INTERPOLATION" equiv-text="{{ delay() }}"/>. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/lock-notice.component.ts</context>
           <context context-type="linenumber">32,35</context>
@@ -3894,6 +4176,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.rule.length" datatype="html">
         <source>Au moins <x id="min" equiv-text="PASSWORD_MIN_LENGTH"/> caractères</source>
+        <target state="translated">عدد الأحرف: <x id="min" equiv-text="PASSWORD_MIN_LENGTH"/> على الأقل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/password-rules.component.ts</context>
           <context context-type="linenumber">140</context>
@@ -3902,6 +4185,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.rule.case" datatype="html">
         <source>Majuscules et minuscules</source>
+        <target state="translated">أحرف كبيرة وصغيرة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/password-rules.component.ts</context>
           <context context-type="linenumber">145</context>
@@ -3910,6 +4194,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.rule.server" datatype="html">
         <source>Pas un mot de passe courant, ni votre nom ni votre e-mail (vérifié à l&apos;envoi)</source>
+        <target state="translated">ألّا تكون كلمة مرور شائعة، ولا الاسم ولا البريد الإلكتروني (يُتحقَّق منه عند الإرسال)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/password-rules.component.ts</context>
           <context context-type="linenumber">149</context>
@@ -3918,6 +4203,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.rule.ok" datatype="html">
         <source>règle respectée</source>
+        <target state="translated">القاعدة مستوفاة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/password-rules.component.ts</context>
           <context context-type="linenumber">159</context>
@@ -3926,6 +4212,7 @@
       </trans-unit>
       <trans-unit id="account.security.password.rule.ko" datatype="html">
         <source>règle non respectée</source>
+        <target state="translated">القاعدة غير مستوفاة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/password-rules.component.ts</context>
           <context context-type="linenumber">161</context>
@@ -3966,6 +4253,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.profession" datatype="html">
         <source>Profession déclarée</source>
+        <target state="translated">المهنة المصرَّح بها</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">5,8</context>
@@ -3974,6 +4262,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.professionalNumber" datatype="html">
         <source>N° ADELI / RPPS</source>
+        <target state="translated">رقم ADELI / RPPS</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">12,16</context>
@@ -3982,6 +4271,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.professionalNumber.recommended" datatype="html">
         <source>(recommandé, jamais bloquant)</source>
+        <target state="translated">(مستحسن، ولا يمنع أبدًا)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">20,25</context>
@@ -3991,6 +4281,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.professionalNumber.optional" datatype="html">
         <source>(facultatif)</source>
+        <target state="translated">(اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">26,31</context>
@@ -3999,6 +4290,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.phone" datatype="html">
         <source>Téléphone de contact</source>
+        <target state="translated">هاتف التواصل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">48,52</context>
@@ -4007,6 +4299,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.remoteOnly" datatype="html">
         <source>J&apos;exerce uniquement en visioconsultation</source>
+        <target state="translated">ممارسة المهنة عبر الفيديو فقط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">69,76</context>
@@ -4015,6 +4308,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.street" datatype="html">
         <source>Adresse du cabinet</source>
+        <target state="translated">عنوان العيادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">85,88</context>
@@ -4023,6 +4317,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.postalCode" datatype="html">
         <source>Code postal</source>
+        <target state="translated">الرمز البريدي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">107,110</context>
@@ -4031,6 +4326,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.city" datatype="html">
         <source>Ville</source>
+        <target state="translated">المدينة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">129,132</context>
@@ -4039,6 +4335,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.save" datatype="html">
         <source> Enregistrer </source>
+        <target state="translated"> حفظ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">157,162</context>
@@ -4047,6 +4344,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.saved" datatype="html">
         <source>Enregistré</source>
+        <target state="translated">تم الحفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.html</context>
           <context context-type="linenumber">164,168</context>
@@ -4055,6 +4353,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.address" datatype="html">
         <source>Adresse du cabinet</source>
+        <target state="translated">عنوان العيادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.ts</context>
           <context context-type="linenumber">46</context>
@@ -4063,6 +4362,7 @@
       </trans-unit>
       <trans-unit id="account.verification.info.error.failed" datatype="html">
         <source>Enregistrement impossible pour le moment. Rien n&apos;a été modifié.</source>
+        <target state="translated">يتعذّر الحفظ حاليًا. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/professional-info-form.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -4591,6 +4891,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.list" datatype="html">
         <source>Codes de secours</source>
+        <target state="translated">رموز الاسترداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">29,30</context>
@@ -4599,6 +4900,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.download" datatype="html">
         <source> Télécharger (.txt) </source>
+        <target state="translated"> تنزيل (.txt) </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">45,49</context>
@@ -4607,6 +4909,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.copy" datatype="html">
         <source> Copier </source>
+        <target state="translated"> نسخ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">53,55</context>
@@ -4615,6 +4918,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.saved" datatype="html">
         <source>Je les ai enregistrés</source>
+        <target state="translated">أؤكّد حفظ الرموز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">65,71</context>
@@ -4623,6 +4927,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.fileHeader" datatype="html">
         <source>PsyMate · codes de secours de la double authentification. Chaque code ne sert qu&apos;une fois.</source>
+        <target state="translated">PsyMate · رموز الاسترداد للمصادقة الثنائية. يُستخدم كل رمز مرة واحدة فقط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">131</context>
@@ -4631,6 +4936,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.downloaded" datatype="html">
         <source>Fichier téléchargé.</source>
+        <target state="translated">تم تنزيل الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">148</context>
@@ -4639,6 +4945,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.copied" datatype="html">
         <source>Codes copiés.</source>
+        <target state="translated">تم نسخ الرموز.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -4647,6 +4954,7 @@
       </trans-unit>
       <trans-unit id="account.security.recovery.copyFailed" datatype="html">
         <source>Copie impossible : sélectionnez les codes à la main.</source>
+        <target state="translated">يتعذّر النسخ: يُرجى تحديد الرموز يدويًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/recovery-codes.component.ts</context>
           <context context-type="linenumber">160</context>
@@ -4663,6 +4971,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.invalid" datatype="html">
         <source>Ce code n&apos;est pas valide ou a déjà été utilisé.</source>
+        <target state="translated">هذا الرمز غير صالح أو سبق استخدامه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">4</context>
@@ -4671,6 +4980,7 @@
       </trans-unit>
       <trans-unit id="account.security.error.unavailable" datatype="html">
         <source>Opération impossible pour le moment. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">تتعذّر العملية حاليًا. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد قليل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">7</context>
@@ -4679,6 +4989,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.unknownDevice" datatype="html">
         <source>Appareil non identifié</source>
+        <target state="translated">جهاز غير معروف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">13</context>
@@ -4687,6 +4998,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.revokedNone" datatype="html">
         <source>Aucun autre appareil n&apos;était connecté.</source>
+        <target state="translated">لم يكن أي جهاز آخر متّصلًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">24</context>
@@ -4695,6 +5007,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.revokedOne" datatype="html">
         <source>1 appareil déconnecté.</source>
+        <target state="translated">تم تسجيل الخروج من جهاز واحد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">27</context>
@@ -4703,6 +5016,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.revokedMany" datatype="html">
         <source><x id="count" equiv-text="count"/> appareils déconnectés.</source>
+        <target state="translated">عدد الأجهزة التي سُجِّل الخروج منها: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">28</context>
@@ -4711,6 +5025,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.confirmTitle" datatype="html">
         <source>Déconnecter les autres appareils ?</source>
+        <target state="translated">تسجيل الخروج من الأجهزة الأخرى؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">38</context>
@@ -4719,6 +5034,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.confirmBody" datatype="html">
         <source>Cet appareil reste connecté. Les autres devront se reconnecter ; l&apos;opération est consignée côté serveur.</source>
+        <target state="translated">يبقى هذا الجهاز متّصلًا. ويلزم تسجيل الدخول من جديد على الأجهزة الأخرى؛ وتُسجَّل العملية على الخادم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">39</context>
@@ -4727,6 +5043,7 @@
       </trans-unit>
       <trans-unit id="account.security.sessions.confirmButton" datatype="html">
         <source>Déconnecter</source>
+        <target state="translated">تسجيل الخروج</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">40</context>
@@ -4735,6 +5052,7 @@
       </trans-unit>
       <trans-unit id="account.security.verify.alreadyEnabled" datatype="html">
         <source>La double authentification est déjà active sur ce compte.</source>
+        <target state="translated">المصادقة الثنائية مفعّلة بالفعل على هذا الحساب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">60</context>
@@ -4743,6 +5061,7 @@
       </trans-unit>
       <trans-unit id="account.security.verify.notStarted" datatype="html">
         <source>Le secret en attente a expiré. Recommencez l&apos;activation depuis le début.</source>
+        <target state="translated">انتهت صلاحية المفتاح السرّي المعلّق. يُرجى بدء التفعيل من جديد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/security-messages.ts</context>
           <context context-type="linenumber">61</context>
@@ -4751,6 +5070,7 @@
       </trans-unit>
       <trans-unit id="account.security.stepper.label" datatype="html">
         <source>Étapes de l&apos;activation</source>
+        <target state="translated">خطوات التفعيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">3,4</context>
@@ -4759,6 +5079,7 @@
       </trans-unit>
       <trans-unit id="account.security.scan.title" datatype="html">
         <source> Scanner le QR code </source>
+        <target state="translated"> مسح رمز QR </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">22,24</context>
@@ -4767,6 +5088,7 @@
       </trans-unit>
       <trans-unit id="account.security.scan.intro" datatype="html">
         <source> Avec une application d&apos;authentification (Aegis, FreeOTP, Google Authenticator, 1Password…). Le secret n&apos;est affiché qu&apos;une seule fois. </source>
+        <target state="translated"> باستخدام تطبيق مصادقة (Aegis، FreeOTP، Google Authenticator، 1Password…). لا يُعرض المفتاح السرّي إلا مرة واحدة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">25,28</context>
@@ -4775,6 +5097,7 @@
       </trans-unit>
       <trans-unit id="account.security.secret.hint" datatype="html">
         <source> QR illisible ? Saisissez le secret à la main : </source>
+        <target state="translated"> رمز QR غير مقروء؟ يُرجى إدخال المفتاح السرّي يدويًا: </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">42,45</context>
@@ -4783,6 +5106,7 @@
       </trans-unit>
       <trans-unit id="account.security.secret.copy" datatype="html">
         <source> Copier </source>
+        <target state="translated"> نسخ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">54,56</context>
@@ -4791,6 +5115,7 @@
       </trans-unit>
       <trans-unit id="account.security.secret.params" datatype="html">
         <source> Émetteur PsyMate · 6 chiffres · toutes les 30 s · SHA-1. </source>
+        <target state="translated"> الجهة المُصدِرة PsyMate · 6 أرقام · كل 30 ثانية · SHA-1. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">59,63</context>
@@ -4799,6 +5124,7 @@
       </trans-unit>
       <trans-unit id="account.security.scan.next" datatype="html">
         <source> Continuer </source>
+        <target state="translated"> التالي </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">70,74</context>
@@ -4807,6 +5133,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.title" datatype="html">
         <source> Saisir le code à 6 chiffres </source>
+        <target state="translated"> إدخال الرمز المكوّن من 6 أرقام </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">79,81</context>
@@ -4815,6 +5142,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.label" datatype="html">
         <source>Code de vérification</source>
+        <target state="translated">رمز التحقّق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">84,88</context>
@@ -4823,6 +5151,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.hint" datatype="html">
         <source> Le code affiché par l&apos;application pour PsyMate. Il prouve que le secret est bien enregistré ; la double authentification n&apos;est active qu&apos;après cette étape. </source>
+        <target state="translated"> الرمز الذي يعرضه التطبيق لـ PsyMate. يُثبت أن المفتاح السرّي محفوظ فعلًا؛ ولا تُفعَّل المصادقة الثنائية إلا بعد هذه الخطوة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">104,107</context>
@@ -4831,6 +5160,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.format" datatype="html">
         <source> Saisissez les 6 chiffres affichés par l&apos;application. </source>
+        <target state="translated"> يُرجى إدخال الأرقام الستة التي يعرضها التطبيق. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">113,115</context>
@@ -4839,6 +5169,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.back" datatype="html">
         <source> Retour </source>
+        <target state="translated"> رجوع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">127,130</context>
@@ -4847,6 +5178,7 @@
       </trans-unit>
       <trans-unit id="account.security.code.submit" datatype="html">
         <source> Vérifier </source>
+        <target state="translated"> تحقّق </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">135,138</context>
@@ -4855,6 +5187,7 @@
       </trans-unit>
       <trans-unit id="account.security.codes.title" datatype="html">
         <source> Codes de secours </source>
+        <target state="translated"> رموز الاسترداد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">144,147</context>
@@ -4863,6 +5196,7 @@
       </trans-unit>
       <trans-unit id="account.security.codes.enabled" datatype="html">
         <source> Double authentification activée. Conservez ces 10 codes en lieu sûr : chacun ne sert qu&apos;une fois et ils ne seront plus affichés. </source>
+        <target state="translated"> تم تفعيل المصادقة الثنائية. يُرجى حفظ هذه الرموز العشرة في مكان آمن: يُستخدم كل منها مرة واحدة فقط، ولن تُعرض مرة أخرى. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.html</context>
           <context context-type="linenumber">151,154</context>
@@ -4871,6 +5205,7 @@
       </trans-unit>
       <trans-unit id="account.security.qr.label" datatype="html">
         <source>QR code à scanner avec votre application d&apos;authentification ; le secret affiché à côté en est l&apos;équivalent.</source>
+        <target state="translated">رمز QR للمسح بتطبيق المصادقة؛ والمفتاح السرّي المعروض بجانبه يعادله.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">76</context>
@@ -4879,6 +5214,7 @@
       </trans-unit>
       <trans-unit id="account.security.enroll.errorTitle" datatype="html">
         <source>Impossible de préparer la double authentification</source>
+        <target state="translated">تعذّر تحضير المصادقة الثنائية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">77</context>
@@ -4887,6 +5223,7 @@
       </trans-unit>
       <trans-unit id="account.security.codes.errorTitle" datatype="html">
         <source>Impossible d&apos;afficher vos codes de secours</source>
+        <target state="translated">تعذّر عرض رموز الاسترداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">78</context>
@@ -4895,6 +5232,7 @@
       </trans-unit>
       <trans-unit id="account.security.enroll.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -4903,6 +5241,7 @@
       </trans-unit>
       <trans-unit id="account.security.step.scan" datatype="html">
         <source>Scanner le QR</source>
+        <target state="translated">مسح رمز QR</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">107</context>
@@ -4911,6 +5250,7 @@
       </trans-unit>
       <trans-unit id="account.security.step.code" datatype="html">
         <source>Saisir le code</source>
+        <target state="translated">إدخال الرمز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">111</context>
@@ -4919,6 +5259,7 @@
       </trans-unit>
       <trans-unit id="account.security.step.codes" datatype="html">
         <source>Codes de secours</source>
+        <target state="translated">رموز الاسترداد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">115</context>
@@ -4927,6 +5268,7 @@
       </trans-unit>
       <trans-unit id="account.security.secret.copied" datatype="html">
         <source>Secret copié.</source>
+        <target state="translated">تم نسخ المفتاح السرّي.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">131</context>
@@ -4935,6 +5277,7 @@
       </trans-unit>
       <trans-unit id="account.security.secret.copyFailed" datatype="html">
         <source>Copie impossible : sélectionnez le secret à la main.</source>
+        <target state="translated">يتعذّر النسخ: يُرجى تحديد المفتاح السرّي يدويًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/two-factor-setup.component.ts</context>
           <context context-type="linenumber">135</context>
@@ -4943,6 +5286,7 @@
       </trans-unit>
       <trans-unit id="53252064574172960" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {Aucun déposé} =1 {1 déposé} other {<x id="INTERPOLATION"/> déposés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لم يُودَع أي مستند} one {مستند واحد مُودَع} two {مستندان مُودَعان} few {<x id="INTERPOLATION"/> مستندات مُودَعة} many {<x id="INTERPOLATION"/> مستندًا مُودَعًا} other {<x id="INTERPOLATION"/> مستند مُودَع}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">33,35</context>
@@ -4962,6 +5306,11 @@
                     =1 {1 déposé}
                     other {{{documentCount()}} déposés}
                   }" xid="4858505258601418427"/> · dossier soumis</source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · الملف مُرسَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">33,39</context>
@@ -4978,6 +5327,14 @@
                     =1 {1 manquant}
                     other {{{missingCount()}} manquants}
                   }" xid="5940867077365447752"/></source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · <x id="ICU_1" equiv-text="{missingCount(), plural,
+                    =1 {1 manquant}
+                    other {{{missingCount()}} manquants}
+                  }" xid="5940867077365447752"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">46,57</context>
@@ -4987,6 +5344,7 @@
       </trans-unit>
       <trans-unit id="3269664571840477809" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 manquant} other {<x id="INTERPOLATION"/> manquants}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مستندات ناقصة} one {مستند واحد ناقص} two {مستندان ناقصان} few {<x id="INTERPOLATION"/> مستندات ناقصة} many {<x id="INTERPOLATION"/> مستندًا ناقصًا} other {<x id="INTERPOLATION"/> مستند ناقص}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">52,54</context>
@@ -4998,6 +5356,11 @@
                     =1 {1 déposé}
                     other {{{documentCount()}} déposés}
                   }" xid="4858505258601418427"/> · prêt à soumettre</source>
+        <target state="translated"><x id="ICU" equiv-text="{documentCount(), plural,
+                    =0 {Aucun déposé}
+                    =1 {1 déposé}
+                    other {{{documentCount()}} déposés}
+                  }" xid="4858505258601418427"/> · جاهز للإرسال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">62,68</context>
@@ -5006,6 +5369,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.label" datatype="html">
         <source>Progression du dossier</source>
+        <target state="translated">تقدّم الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">143</context>
@@ -5014,6 +5378,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.created" datatype="html">
         <source>Compte créé</source>
+        <target state="translated">إنشاء الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">151</context>
@@ -5022,6 +5387,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.created.detail" datatype="html">
         <source>Fait</source>
+        <target state="translated">تم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">152</context>
@@ -5030,6 +5396,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.emailConfirmed" datatype="html">
         <source>E-mail confirmé</source>
+        <target state="translated">تأكيد البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">156</context>
@@ -5038,6 +5405,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.emailConfirmed.detail" datatype="html">
         <source>Fait</source>
+        <target state="translated">تم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">157</context>
@@ -5046,6 +5414,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.docs" datatype="html">
         <source>Justificatifs</source>
+        <target state="translated">مستندات الإثبات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">161</context>
@@ -5054,6 +5423,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.validation" datatype="html">
         <source>Validation</source>
+        <target state="translated">القبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">167</context>
@@ -5062,6 +5432,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.validation.approved" datatype="html">
         <source>Dossier approuvé</source>
+        <target state="translated">الملف مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">170</context>
@@ -5070,6 +5441,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.validation.underReview" datatype="html">
         <source>En cours, sous 2 jours ouvrés</source>
+        <target state="translated">قيد التحقّق، خلال يومَي عمل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">172</context>
@@ -5078,6 +5450,7 @@
       </trans-unit>
       <trans-unit id="account.verification.progress.validation.todo" datatype="html">
         <source>Sous 2 jours ouvrés après soumission</source>
+        <target state="translated">خلال يومَي عمل بعد الإرسال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/verification-progress.component.ts</context>
           <context context-type="linenumber">173</context>
