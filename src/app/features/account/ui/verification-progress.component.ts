@@ -90,7 +90,8 @@ interface Milestone {
       display: flex;
       flex-direction: column;
       gap: 2px;
-      padding: 10px 12px 10px 28px;
+      padding-block: 10px;
+      padding-inline: 28px 12px;
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
       background: var(--surface-raised);
@@ -99,7 +100,7 @@ interface Milestone {
     .dot {
       position: absolute;
       top: 14px;
-      left: 10px;
+      inset-inline-start: 10px;
       width: 10px;
       height: 10px;
       border-radius: 50%;
@@ -111,7 +112,8 @@ interface Milestone {
     }
     .current {
       border: 2px solid var(--primary);
-      padding: 9px 11px 9px 27px;
+      padding-block: 9px;
+      padding-inline: 27px 11px;
     }
     .current .dot {
       border-color: var(--primary);

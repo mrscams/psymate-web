@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +15,7 @@ import { ApiProblem } from '../../../../core/http';
 import { applyProblem, FieldErrorsComponent, SERVER_ERROR } from '../../../../shared/forms';
 import { Emotion, EMOTION_FAMILIES, EmotionFamily } from '../../data/emotions.api';
 import { emotionProblemMessage } from './vocabulary-messages';
+import { formatLocale } from '../../../../core/i18n';
 import { closestEmotion, familyColor, familyLabel } from './vocabulary-labels';
 
 /** Enregistre l'émotion ; renvoie null si c'est fait, sinon le problème du serveur. */
@@ -39,6 +48,7 @@ export type CreateEmotionFn = (
           id="field-labelFr"
           type="text"
           formControlName="labelFr"
+          dir="auto"
           autocomplete="off"
           required
           [attr.aria-invalid]="showError('labelFr')"
@@ -138,7 +148,10 @@ export class EmotionFormComponent {
     initialValue: '',
   });
 
-  protected readonly near = computed(() => closestEmotion(this.labelValue(), this.emotions()));
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+  protected readonly near = computed(() =>
+    closestEmotion(this.labelValue(), this.emotions(), this.locale),
+  );
 
   protected readonly describedBy = computed(() =>
     ['field-labelFr-error', this.near() ? 'field-labelFr-near' : null].filter(Boolean).join(' '),

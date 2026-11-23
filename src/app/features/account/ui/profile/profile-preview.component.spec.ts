@@ -86,4 +86,31 @@ describe('ProfilePreviewComponent', () => {
     refresh.click();
     expect(document.activeElement).toBe(card);
   });
+
+  it('M16-12 : texte saisi en dir="auto", ville isolée, téléphone, e-mail et site en dir="ltr"', async () => {
+    const { el } = await render(
+      fields({
+        titleLabel: 'Psychologue clinicienne',
+        bio: 'مرحبا',
+        city: 'Lyon',
+        modalities: ['in_person'],
+        contactPhone: '04 00 00 00 00',
+        showPhone: true,
+        contactEmail: 'cabinet@example.test',
+        showEmail: true,
+        address: '12 rue Vendôme',
+        showAddress: true,
+        websiteUrl: 'https://claire.example.test',
+      }),
+    );
+    expect(el.querySelector('.name')?.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('.bio')?.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('.who bdi')?.textContent).toBe('Lyon');
+    const contacts = [...el.querySelectorAll('.contact bdi')].map((b) => b.getAttribute('dir'));
+    expect(contacts).toEqual(['ltr', 'ltr', 'auto']);
+    expect(el.querySelector('bdi[dir="ltr"]')?.textContent).toBe('04 00 00 00 00');
+    expect(
+      [...el.querySelectorAll('bdi')].some((b) => b.textContent === 'https://claire.example.test'),
+    ).toBe(true);
+  });
 });

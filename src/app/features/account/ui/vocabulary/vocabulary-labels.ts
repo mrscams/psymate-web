@@ -27,13 +27,16 @@ export function familyColor(family: EmotionFamily): string {
   return `var(--emotion-${family})`;
 }
 
-/** Forme de comparaison d'un libellé : minuscules, sans accents ni « # », espaces réduits. */
-export function normalizeLabel(value: string): string {
+/**
+ * Forme de comparaison d'un libellé : minuscules (locale de formatage de l'écran, Q73), sans accents
+ * ni « # », espaces réduits.
+ */
+export function normalizeLabel(value: string, locale = 'fr'): string {
   return value
     .normalize('NFD')
     .replace(/\p{M}/gu, '')
     .replace(/#/g, '')
-    .toLocaleLowerCase('fr')
+    .toLocaleLowerCase(locale)
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -69,13 +72,17 @@ export const PROXIMITY_THRESHOLD = 0.6;
  * existant contenu comme mot entier (« Appréhension sociale » → « Appréhension »), ou trigrammes
  * proches. Un avertissement seulement : le serveur juge l'égalité (409 EMOTION_LABEL_EXISTS).
  */
-export function closestEmotion(label: string, emotions: readonly Emotion[]): Emotion | null {
-  const wanted = normalizeLabel(label);
+export function closestEmotion(
+  label: string,
+  emotions: readonly Emotion[],
+  locale = 'fr',
+): Emotion | null {
+  const wanted = normalizeLabel(label, locale);
   if (wanted.length < 3) return null;
   let best: Emotion | null = null;
   let bestScore = 0;
   for (const emotion of emotions) {
-    const other = normalizeLabel(emotion.labelFr);
+    const other = normalizeLabel(emotion.labelFr, locale);
     if (!other) continue;
     let score = trigramSimilarity(wanted, other);
     if (other === wanted) score = 2;

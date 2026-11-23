@@ -45,6 +45,7 @@
         [id]="fieldId('title')"
         type="text"
         formControlName="title"
+        dir="auto"
         required
         [attr.aria-invalid]="form.controls.title.invalid && form.controls.title.touched"
         [attr.aria-describedby]="fieldId('title') + '-error'"
@@ -61,6 +62,7 @@
         [id]="fieldId('issuer')"
         type="text"
         formControlName="issuer"
+        dir="auto"
         [attr.aria-invalid]="form.controls.issuer.invalid && form.controls.issuer.touched"
         [attr.aria-describedby]="fieldId('issuer') + '-error'"
       />
@@ -74,6 +76,7 @@
         [id]="fieldId('year')"
         type="text"
         formControlName="year"
+        dir="ltr"
         inputmode="numeric"
         class="mono"
         [attr.aria-invalid]="form.controls.year.invalid && form.controls.year.touched"
@@ -124,7 +127,7 @@
     <p class="file-name" [id]="fieldId('file') + '-name'">
       @if (file(); as f) {
         <span i18n="Fichier choisi@@account.verification.upload.chosen">Fichier choisi :</span>
-        <span class="mono">{{ f.name }}</span>
+        <span class="mono name" dir="auto">{{ f.name }}</span>
       } @else {
         <span i18n="Aucun fichier choisi@@account.verification.upload.none"
           >Aucun fichier choisi.</span
@@ -137,7 +140,7 @@
     @if (uploading()) {
       <div class="progress">
         <progress max="100" [value]="state().percent" [attr.aria-label]="progressLabel"></progress>
-        <span class="mono" aria-live="polite">{{ state().percent }} %</span>
+        <span class="mono" dir="ltr" aria-live="polite">{{ state().percent }} %</span>
       </div>
     }
   </div>

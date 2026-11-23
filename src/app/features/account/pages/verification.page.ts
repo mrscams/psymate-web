@@ -22,7 +22,7 @@ import {
 import { stateKind } from '../../../shared/util';
 import { DocumentType, isDocumentType, ProfessionalInfoPatch } from '../data/verification.api';
 import { VerificationStore } from '../data/verification.store';
-import { documentTypeShort, professionLabel } from '../ui/document-labels';
+import { documentListText, documentTypeShort, professionLabel } from '../ui/document-labels';
 import { DocumentListComponent } from '../ui/document-list.component';
 import { DocumentUploadComponent, DocumentUploadRequest } from '../ui/document-upload.component';
 import { ProfessionalInfoFormComponent } from '../ui/professional-info-form.component';
@@ -92,13 +92,13 @@ export class VerificationPage {
   protected readonly missingText = computed(() => {
     const missing = this.store.missing();
     if (missing.length === 0) return null;
-    return $localize`:Pièces obligatoires manquantes@@account.verification.missing:Il manque : ${missing.map(documentTypeShort).join(', ')}:list:.`;
+    return $localize`:Pièces obligatoires manquantes@@account.verification.missing:Il manque : ${documentListText(missing.map(documentTypeShort), this.locale)}:list:.`;
   });
 
   protected readonly recommendedText = computed(() => {
     const recommended = this.store.recommended();
     if (recommended.length === 0) return null;
-    return $localize`:Pièces conseillées absentes (G Q14)@@account.verification.recommended:Conseillé pour votre profession, sans bloquer la soumission : ${recommended.map(documentTypeShort).join(', ')}:list:.`;
+    return $localize`:Pièces conseillées absentes (G Q14)@@account.verification.recommended:Conseillé pour votre profession, sans bloquer la soumission : ${documentListText(recommended.map(documentTypeShort), this.locale)}:list:.`;
   });
 
   protected readonly submittedAtText = computed(() => {
@@ -106,7 +106,9 @@ export class VerificationPage {
     return at ? formatDate(at, this.locale, 'long') : '';
   });
 
-  protected readonly submitMessage = computed(() => submitError(this.store.submission().problem));
+  protected readonly submitMessage = computed(() =>
+    submitError(this.store.submission().problem, this.locale),
+  );
 
   protected readonly lockRows: LockRow[] = [
     {
@@ -204,13 +206,13 @@ export class VerificationPage {
 }
 
 /** Message sous le bouton Soumettre après un refus. */
-function submitError(problem: ApiProblem | null): string | null {
+function submitError(problem: ApiProblem | null, locale: string): string | null {
   if (!problem) return null;
   if (problem.status === 409 && problem.code === 'VERIFICATION_INCOMPLETE') {
     const missing = (
       Array.isArray(problem.extra?.['missing']) ? (problem.extra['missing'] as unknown[]) : []
     ).filter(isDocumentType) as DocumentType[];
-    const list = missing.map(documentTypeShort).join(', ');
+    const list = documentListText(missing.map(documentTypeShort), locale);
     return missing.length > 0
       ? $localize`:409 VERIFICATION_INCOMPLETE avec la liste@@account.verification.submit.incomplete:Le serveur refuse la soumission, il manque : ${list}:list:.`
       : $localize`:409 VERIFICATION_INCOMPLETE sans liste@@account.verification.submit.incompleteNoList:Le serveur refuse la soumission : des justificatifs obligatoires manquent.`;

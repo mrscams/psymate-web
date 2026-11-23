@@ -42,7 +42,7 @@
               QR illisible ? Saisissez le secret à la main :
             </p>
             <p class="secret">
-              <code>{{ groupedSecret() }}</code>
+              <code dir="ltr">{{ groupedSecret() }}</code>
             </p>
             <div class="secret-actions">
               <button
@@ -89,6 +89,7 @@
             class="otp"
             type="text"
             formControlName="code"
+            dir="ltr"
             inputmode="numeric"
             autocomplete="one-time-code"
             maxlength="6"

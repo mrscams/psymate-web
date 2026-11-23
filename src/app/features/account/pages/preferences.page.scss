@@ -112,9 +112,11 @@ h2 {
   font: var(--mat-sys-body-small);
 }
 
+// « 1 h 15 » et date à nom de mois : des lettres, police d'interface en arabe (Q76).
 .mono {
   color: var(--text-primary);
-  font: 14px/1.4 var(--font-mono);
+  font: 14px/1.4 var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .summary {
@@ -259,7 +261,7 @@ h2 {
   }
 
   a {
-    margin-left: 4px;
+    margin-inline-start: 4px;
     color: var(--text-primary);
     font-weight: 600;
   }
