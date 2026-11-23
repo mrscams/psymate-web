@@ -47,35 +47,37 @@
   align-self: flex-end;
 }
 
+// Date à nom de mois : chasse fixe en français et en anglais, police d'interface en arabe (Q76).
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
 }
 
-// Carte de l'entrée source : bordure gauche à la couleur du type (fiche 06, tokens).
+// Carte de l'entrée source : bordure de début (gauche, droite en arabe) à la couleur du type (fiche 06, tokens).
 .card {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--entry-note);
+  border-inline-start: 3px solid var(--entry-note);
   border-radius: 10px;
   background: var(--surface-raised);
 
   &[data-type='event'] {
-    border-left-color: var(--entry-event);
+    border-inline-start-color: var(--entry-event);
   }
   &[data-type='situation'] {
-    border-left-color: var(--entry-situation);
+    border-inline-start-color: var(--entry-situation);
   }
   &[data-type='feeling'] {
-    border-left-color: var(--entry-feeling);
+    border-inline-start-color: var(--entry-feeling);
   }
   &[data-type='session'] {
-    border-left-color: var(--entry-session);
+    border-inline-start-color: var(--entry-session);
   }
   &[data-type='medication'] {
-    border-left-color: var(--entry-medication);
+    border-inline-start-color: var(--entry-medication);
   }
 }
 
@@ -174,7 +176,7 @@
   border-radius: 8px;
   background: transparent;
   color: var(--text-primary);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 
   &:hover {
@@ -429,7 +431,7 @@ textarea {
     }
   }
   .ghost {
-    margin-left: auto;
+    margin-inline-start: auto;
     border-color: transparent;
     background: none;
     color: var(--text-secondary);

@@ -1,4 +1,5 @@
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
@@ -7,12 +8,14 @@ import {
   ElementRef,
   inject,
   input,
+  LOCALE_ID,
   output,
   signal,
   untracked,
   viewChild,
 } from '@angular/core';
 
+import { textDirection } from '../../../core/i18n';
 import { StateComponent } from '../../../shared/ui';
 import {
   DEFAULT_DIRECTION,
@@ -35,7 +38,14 @@ import {
   LayoutEngine,
   LayoutOptions,
 } from './graph-layout';
-import { buildScene, CardView, GraphCanvasLabels, GraphScene, LinkView } from './graph-scene';
+import {
+  BandView,
+  buildScene,
+  CardView,
+  GraphCanvasLabels,
+  GraphScene,
+  LinkView,
+} from './graph-scene';
 
 /**
  * Sonde des e2e : position à l'écran d'une carte et durée de la dernière disposition. Posée sur
@@ -94,7 +104,7 @@ const ARROW_PROPOSED = 'pm-graph-arrow-proposed';
 /**
  * Canevas du graphe (fiche 04, B4 écran 4) : une carte par entrée (forme du type, titre, date), un
  * trait par lien (style par type de lien, flèche vers la cible), disposés par elkjs de gauche à
- * droite (graph-layout.ts). Clic : sélection, le fil de l'entrée s'allume et le reste s'efface ;
+ * droite, vers la gauche en arabe (graph-layout.ts, Q75). Clic : sélection, le fil de l'entrée s'allume et le reste s'efface ;
  * double-clic : activation (timeline, ou dépliage d'un super-nœud) ; glisser une carte sur une
  * autre : lien à poser, la carte revient à sa place. Glisser le fond déplace la vue, la molette
  * zoome ; zoom et position remontent à la page, qui les range par racine. Les cartes se cliquent
@@ -142,6 +152,8 @@ export class GraphCanvasComponent {
   protected readonly panning = signal(false);
   protected readonly drag = signal<Drag | null>(null);
   protected readonly markers = [ARROW, ARROW_THREAD, ARROW_PROPOSED];
+  /** Sens de lecture de l'interface (Q74) : le texte des cartes et des titres de colonne le suit. */
+  protected readonly textDirection = textDirection(inject(LOCALE_ID));
   protected readonly failedTitle = $localize`:Le moteur du graphe ne s'est pas chargé@@graph.canvas.failed:Impossible d'afficher le graphe`;
   protected readonly zoomGroupLabel = $localize`:Groupe des boutons de zoom du graphe@@graph.zoom.group:Zoom du graphe`;
   protected readonly zoomInLabel = $localize`:Bouton de zoom avant du graphe@@graph.zoom.in:Zoom avant`;
@@ -197,11 +209,16 @@ export class GraphCanvasComponent {
       const relayout = this.relayout();
       const reading = this.reading();
       const direction = this.direction();
-      untracked(() => void this.arrange(view, root, key, relayout, { reading, direction }));
+      const textDirection = this.textDirection;
+      untracked(
+        () => void this.arrange(view, root, key, relayout, { reading, direction, textDirection }),
+      );
     });
 
     this.exposeProbe();
-    inject(DestroyRef).onDestroy(() => {
+    const destroyRef = inject(DestroyRef);
+    afterNextRender(() => this.keepReadingStart(destroyRef));
+    destroyRef.onDestroy(() => {
       this.destroyed = true;
       if (this.animationTimer) clearTimeout(this.animationTimer);
       if (this.rearrangeTimer) clearTimeout(this.rearrangeTimer);
@@ -290,6 +307,29 @@ export class GraphCanvasComponent {
     );
   }
 
+  /**
+   * De droite à gauche (Q75), le début de la lecture est au bord droit de la zone : quand la zone
+   * change de largeur (panneau de détail ouvert ou fermé à sa gauche), le graphe garde sa place
+   * par rapport à ce bord, comme il la garde par rapport au bord gauche de gauche à droite (le
+   * repère du dessin part toujours du bord gauche). Sans ResizeObserver, rien ne bouge.
+   */
+  private keepReadingStart(destroyRef: DestroyRef): void {
+    if (this.textDirection !== 'rtl' || typeof ResizeObserver === 'undefined') return;
+    const zone = this.viewportEl().nativeElement;
+    let width = zone.clientWidth;
+    const observer = new ResizeObserver(() => {
+      const next = zone.clientWidth;
+      const shift = next - width;
+      width = next;
+      if (!shift || !this.placed() || this.destroyed) return;
+      const current = this.transform();
+      this.moveTo({ ...current, x: current.x + shift }, false);
+      this.viewportMoved();
+    });
+    observer.observe(zone);
+    destroyRef.onDestroy(() => observer.disconnect());
+  }
+
   /** Les cartes ne s'animent que le temps d'une nouvelle disposition (une carte lâchée revient d'un coup). */
   private animateCards(): void {
     if (this.rearrangeTimer) clearTimeout(this.rearrangeTimer);
@@ -358,6 +398,12 @@ export class GraphCanvasComponent {
     const dx = drag?.id === card.id ? drag.dx : 0;
     const dy = drag?.id === card.id ? drag.dy : 0;
     return `translate(${card.box.x + dx}px, ${card.box.y + dy}px)`;
+  }
+
+  /** Titre d'une colonne à son point d'accroche ; il y finit s'il est à gauche d'une rangée ou lu vers la gauche. */
+  protected bandLabelTransform(band: BandView): string {
+    const { x, y } = band.labelAt;
+    return `translate(${x}px, ${y}px)${band.labelEnds ? ' translateX(-100%)' : ''}`;
   }
 
   protected markerOf(link: LinkView): string {

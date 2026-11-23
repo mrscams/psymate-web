@@ -108,7 +108,7 @@ interface LineSample {
       background: transparent;
       color: var(--text-secondary);
       font: var(--mat-sys-label-medium);
-      text-align: left;
+      text-align: start;
       cursor: pointer;
     }
     .toggle:hover {

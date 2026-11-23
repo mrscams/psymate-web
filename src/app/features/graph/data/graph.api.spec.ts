@@ -1,4 +1,37 @@
-import { mostLinkedSituation, toView } from './graph.api';
+import { mostLinkedSituation, toEmotionLabels, toView } from './graph.api';
+
+describe('GraphApi · toEmotionLabels (Q78, plus de booléen english)', () => {
+  const list = [
+    { code: 'anxiety', labelFr: 'Anxiété', labelEn: 'Anxiety' },
+    { code: 'shame', labelFr: 'Honte' },
+    { code: 'calm', labelFr: '', labelEn: '' },
+    { labelFr: 'Sans code' },
+  ];
+
+  it('français : le libellé français, sinon le code', () => {
+    expect(toEmotionLabels(list, 'fr')).toEqual({
+      anxiety: 'Anxiété',
+      shame: 'Honte',
+      calm: 'calm',
+    });
+  });
+
+  it('anglais : le libellé anglais, sinon le français', () => {
+    expect(toEmotionLabels(list, 'en')).toEqual({
+      anxiety: 'Anxiety',
+      shame: 'Honte',
+      calm: 'calm',
+    });
+  });
+
+  it('arabe : le français tant que le catalogue n’a pas de libellé arabe (contrat 0.16.0)', () => {
+    expect(toEmotionLabels(list, 'ar')).toEqual({
+      anxiety: 'Anxiété',
+      shame: 'Honte',
+      calm: 'calm',
+    });
+  });
+});
 
 describe('GraphApi · mostLinkedSituation (racine par défaut)', () => {
   it('la situation en cours la plus liée (triées par le serveur), reliée au moins une fois', () => {

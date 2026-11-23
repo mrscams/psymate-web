@@ -46,6 +46,7 @@ const featureIndex = { type: 'feature', fileInternalPath: 'index.ts' };
  * remplace la liste par tout src.
  */
 const LOGICAL_DIRECTION_ZONES = [
+  'src/app/features/graph',
   'src/app/shared',
   'src/app/app.component',
   'src/theme',

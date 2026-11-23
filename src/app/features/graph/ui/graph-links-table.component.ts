@@ -55,14 +55,16 @@ export const LINKS_PAGE_SIZE = 20;
               <td>
                 <button type="button" class="entry" (click)="selectEntry.emit(row.source.id)">
                   <pm-entry-icon [type]="row.source.type" [size]="14" />
-                  {{ row.source.name }}
+                  <bdi>{{ row.source.name }}</bdi>
                 </button>
               </td>
-              <td>{{ row.label }}</td>
+              <td>
+                <bdi>{{ row.label }}</bdi>
+              </td>
               <td>
                 <button type="button" class="entry" (click)="selectEntry.emit(row.target.id)">
                   <pm-entry-icon [type]="row.target.type" [size]="14" />
-                  {{ row.target.name }}
+                  <bdi>{{ row.target.name }}</bdi>
                 </button>
               </td>
               <td>{{ row.provenance }}</td>
@@ -129,7 +131,7 @@ export const LINKS_PAGE_SIZE = 20;
               <td>
                 <button type="button" class="entry" (click)="selectEntry.emit(group.neighbor.id)">
                   <pm-entry-icon [type]="group.neighbor.type" [size]="14" />
-                  {{ group.neighbor.name }}
+                  <bdi>{{ group.neighbor.name }}</bdi>
                 </button>
               </td>
               <td>
@@ -165,13 +167,13 @@ export const LINKS_PAGE_SIZE = 20;
       padding: 8px 0;
       color: var(--text-secondary);
       font: var(--mat-sys-label-large);
-      text-align: left;
+      text-align: start;
     }
     th,
     td {
       padding: 6px 10px;
       border-bottom: 1px solid var(--border-subtle);
-      text-align: left;
+      text-align: start;
       vertical-align: middle;
     }
     th {
@@ -189,7 +191,7 @@ export const LINKS_PAGE_SIZE = 20;
       background: transparent;
       color: var(--text-primary);
       font: inherit;
-      text-align: left;
+      text-align: start;
       cursor: pointer;
     }
     .entry:hover {
