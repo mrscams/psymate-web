@@ -51,6 +51,7 @@ const LOGICAL_DIRECTION_ZONES = [
   'src/app/app.component',
   'src/app/features/account',
   'src/app/features/admin',
+  'src/app/features/auth',
   'src/app/features/patients',
   'src/app/features/public',
   'src/app/features/timeline',
