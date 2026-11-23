@@ -8923,6 +8923,7 @@
       </trans-unit>
       <trans-unit id="agenda.pageTitle" datatype="html">
         <source>Agenda · PsyMate</source>
+        <target state="translated">المواعيد · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/agenda.routes.ts</context>
           <context context-type="linenumber">14</context>
@@ -8931,6 +8932,7 @@
       </trans-unit>
       <trans-unit id="agenda.title" datatype="html">
         <source>Agenda</source>
+        <target state="translated">المواعيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">156</context>
@@ -8939,6 +8941,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.today" datatype="html">
         <source>Aujourd&apos;hui</source>
+        <target state="translated">اليوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">157</context>
@@ -8947,6 +8950,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.new" datatype="html">
         <source>+ Rendez-vous</source>
+        <target state="translated">+ موعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">158</context>
@@ -8955,6 +8959,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.views" datatype="html">
         <source>Vue</source>
+        <target state="translated">العرض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">159</context>
@@ -8963,6 +8968,7 @@
       </trans-unit>
       <trans-unit id="agenda.rail.label" datatype="html">
         <source>Navigation de l&apos;agenda</source>
+        <target state="translated">التنقّل في المواعيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">160</context>
@@ -8971,6 +8977,7 @@
       </trans-unit>
       <trans-unit id="agenda.shortcut.escape" datatype="html">
         <source>Fermer le détail du rendez-vous</source>
+        <target state="translated">إغلاق تفاصيل الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">161</context>
@@ -8979,6 +8986,7 @@
       </trans-unit>
       <trans-unit id="agenda.shortcut.arrows" datatype="html">
         <source>Rendez-vous précédent / suivant du jour</source>
+        <target state="translated">الموعد السابق / التالي في اليوم نفسه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">162</context>
@@ -8987,6 +8995,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.prevDay" datatype="html">
         <source>Jour précédent</source>
+        <target state="translated">اليوم السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">180</context>
@@ -8995,6 +9004,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.nextDay" datatype="html">
         <source>Jour suivant</source>
+        <target state="translated">اليوم التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">181</context>
@@ -9003,6 +9013,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.prevMonth" datatype="html">
         <source>Mois précédent</source>
+        <target state="translated">الشهر السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">185</context>
@@ -9011,6 +9022,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.nextMonth" datatype="html">
         <source>Mois suivant</source>
+        <target state="translated">الشهر التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">186</context>
@@ -9019,6 +9031,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.prevPeriod" datatype="html">
         <source>Période précédente</source>
+        <target state="translated">الفترة السابقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">190</context>
@@ -9027,6 +9040,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.nextPeriod" datatype="html">
         <source>Période suivante</source>
+        <target state="translated">الفترة التالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">191</context>
@@ -9035,6 +9049,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.prevWeek" datatype="html">
         <source>Semaine précédente</source>
+        <target state="translated">الأسبوع السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">195</context>
@@ -9043,6 +9058,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.nextWeek" datatype="html">
         <source>Semaine suivante</source>
+        <target state="translated">الأسبوع التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">196</context>
@@ -9051,6 +9067,7 @@
       </trans-unit>
       <trans-unit id="agenda.view.day" datatype="html">
         <source>Jour</source>
+        <target state="translated">يوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">203</context>
@@ -9059,6 +9076,7 @@
       </trans-unit>
       <trans-unit id="agenda.view.week" datatype="html">
         <source>Semaine</source>
+        <target state="translated">أسبوع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">205</context>
@@ -9067,6 +9085,7 @@
       </trans-unit>
       <trans-unit id="agenda.view.month" datatype="html">
         <source>Mois</source>
+        <target state="translated">شهر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">207</context>
@@ -9075,6 +9094,7 @@
       </trans-unit>
       <trans-unit id="agenda.view.list" datatype="html">
         <source>Liste</source>
+        <target state="translated">قائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">209</context>
@@ -9083,6 +9103,7 @@
       </trans-unit>
       <trans-unit id="agenda.list.emptyTitle" datatype="html">
         <source>Aucun rendez-vous dans les 30 prochains jours</source>
+        <target state="translated">لا مواعيد خلال الأيام الثلاثين القادمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">222</context>
@@ -9091,6 +9112,7 @@
       </trans-unit>
       <trans-unit id="agenda.list.emptyMessage" datatype="html">
         <source>Cliquez sur un créneau de la semaine ou sur « + Rendez-vous » pour en planifier un.</source>
+        <target state="translated">لتحديد موعد، يكفي النقر على فترة زمنية في الأسبوع أو على « + موعد ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">223</context>
@@ -9099,6 +9121,7 @@
       </trans-unit>
       <trans-unit id="agenda.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">225</context>
@@ -9107,6 +9130,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.undo" datatype="html">
         <source>Annuler</source>
+        <target state="translated">تراجع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">397</context>
@@ -9115,6 +9139,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.createdMany" datatype="html">
         <source><x id="count" equiv-text="count"/> rendez-vous planifiés</source>
+        <target state="translated">المواعيد المحدَّدة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">408</context>
@@ -9123,6 +9148,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.createdOne" datatype="html">
         <source>Rendez-vous planifié</source>
+        <target state="translated">تم تحديد الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">409</context>
@@ -9131,6 +9157,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.createdOverlaps" datatype="html">
         <source><x id="base" equiv-text="base"/>, <x id="count" equiv-text="overlaps"/> chevauchements</source>
+        <target state="translated"><x id="base" equiv-text="base"/>، التعارضات: <x id="count" equiv-text="overlaps"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">413</context>
@@ -9139,6 +9166,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.createdOverlap" datatype="html">
         <source><x id="base" equiv-text="base"/>, 1 chevauchement</source>
+        <target state="translated"><x id="base" equiv-text="base"/>، تعارض واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">414</context>
@@ -9147,6 +9175,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.undone" datatype="html">
         <source>Planification annulée.</source>
+        <target state="translated">تم التراجع عن تحديد الموعد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">424</context>
@@ -9155,6 +9184,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.patient" datatype="html">
         <source>Patient</source>
+        <target state="translated">المريض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">14,17</context>
@@ -9163,6 +9193,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.change" datatype="html">
         <source> Changer </source>
+        <target state="translated"> تغيير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">32,36</context>
@@ -9171,6 +9202,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.optionAge" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ option.age }}"/> ans</source>
+        <target state="translated">العمر: <x id="INTERPOLATION" equiv-text="{{ option.age }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">73,74</context>
@@ -9179,6 +9211,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.slot" datatype="html">
         <source>Créneau</source>
+        <target state="translated">الفترة الزمنية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">100,102</context>
@@ -9187,6 +9220,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.date" datatype="html">
         <source>Date</source>
+        <target state="translated">التاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">103,104</context>
@@ -9195,6 +9229,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.start" datatype="html">
         <source>Début</source>
+        <target state="translated">البداية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">109,112</context>
@@ -9203,6 +9238,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.duration" datatype="html">
         <source>Durée</source>
+        <target state="translated">المدّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">125,127</context>
@@ -9211,6 +9247,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.durationOption" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min </source>
+        <target state="translated"> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> د </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">136,137</context>
@@ -9219,6 +9256,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.endsAt" datatype="html">
         <source>Se termine à <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono dark&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ endLabel() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></source>
+        <target state="translated">ينتهي في <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span class=&quot;mono dark&quot;&gt;"/><x id="INTERPOLATION" equiv-text="{{ endLabel() }}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">148,149</context>
@@ -9227,6 +9265,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.modality" datatype="html">
         <source>Modalité</source>
+        <target state="translated">طريقة الاستشارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">173,177</context>
@@ -9235,6 +9274,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeat" datatype="html">
         <source>Répéter</source>
+        <target state="translated">التكرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">202,205</context>
@@ -9243,6 +9283,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeat.none" datatype="html">
         <source> Ne pas répéter </source>
+        <target state="translated"> دون تكرار </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">207,209</context>
@@ -9251,6 +9292,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeat.weekly" datatype="html">
         <source> Toutes les semaines </source>
+        <target state="translated"> كل أسبوع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">210,212</context>
@@ -9259,6 +9301,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeat.biweekly" datatype="html">
         <source> Toutes les 2 semaines </source>
+        <target state="translated"> كل أسبوعين </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">213,215</context>
@@ -9267,6 +9310,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeat.monthly" datatype="html">
         <source> Toutes les 4 semaines </source>
+        <target state="translated"> كل 4 أسابيع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">216,219</context>
@@ -9275,6 +9319,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.untilOption" datatype="html">
         <source> Jusqu&apos;à une date… </source>
+        <target state="translated"> حتى تاريخ معيّن… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">230,233</context>
@@ -9283,6 +9328,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.until" datatype="html">
         <source>Jusqu&apos;au</source>
+        <target state="translated">حتى تاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">239,242</context>
@@ -9291,6 +9337,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.repeatHint" datatype="html">
         <source>Chaque occurrence est un rendez-vous distinct ; vous pourrez en déplacer une sans toucher aux autres.</source>
+        <target state="translated">كل تكرار موعد مستقل؛ ويمكن تغيير موعد أحدها دون المساس بالبقية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">254,260</context>
@@ -9299,6 +9346,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.note" datatype="html">
         <source>Note de planification</source>
+        <target state="translated">ملاحظة الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">266,270</context>
@@ -9307,6 +9355,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">290,291</context>
@@ -9315,6 +9364,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.escapeKey" datatype="html">
         <source>Échap</source>
+        <target state="translated">Esc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.html</context>
           <context context-type="linenumber">291,295</context>
@@ -9323,6 +9373,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.title" datatype="html">
         <source>Nouveau rendez-vous</source>
+        <target state="translated">موعد جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">139</context>
@@ -9331,6 +9382,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.subtitle" datatype="html">
         <source>Créneau cliqué : <x id="date" equiv-text="formatWeekdayDate(this.data.slot, this.locale, false)"/>, <x id="time" equiv-text="formatTime(this.data.slot, this.locale)"/></source>
+        <target state="translated">الفترة المختارة: <x id="date" equiv-text="formatWeekdayDate(this.data.slot, this.locale, false)"/>، <x id="time" equiv-text="formatTime(this.data.slot, this.locale)"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">140</context>
@@ -9339,6 +9391,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.searchPlaceholder" datatype="html">
         <source>Rechercher un patient…</source>
+        <target state="translated">بحث عن مريض…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">145</context>
@@ -9347,6 +9400,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.searchOther" datatype="html">
         <source>Ou rechercher un autre patient…</source>
+        <target state="translated">أو البحث عن مريض آخر…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">146</context>
@@ -9355,6 +9409,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.countLabel" datatype="html">
         <source>Nombre de répétitions</source>
+        <target state="translated">عدد المرات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">147</context>
@@ -9363,6 +9418,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.notePlaceholder" datatype="html">
         <source>ex. apporter le carnet du soir</source>
+        <target state="translated">مثال: إحضار دفتر المساء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">148</context>
@@ -9371,6 +9427,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.startPlaceholder" datatype="html">
         <source>10:00</source>
+        <target state="translated">10:00</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">149</context>
@@ -9379,6 +9436,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.toConfirm" datatype="html">
         <source>À confirmer avec le <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">بانتظار التأكيد مع ال<x id="subject" equiv-text="subject"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">153</context>
@@ -9387,6 +9445,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.noResults" datatype="html">
         <source>Aucun patient actif ne correspond.</source>
+        <target state="translated">لا يوجد مريض نشط مطابق.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">155</context>
@@ -9395,6 +9454,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.searching" datatype="html">
         <source>Recherche…</source>
+        <target state="translated">جارٍ البحث…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">156</context>
@@ -9403,6 +9463,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.searchFailed" datatype="html">
         <source>La recherche n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">لم يكتمل البحث. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">157</context>
@@ -9411,6 +9472,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.patient" datatype="html">
         <source>Patient</source>
+        <target state="translated">المريض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">159</context>
@@ -9419,6 +9481,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.date" datatype="html">
         <source>Date</source>
+        <target state="translated">التاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">160</context>
@@ -9427,6 +9490,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.start" datatype="html">
         <source>Début</source>
+        <target state="translated">البداية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">161</context>
@@ -9435,6 +9499,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.duration" datatype="html">
         <source>Durée</source>
+        <target state="translated">المدّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">162</context>
@@ -9443,6 +9508,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.modality" datatype="html">
         <source>Modalité</source>
+        <target state="translated">طريقة الاستشارة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">163</context>
@@ -9451,6 +9517,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.repeat" datatype="html">
         <source>Répéter</source>
+        <target state="translated">التكرار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">164</context>
@@ -9459,6 +9526,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.count" datatype="html">
         <source>Répétitions</source>
+        <target state="translated">عدد المرات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">165</context>
@@ -9467,6 +9535,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.until" datatype="html">
         <source>Jusqu&apos;au</source>
+        <target state="translated">حتى تاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">166</context>
@@ -9475,6 +9544,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.note" datatype="html">
         <source>Note de planification</source>
+        <target state="translated">ملاحظة الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">167</context>
@@ -9483,6 +9553,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.field.toConfirm" datatype="html">
         <source>À confirmer</source>
+        <target state="translated">بانتظار التأكيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">168</context>
@@ -9491,6 +9562,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.age" datatype="html">
         <source><x id="age" equiv-text="patient.age"/> ans</source>
+        <target state="translated">العمر: <x id="age" equiv-text="patient.age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">275</context>
@@ -9499,6 +9571,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.rhythm" datatype="html">
         <source>rythme <x id="rhythm" equiv-text="rhythm"/></source>
+        <target state="translated">الوتيرة: <x id="rhythm" equiv-text="rhythm"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">281</context>
@@ -9507,6 +9580,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.nextAppointment" datatype="html">
         <source>prochain rendez-vous le <x id="date" equiv-text="date"/> à <x id="time" equiv-text="time"/></source>
+        <target state="translated">الموعد القادم: <x id="date" equiv-text="date"/> الساعة <x id="time" equiv-text="time"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">289</context>
@@ -9515,6 +9589,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.tooMany" datatype="html">
         <source>Au-delà de <x id="max" equiv-text="MAX_OCCURRENCES"/> rendez-vous, la série sera refusée : choisissez une date de fin plus proche.</source>
+        <target state="translated">إذا تجاوز عدد المواعيد <x id="max" equiv-text="MAX_OCCURRENCES"/>، تُرفض السلسلة: يُرجى اختيار تاريخ نهاية أقرب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">386</context>
@@ -9523,6 +9598,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.previous" datatype="html">
         <source>précédent : <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/></source>
+        <target state="translated">السابق: <x id="name" equiv-text="name"/> الساعة <x id="time" equiv-text="at"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">402</context>
@@ -9531,6 +9607,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.next" datatype="html">
         <source>suivant : <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/></source>
+        <target state="translated">التالي: <x id="name" equiv-text="name"/> الساعة <x id="time" equiv-text="at"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">409</context>
@@ -9539,6 +9616,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.noOverlap" datatype="html">
         <source>pas de chevauchement</source>
+        <target state="translated">لا تعارض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">413</context>
@@ -9547,6 +9625,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.conflict" datatype="html">
         <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> (<x id="range" equiv-text="range"/>). Il sera créé quand même ; vous pourrez le déplacer depuis l&apos;agenda.</source>
+        <target state="translated">يتعارض مع موعد <x id="name" equiv-text="name"/> (<x id="range" equiv-text="range"/>). سيُنشأ رغم ذلك؛ ويمكن تغيير موعده من صفحة المواعيد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">424</context>
@@ -9555,6 +9634,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.count" datatype="html">
         <source><x id="count" equiv-text="count"/> fois</source>
+        <target state="translated">عدد المرات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">431</context>
@@ -9563,6 +9643,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.countUntil" datatype="html">
         <source><x id="count" equiv-text="count"/> fois (jusqu&apos;au <x id="date" equiv-text="last"/>)</source>
+        <target state="translated">عدد المرات: <x id="count" equiv-text="count"/> (حتى <x id="date" equiv-text="last"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">433</context>
@@ -9571,6 +9652,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.submitMany" datatype="html">
         <source>Planifier <x id="count" equiv-text="count"/> rendez-vous</source>
+        <target state="translated">تحديد المواعيد (<x id="count" equiv-text="count"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">439</context>
@@ -9579,6 +9661,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.submitOne" datatype="html">
         <source>Planifier le rendez-vous</source>
+        <target state="translated">تحديد الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">440</context>
@@ -9587,6 +9670,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.patientUnavailable" datatype="html">
         <source>Ce patient n&apos;est plus accessible : choisissez-en un autre.</source>
+        <target state="translated">لم يعد الوصول إلى هذا المريض ممكنًا: يُرجى اختيار مريض آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">530</context>
@@ -9595,6 +9679,7 @@
       </trans-unit>
       <trans-unit id="agenda.new.failed" datatype="html">
         <source>Les rendez-vous n&apos;ont pas pu être planifiés. Réessayez dans un instant.</source>
+        <target state="translated">تعذّر تحديد المواعيد. يُرجى إعادة المحاولة بعد لحظات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/panels/new-appointment.panel.ts</context>
           <context context-type="linenumber">531</context>
@@ -9603,6 +9688,7 @@
       </trans-unit>
       <trans-unit id="agenda.grid.off" datatype="html">
         <source>non travaillé</source>
+        <target state="translated">يوم عطلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -9611,6 +9697,7 @@
       </trans-unit>
       <trans-unit id="agenda.busy.title" datatype="html">
         <source>Occupé · <x id="calendar" equiv-text="block.calendar"/></source>
+        <target state="translated">وقت مشغول · <x id="calendar" equiv-text="block.calendar"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
           <context context-type="linenumber">172</context>
@@ -9619,6 +9706,7 @@
       </trans-unit>
       <trans-unit id="agenda.month.more" datatype="html">
         <source>+ <x id="count" equiv-text="count"/> autres</source>
+        <target state="translated">+ <x id="count" equiv-text="count"/> أخرى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendar.component.ts</context>
           <context context-type="linenumber">324</context>
@@ -9627,6 +9715,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.mine" datatype="html">
         <source>Mes agendas</source>
+        <target state="translated">تقاويمي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
           <context context-type="linenumber">16,18</context>
@@ -9635,6 +9724,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.google" datatype="html">
         <source>Google Agenda</source>
+        <target state="translated">تقويم Google</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
           <context context-type="linenumber">32,34</context>
@@ -9643,6 +9733,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.later" datatype="html">
         <source>à venir</source>
+        <target state="translated">قريبًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
           <context context-type="linenumber">35,39</context>
@@ -9651,6 +9742,7 @@
       </trans-unit>
       <trans-unit id="agenda.legend.tentative" datatype="html">
         <source>À confirmer</source>
+        <target state="translated">بانتظار التأكيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
           <context context-type="linenumber">43,48</context>
@@ -9659,6 +9751,7 @@
       </trans-unit>
       <trans-unit id="agenda.legend.label" datatype="html">
         <source>Légende</source>
+        <target state="translated">مفتاح الرسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-calendars.component.ts</context>
           <context context-type="linenumber">56</context>
@@ -9667,6 +9760,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.week" datatype="html">
         <source>semaine <x id="week" equiv-text="isoWeek(range.from)"/></source>
+        <target state="translated">الأسبوع <x id="week" equiv-text="isoWeek(range.from)"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">153</context>
@@ -9675,6 +9769,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.listPeriod" datatype="html">
         <source><x id="days" equiv-text="LIST_DAYS"/> prochains jours</source>
+        <target state="translated">الأيام الـ<x id="days" equiv-text="LIST_DAYS"/> القادمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">155</context>
@@ -9683,6 +9778,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.sessions.none" datatype="html">
         <source>aucune séance</source>
+        <target state="translated">لا جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">164</context>
@@ -9691,6 +9787,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.sessions.one" datatype="html">
         <source>1 séance</source>
+        <target state="translated">جلسة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">167</context>
@@ -9699,6 +9796,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.sessions.many" datatype="html">
         <source><x id="count" equiv-text="count"/> séances</source>
+        <target state="translated">عدد الجلسات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">169</context>
@@ -9707,6 +9805,7 @@
       </trans-unit>
       <trans-unit id="agenda.guest.purged" datatype="html">
         <source>Invité purgé</source>
+        <target state="translated">ضيف محذوفة بياناته</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">181</context>
@@ -9715,6 +9814,7 @@
       </trans-unit>
       <trans-unit id="agenda.modality.inPerson" datatype="html">
         <source>Cabinet</source>
+        <target state="translated">حضوريًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">195</context>
@@ -9723,6 +9823,7 @@
       </trans-unit>
       <trans-unit id="agenda.modality.video" datatype="html">
         <source>Visio</source>
+        <target state="translated">عبر الفيديو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">197</context>
@@ -9731,6 +9832,7 @@
       </trans-unit>
       <trans-unit id="agenda.modality.phone" datatype="html">
         <source>Téléphone</source>
+        <target state="translated">عبر الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">199</context>
@@ -9739,6 +9841,7 @@
       </trans-unit>
       <trans-unit id="agenda.status.tentative" datatype="html">
         <source>à confirmer</source>
+        <target state="translated">بانتظار التأكيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">207</context>
@@ -9747,6 +9850,7 @@
       </trans-unit>
       <trans-unit id="agenda.status.cancelled" datatype="html">
         <source>annulé</source>
+        <target state="translated">ملغى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">209</context>
@@ -9755,6 +9859,7 @@
       </trans-unit>
       <trans-unit id="agenda.status.done" datatype="html">
         <source>fait</source>
+        <target state="translated">منجز</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">211</context>
@@ -9763,6 +9868,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.inPerson" datatype="html">
         <source>Séances au cabinet</source>
+        <target state="translated">الجلسات الحضورية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">221</context>
@@ -9771,6 +9877,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.video" datatype="html">
         <source>Séances en visio</source>
+        <target state="translated">الجلسات عبر الفيديو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">223</context>
@@ -9779,6 +9886,7 @@
       </trans-unit>
       <trans-unit id="agenda.calendars.phone" datatype="html">
         <source>Contacts (appels)</source>
+        <target state="translated">التواصل (مكالمات)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">225</context>
@@ -9787,6 +9895,7 @@
       </trans-unit>
       <trans-unit id="agenda.busy.name" datatype="html">
         <source>Indisponible de <x id="from" equiv-text="from"/> à <x id="to" equiv-text="to"/>, agenda <x id="calendar" equiv-text="calendar"/></source>
+        <target state="translated">فترة انشغال من <x id="from" equiv-text="from"/> إلى <x id="to" equiv-text="to"/>، تقويم <x id="calendar" equiv-text="calendar"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">238</context>
@@ -9795,6 +9904,7 @@
       </trans-unit>
       <trans-unit id="agenda.conflict.many" datatype="html">
         <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/> et <x id="count" equiv-text="others"/> autre(s).</source>
+        <target state="translated">يتعارض مع موعد <x id="name" equiv-text="name"/> الساعة <x id="time" equiv-text="at"/> ومع مواعيد أخرى (<x id="count" equiv-text="others"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">252</context>
@@ -9803,6 +9913,7 @@
       </trans-unit>
       <trans-unit id="agenda.conflict.one" datatype="html">
         <source>Chevauche le rendez-vous de <x id="name" equiv-text="name"/> à <x id="time" equiv-text="at"/>.</source>
+        <target state="translated">يتعارض مع موعد <x id="name" equiv-text="name"/> الساعة <x id="time" equiv-text="at"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">253</context>
@@ -9811,6 +9922,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.moveTitle" datatype="html">
         <source> Déplacer le rendez-vous </source>
+        <target state="translated"> تغيير الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">54,57</context>
@@ -9819,6 +9931,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.moveDate" datatype="html">
         <source>Date</source>
+        <target state="translated">التاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">59,61</context>
@@ -9827,6 +9940,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.moveStart" datatype="html">
         <source>Début</source>
+        <target state="translated">البداية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">68,72</context>
@@ -9835,6 +9949,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.moveDuration" datatype="html">
         <source>Durée</source>
+        <target state="translated">المدّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">85,88</context>
@@ -9843,6 +9958,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.durationOption" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> min </source>
+        <target state="translated"> <x id="INTERPOLATION" equiv-text="{{ minutes }}"/> د </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">94,95</context>
@@ -9851,6 +9967,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.moveSubmit" datatype="html">
         <source> Déplacer </source>
+        <target state="translated"> تغيير الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">114,117</context>
@@ -9859,6 +9976,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.formCancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">121,125</context>
@@ -9867,6 +9985,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelTitle" datatype="html">
         <source> Annuler ce rendez-vous ? </source>
+        <target state="translated"> إلغاء هذا الموعد؟ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">137,140</context>
@@ -9875,6 +9994,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelReason" datatype="html">
         <source>Motif (facultatif)</source>
+        <target state="translated">السبب (اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">141,144</context>
@@ -9883,6 +10003,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelSubmit" datatype="html">
         <source> Annuler le rendez-vous </source>
+        <target state="translated"> إلغاء الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">160,163</context>
@@ -9891,6 +10012,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelKeep" datatype="html">
         <source> Garder </source>
+        <target state="translated"> الإبقاء على الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">167,170</context>
@@ -9899,6 +10021,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.prepare" datatype="html">
         <source>Préparer</source>
+        <target state="translated">التحضير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">177,179</context>
@@ -9907,6 +10030,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.lastSession" datatype="html">
         <source>Dernière séance le <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ last }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <target state="translated">آخر جلسة: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ last }}"/><x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">186,187</context>
@@ -9915,6 +10039,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.since.text" datatype="html">
         <source>depuis : <x id="INTERPOLATION" equiv-text="{{ since }}"/></source>
+        <target state="translated">منذ ذلك الحين: <x id="INTERPOLATION" equiv-text="{{ since }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">191,192</context>
@@ -9923,6 +10048,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.since.none" datatype="html">
         <source>rien de nouveau depuis</source>
+        <target state="translated">لا جديد منذ ذلك الحين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">196,199</context>
@@ -9931,6 +10057,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.noSession" datatype="html">
         <source>Aucune séance clôturée pour l&apos;instant.</source>
+        <target state="translated">لا توجد جلسة منتهية حتى الآن.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">201,204</context>
@@ -9939,6 +10066,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.overview" datatype="html">
         <source>Vue d&apos;ensemble</source>
+        <target state="translated">نظرة عامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">212,216</context>
@@ -9947,6 +10075,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.timeline" datatype="html">
         <source>Timeline</source>
+        <target state="translated">الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">218,224</context>
@@ -9955,6 +10084,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.note" datatype="html">
         <source>Note de planification</source>
+        <target state="translated">ملاحظة الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">227,231</context>
@@ -9963,6 +10093,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.noteHint" datatype="html">
         <source>Visible seulement dans l&apos;agenda.</source>
+        <target state="translated">تظهر في المواعيد فقط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">242,244</context>
@@ -9971,6 +10102,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.confirm" datatype="html">
         <source> Confirmer le rendez-vous </source>
+        <target state="translated"> تأكيد الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">269,273</context>
@@ -9979,6 +10111,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.move" datatype="html">
         <source> Déplacer </source>
+        <target state="translated"> تغيير الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">283,286</context>
@@ -9987,6 +10120,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.duplicate" datatype="html">
         <source> Dupliquer </source>
+        <target state="translated"> إنشاء نسخة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">293,297</context>
@@ -9995,6 +10129,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء الموعد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">306,310</context>
@@ -10003,6 +10138,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.help" datatype="html">
         <source>Glisser le rendez-vous dans la grille ou « Déplacer » · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Échap<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ferme le détail</source>
+        <target state="translated">سحب الموعد في الشبكة أو « تغيير الموعد » · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Esc<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> لإغلاق التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">311,313</context>
@@ -10011,6 +10147,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.failed" datatype="html">
         <source>L&apos;action n&apos;a pas abouti. Réessayez dans un instant.</source>
+        <target state="translated">لم يكتمل الإجراء. يُرجى إعادة المحاولة بعد لحظات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -10019,6 +10156,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.label" datatype="html">
         <source>Détail du rendez-vous</source>
+        <target state="translated">تفاصيل الموعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">124</context>
@@ -10027,6 +10165,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.close" datatype="html">
         <source>Fermer le détail</source>
+        <target state="translated">إغلاق التفاصيل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">125</context>
@@ -10035,6 +10174,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.start" datatype="html">
         <source>Démarrer la séance</source>
+        <target state="translated">بدء الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">126</context>
@@ -10043,6 +10183,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.missing" datatype="html">
         <source>Rendez-vous introuvable</source>
+        <target state="translated">الموعد غير موجود</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -10051,6 +10192,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">130</context>
@@ -10059,6 +10201,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.missingMessage" datatype="html">
         <source>Il a peut-être été supprimé, ou il appartient à un autre compte.</source>
+        <target state="translated">ربما حُذف، أو أنه يخصّ حسابًا آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">133</context>
@@ -10067,6 +10210,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.later" datatype="html">
         <source><x id="action" equiv-text="this.startLabel"/> · à venir</source>
+        <target state="translated"><x id="action" equiv-text="this.startLabel"/> · قريبًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -10075,6 +10219,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.kicker.tentative" datatype="html">
         <source>À confirmer · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">بانتظار التأكيد · <x id="modality" equiv-text="modality"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">208</context>
@@ -10083,6 +10228,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.kicker.cancelled" datatype="html">
         <source>Annulé · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">ملغى · <x id="modality" equiv-text="modality"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">210</context>
@@ -10091,6 +10237,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.kicker.done" datatype="html">
         <source>Séance faite · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">جلسة منجزة · <x id="modality" equiv-text="modality"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">212</context>
@@ -10099,6 +10246,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.kicker.planned" datatype="html">
         <source>Séance planifiée · <x id="modality" equiv-text="modality"/></source>
+        <target state="translated">جلسة مقرَّرة · <x id="modality" equiv-text="modality"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">214</context>
@@ -10107,6 +10255,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.guest" datatype="html">
         <source>invité</source>
+        <target state="translated">ضيف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">247</context>
@@ -10115,6 +10264,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.age" datatype="html">
         <source><x id="age" equiv-text="item.patient.age"/> ans</source>
+        <target state="translated">العمر: <x id="age" equiv-text="item.patient.age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">253</context>
@@ -10123,6 +10273,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.since" datatype="html">
         <source>suivi depuis <x id="month" equiv-text="month"/></source>
+        <target state="translated">بداية المتابعة: <x id="month" equiv-text="month"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">260</context>
@@ -10131,6 +10282,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.archived" datatype="html">
         <source>dossier archivé</source>
+        <target state="translated">ملف مؤرشف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">265</context>
@@ -10139,6 +10291,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.duration" datatype="html">
         <source><x id="minutes" equiv-text="item.durationMin"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="item.durationMin"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">286</context>
@@ -10147,6 +10300,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.rhythm" datatype="html">
         <source>Rythme : <x id="rhythm" equiv-text="rhythm"/></source>
+        <target state="translated">الوتيرة: <x id="rhythm" equiv-text="rhythm"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">291</context>
@@ -10155,6 +10309,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelledAt" datatype="html">
         <source>Annulé le <x id="date" equiv-text="date"/> à <x id="time" equiv-text="time"/></source>
+        <target state="translated">أُلغي في <x id="date" equiv-text="date"/> الساعة <x id="time" equiv-text="time"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">304</context>
@@ -10163,6 +10318,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelledReason" datatype="html">
         <source><x id="base" equiv-text="base"/> (<x id="reason" equiv-text="reason"/>)</source>
+        <target state="translated"><x id="base" equiv-text="base"/> (<x id="reason" equiv-text="reason"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">307</context>
@@ -10171,6 +10327,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.feelings.one" datatype="html">
         <source>1 ressenti</source>
+        <target state="translated">شعور واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">325</context>
@@ -10179,6 +10336,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.feelings.many" datatype="html">
         <source><x id="count" equiv-text="prep.feelings"/> ressentis</source>
+        <target state="translated">عدد المشاعر: <x id="count" equiv-text="prep.feelings"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">326</context>
@@ -10187,6 +10345,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.events.one" datatype="html">
         <source>1 événement</source>
+        <target state="translated">حدث واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">332</context>
@@ -10195,6 +10354,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.events.many" datatype="html">
         <source><x id="count" equiv-text="prep.events"/> événements</source>
+        <target state="translated">عدد الأحداث: <x id="count" equiv-text="prep.events"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">333</context>
@@ -10203,6 +10363,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.others.one" datatype="html">
         <source>1 autre entrée</source>
+        <target state="translated">مُدخَل آخر واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">339</context>
@@ -10211,6 +10372,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.others.many" datatype="html">
         <source><x id="count" equiv-text="prep.others"/> autres entrées</source>
+        <target state="translated">مُدخَلات أخرى: <x id="count" equiv-text="prep.others"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">340</context>
@@ -10219,6 +10381,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.noteSaving" datatype="html">
         <source>Enregistrement…</source>
+        <target state="translated">جارٍ الحفظ…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">359</context>
@@ -10227,6 +10390,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.noteSaved" datatype="html">
         <source>Enregistré</source>
+        <target state="translated">تم الحفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">361</context>
@@ -10235,6 +10399,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.noteError" datatype="html">
         <source>Non enregistré, réessayez.</source>
+        <target state="translated">لم يُحفظ، يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">363</context>
@@ -10243,6 +10408,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.moved" datatype="html">
         <source>Rendez-vous déplacé.</source>
+        <target state="translated">تم تغيير الموعد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">456</context>
@@ -10251,6 +10417,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.cancelled" datatype="html">
         <source>Rendez-vous annulé.</source>
+        <target state="translated">تم إلغاء الموعد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">493</context>
@@ -10259,6 +10426,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.confirmed" datatype="html">
         <source>Rendez-vous confirmé.</source>
+        <target state="translated">تم تأكيد الموعد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">507</context>
@@ -10267,6 +10435,7 @@
       </trans-unit>
       <trans-unit id="agenda.miniMonth.prev" datatype="html">
         <source>Mois précédent</source>
+        <target state="translated">الشهر السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
           <context context-type="linenumber">93</context>
@@ -10275,6 +10444,7 @@
       </trans-unit>
       <trans-unit id="agenda.miniMonth.next" datatype="html">
         <source>Mois suivant</source>
+        <target state="translated">الشهر التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
           <context context-type="linenumber">94</context>
@@ -10283,6 +10453,7 @@
       </trans-unit>
       <trans-unit id="agenda.miniMonth.today" datatype="html">
         <source>Aujourd&apos;hui, <x id="date" equiv-text="name"/></source>
+        <target state="translated">اليوم، <x id="date" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/mini-month.component.ts</context>
           <context context-type="linenumber">127</context>
@@ -28884,6 +29055,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.requests" datatype="html">
         <source>Demandes</source>
+        <target state="translated">الطلبات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">183</context>
@@ -28892,6 +29064,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.close" datatype="html">
         <source>Fermer les demandes</source>
+        <target state="translated">إغلاق الطلبات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">184</context>
@@ -28904,6 +29077,7 @@
       </trans-unit>
       <trans-unit id="agenda.online.mention" datatype="html">
         <source>Demande en ligne</source>
+        <target state="translated">طلب عبر الإنترنت</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/agenda-format.ts</context>
           <context context-type="linenumber">222</context>
@@ -28912,6 +29086,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.contactEmail" datatype="html">
         <source> E-mail </source>
+        <target state="translated"> البريد الإلكتروني </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">55,58</context>
@@ -28920,6 +29095,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.contactPhone" datatype="html">
         <source> Téléphone </source>
+        <target state="translated"> الهاتف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">63,66</context>
@@ -28928,6 +29104,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.refuse" datatype="html">
         <source> Refuser </source>
+        <target state="translated"> رفض </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">339,343</context>
@@ -28936,6 +29113,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.refuseTitle" datatype="html">
         <source>Refuser cette demande ?</source>
+        <target state="translated">رفض هذا الطلب؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">244</context>
@@ -28944,6 +29122,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.refuseSubmit" datatype="html">
         <source>Refuser la demande</source>
+        <target state="translated">رفض الطلب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">245</context>
@@ -28952,6 +29131,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.refuseHint" datatype="html">
         <source>Le demandeur sera prévenu par e-mail. Le motif reste dans votre agenda : il ne lui est jamais transmis.</source>
+        <target state="translated">سيُبلَّغ مقدّم الطلب بالبريد الإلكتروني. يبقى السبب في مواعيدك ولا يُرسَل إليه أبدًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">247</context>
@@ -28960,6 +29140,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.cancelReasonPrivate" datatype="html">
         <source>Le motif ne lui est jamais transmis.</source>
+        <target state="translated">لا يُرسَل السبب إليه أبدًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">255</context>
@@ -28968,6 +29149,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.requesterNotified" datatype="html">
         <source>Le demandeur sera prévenu par e-mail.</source>
+        <target state="translated">سيُبلَّغ مقدّم الطلب بالبريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">260</context>
@@ -28976,6 +29158,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.refused" datatype="html">
         <source>Demande refusée. Le demandeur est prévenu par e-mail.</source>
+        <target state="translated">تم رفض الطلب. أُبلغ مقدّم الطلب بالبريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">566</context>
@@ -28984,6 +29167,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.withdrawn" datatype="html">
         <source>Cette demande n&apos;est plus en attente : elle vient d&apos;être annulée.</source>
+        <target state="translated">لم يعد هذا الطلب قيد الانتظار: أُلغي للتو.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">583</context>
@@ -28992,6 +29176,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.confirmedRequest" datatype="html">
         <source>Rendez-vous confirmé. Le demandeur est prévenu par e-mail.</source>
+        <target state="translated">تم تأكيد الموعد. أُبلغ مقدّم الطلب بالبريد الإلكتروني.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">600</context>
@@ -29000,6 +29185,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.title" datatype="html">
         <source>Demandes en ligne</source>
+        <target state="translated">الطلبات عبر الإنترنت</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -29008,6 +29194,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.emptyTitle" datatype="html">
         <source>Aucune demande en attente</source>
+        <target state="translated">لا طلبات قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -29016,6 +29203,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.emptyMessage" datatype="html">
         <source>Les demandes faites depuis votre page de rendez-vous arrivent ici.</source>
+        <target state="translated">تصل إلى هنا الطلبات المقدَّمة من صفحة حجز المواعيد الخاصة بك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -29024,6 +29212,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.errorTitle" datatype="html">
         <source>Les demandes n&apos;ont pas pu être chargées.</source>
+        <target state="translated">تعذّر تحميل الطلبات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -29032,6 +29221,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">71</context>
@@ -29040,6 +29230,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.countOne" datatype="html">
         <source>1 demande attend votre réponse.</source>
+        <target state="translated">طلب واحد بانتظار ردّك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -29048,6 +29239,7 @@
       </trans-unit>
       <trans-unit id="agenda.requests.countMany" datatype="html">
         <source><x id="count" equiv-text="count"/> demandes attendent votre réponse.</source>
+        <target state="translated">طلبات بانتظار ردّك: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/online-requests.component.ts</context>
           <context context-type="linenumber">92</context>
@@ -29056,6 +29248,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.requestsSuffix" datatype="html">
         <source> en ligne</source>
+        <target state="translated"> عبر الإنترنت</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">196</context>
@@ -29064,6 +29257,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.requestsSuffixNone" datatype="html">
         <source> en ligne, aucune en attente</source>
+        <target state="translated"> عبر الإنترنت، لا شيء قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">199</context>
@@ -29072,6 +29266,7 @@
       </trans-unit>
       <trans-unit id="agenda.toolbar.requestsSuffixCount" datatype="html">
         <source> en ligne, <x id="count" equiv-text="count"/> en attente</source>
+        <target state="translated"> عبر الإنترنت، قيد الانتظار: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/pages/agenda.page.ts</context>
           <context context-type="linenumber">200</context>
@@ -29080,6 +29275,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.alreadyCancelledRequest" datatype="html">
         <source>Cette demande était déjà annulée.</source>
+        <target state="translated">كان هذا الطلب ملغى من قبل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">577</context>
@@ -29088,6 +29284,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.alreadyCancelled" datatype="html">
         <source>Ce rendez-vous était déjà annulé.</source>
+        <target state="translated">كان هذا الموعد ملغى من قبل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">578</context>
@@ -29096,6 +29293,7 @@
       </trans-unit>
       <trans-unit id="agenda.detail.attach" datatype="html">
         <source> Rattacher à un patient </source>
+        <target state="translated"> ربط بملف مريض </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">401,404</context>
@@ -29104,6 +29302,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.title" datatype="html">
         <source> Rattacher à un patient </source>
+        <target state="translated"> ربط بملف مريض </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">214,218</context>
@@ -29112,6 +29311,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.patient" datatype="html">
         <source>Patient</source>
+        <target state="translated">المريض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">220,223</context>
@@ -29120,6 +29320,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.includeSameGuest" datatype="html">
         <source>Rattacher aussi les autres rendez-vous de cette personne</source>
+        <target state="translated">ربط مواعيد هذا الشخص الأخرى أيضًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">240,244</context>
@@ -29128,6 +29329,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.stopsEmails" datatype="html">
         <source>Après le rattachement, le demandeur ne recevra plus d&apos;e-mails automatiques.</source>
+        <target state="translated">بعد الربط، لن يتلقّى مقدّم الطلب رسائل بريد إلكتروني تلقائية.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">496</context>
@@ -29136,6 +29338,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.submit" datatype="html">
         <source> Rattacher </source>
+        <target state="translated"> ربط </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">256,259</context>
@@ -29144,6 +29347,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.cancel" datatype="html">
         <source> Annuler </source>
+        <target state="translated"> إلغاء </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.html</context>
           <context context-type="linenumber">263,266</context>
@@ -29152,6 +29356,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.attached" datatype="html">
         <source>Rendez-vous rattaché : <x id="name" equiv-text="name"/></source>
+        <target state="translated">تم ربط الموعد: <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">549</context>
@@ -29160,6 +29365,7 @@
       </trans-unit>
       <trans-unit id="agenda.toast.attachedMany" datatype="html">
         <source><x id="count" equiv-text="count"/> rendez-vous rattachés : <x id="name" equiv-text="name"/></source>
+        <target state="translated">تم ربط المواعيد (<x id="count" equiv-text="count"/>): <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">550</context>
@@ -29168,6 +29374,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.notActive" datatype="html">
         <source>Ce rendez-vous ne peut plus être rattaché : il vise déjà un patient, ou les coordonnées de l&apos;invité ont été effacées.</source>
+        <target state="translated">لم يعد بالإمكان ربط هذا الموعد: فهو مرتبط بمريض أصلًا، أو حُذفت بيانات الضيف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">561</context>
@@ -29176,6 +29383,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.archived" datatype="html">
         <source>Ce patient est archivé : choisissez un patient actif.</source>
+        <target state="translated">هذا المريض مؤرشف: يُرجى اختيار مريض نشط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">567</context>
@@ -29184,6 +29392,7 @@
       </trans-unit>
       <trans-unit id="agenda.attach.patientUnavailable" datatype="html">
         <source>Ce patient n&apos;est plus accessible : choisissez-en un autre.</source>
+        <target state="translated">لم يعد الوصول إلى هذا المريض ممكنًا: يُرجى اختيار مريض آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/agenda/ui/appointment-detail.component.ts</context>
           <context context-type="linenumber">575</context>
