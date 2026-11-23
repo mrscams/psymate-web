@@ -5383,6 +5383,7 @@
       </trans-unit>
       <trans-unit id="4311614769790141296" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucun ressenti} =1 {1 ressenti} other {<x id="INTERPOLATION"/> ressentis}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مشاعر} one {شعور واحد} two {شعوران} few {<x id="INTERPOLATION"/> مشاعر} many {<x id="INTERPOLATION"/> شعورًا} other {<x id="INTERPOLATION"/> شعور}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/ui/vocabulary/merge-journal.component.ts</context>
           <context context-type="linenumber">54,56</context>
@@ -16316,6 +16317,7 @@
       </trans-unit>
       <trans-unit id="5193809995596915518" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {1 entrée} other {<x id="INTERPOLATION"/> entrées}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مُدخَلات} one {مُدخَل واحد} two {مُدخَلان} few {<x id="INTERPOLATION"/> مُدخَلات} many {<x id="INTERPOLATION"/> مُدخَلًا} other {<x id="INTERPOLATION"/> مُدخَل}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">49,50</context>
@@ -16339,6 +16341,7 @@
       </trans-unit>
       <trans-unit id="1080482661578460393" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucun brouillon} =1 {1 brouillon} other {<x id="INTERPOLATION"/> brouillons}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا مسودّات} one {مسودّة واحدة} two {مسودّتان} few {<x id="INTERPOLATION"/> مسودّات} many {<x id="INTERPOLATION"/> مسودّة} other {<x id="INTERPOLATION"/> مسودّة}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/overview/ui/overview-noted.component.ts</context>
           <context context-type="linenumber">50,53</context>
@@ -16852,6 +16855,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.heading" datatype="html">
         <source> Dossier patient </source>
+        <target state="translated"> ملف المريض </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">8,10</context>
@@ -16860,6 +16864,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.back" datatype="html">
         <source>Retour à la liste</source>
+        <target state="translated">العودة إلى القائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">15,19</context>
@@ -16868,6 +16873,7 @@
       </trans-unit>
       <trans-unit id="patientShell.firstEntry.title" datatype="html">
         <source>Dernière étape : notez la première entrée.</source>
+        <target state="translated">الخطوة الأخيرة: تدوين المُدخَل الأول.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">80,82</context>
@@ -16876,6 +16882,7 @@
       </trans-unit>
       <trans-unit id="patientShell.firstEntry.text" datatype="html">
         <source>Elle se rattache à la séance d&apos;accueil du dossier, ou à la séance que vous démarrez.</source>
+        <target state="translated">يُربط بجلسة الاستقبال في الملف، أو بالجلسة التي تبدأ الآن.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">83,88</context>
@@ -16884,6 +16891,7 @@
       </trans-unit>
       <trans-unit id="patientShell.firstEntry.action" datatype="html">
         <source>Nouvelle entrée</source>
+        <target state="translated">مُدخَل جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">95,98</context>
@@ -16892,6 +16900,7 @@
       </trans-unit>
       <trans-unit id="patientShell.context.label" datatype="html">
         <source>Contexte de la séance</source>
+        <target state="translated">سياق الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.html</context>
           <context context-type="linenumber">111,112</context>
@@ -16900,6 +16909,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.started" datatype="html">
         <source>Séance démarrée.</source>
+        <target state="translated">بدأت الجلسة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
           <context context-type="linenumber">353</context>
@@ -16908,6 +16918,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.closedEdit" datatype="html">
         <source>Modifier</source>
+        <target state="translated">تعديل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/patient-shell.page.ts</context>
           <context context-type="linenumber">380</context>
@@ -16916,6 +16927,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.heading" datatype="html">
         <source> Séance </source>
+        <target state="translated"> الجلسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">7,11</context>
@@ -16924,6 +16936,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.heading" datatype="html">
         <source> Noté pendant cette séance </source>
+        <target state="translated"> ما دُوِّن خلال هذه الجلسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">19,22</context>
@@ -16932,6 +16945,7 @@
       </trans-unit>
       <trans-unit id="patientShell.planned.heading" datatype="html">
         <source> Prévu la dernière fois </source>
+        <target state="translated"> ما خُطِّط له في المرة السابقة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">42,44</context>
@@ -16944,6 +16958,7 @@
       </trans-unit>
       <trans-unit id="patientShell.planned.none" datatype="html">
         <source> Rien de prévu dans le dernier compte rendu. </source>
+        <target state="translated"> لا شيء مخطَّط له في آخر محضر جلسة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">53,57</context>
@@ -16952,6 +16967,7 @@
       </trans-unit>
       <trans-unit id="patientShell.planned.hint" datatype="html">
         <source> Les lignes « Prochaine fois : » du dernier compte rendu. Cocher n&apos;enregistre rien ; « Noter » prépare une note. </source>
+        <target state="translated"> سطور « Prochaine fois : » (في الجلسة القادمة) من آخر محضر جلسة. وضع العلامة لا يحفظ شيئًا؛ و« تدوين » يُعِدّ ملاحظة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">60,64</context>
@@ -16960,6 +16976,7 @@
       </trans-unit>
       <trans-unit id="patientShell.since.none" datatype="html">
         <source> Rien de noté entre les séances. </source>
+        <target state="translated"> لم يُدوَّن شيء بين الجلستين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">82,86</context>
@@ -16968,6 +16985,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.hint" datatype="html">
         <source> Chaque entrée reste modifiable 1 h 15 sans créer de version. <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ouvre l&apos;éditeur complet. </source>
+        <target state="translated"> يبقى كل مُدخَل قابلًا للتعديل مدة ساعة و15 دقيقة دون إنشاء نسخة جديدة. مفتاح <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>N<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> يفتح المحرّر الكامل. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.html</context>
           <context context-type="linenumber">104,106</context>
@@ -16976,6 +16994,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.error" datatype="html">
         <source>Impossible de lire ce qui a été noté</source>
+        <target state="translated">تعذّرت قراءة ما دُوِّن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">67</context>
@@ -16984,6 +17003,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.count.none" datatype="html">
         <source>rien de noté encore</source>
+        <target state="translated">لم يُدوَّن شيء بعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">72</context>
@@ -16992,6 +17012,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.count.one" datatype="html">
         <source>1 entrée · la plus récente en haut</source>
+        <target state="translated">مُدخَل واحد · الأحدث في الأعلى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">74</context>
@@ -17000,6 +17021,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.count.many" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées · la plus récente en haut</source>
+        <target state="translated">المُدخَلات: <x id="count" equiv-text="count"/> · الأحدث في الأعلى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">75</context>
@@ -17008,6 +17030,7 @@
       </trans-unit>
       <trans-unit id="patientShell.since.dated" datatype="html">
         <source>Depuis la séance du <x id="day" equiv-text="formatShortDay(at, this.locale)"/></source>
+        <target state="translated">منذ جلسة <x id="day" equiv-text="formatShortDay(at, this.locale)"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">94</context>
@@ -17016,6 +17039,7 @@
       </trans-unit>
       <trans-unit id="patientShell.since.plain" datatype="html">
         <source>Depuis la dernière séance</source>
+        <target state="translated">منذ آخر جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/pages/session-tab.page.ts</context>
           <context context-type="linenumber">95</context>
@@ -17024,6 +17048,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.duration" datatype="html">
         <source>Durée (min)</source>
+        <target state="translated">المدّة (بالدقائق)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">13,17</context>
@@ -17032,6 +17057,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.durationPlanned" datatype="html">
         <source>durée prévue (séance ouverte depuis plus de 3 h)</source>
+        <target state="translated">المدّة المقرّرة (الجلسة مفتوحة منذ أكثر من 3 ساعات)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">31,34</context>
@@ -17040,6 +17066,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.durationElapsed" datatype="html">
         <source>écoulé, arrondi à 5 min</source>
+        <target state="translated">الوقت المنقضي، مقرَّبًا إلى 5 دقائق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">35,39</context>
@@ -17048,6 +17075,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.usual" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ planned }}"/> habituels</source>
+        <target state="translated">المدّة المعتادة: <x id="INTERPOLATION" equiv-text="{{ planned }}"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">42,43</context>
@@ -17056,6 +17084,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.durationRange" datatype="html">
         <source> Une durée entière entre 1 et 600 minutes. </source>
+        <target state="translated"> مدّة بعدد صحيح من الدقائق بين 1 و600. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">52,56</context>
@@ -17064,6 +17093,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.noted" datatype="html">
         <source>Noté en séance</source>
+        <target state="translated">ما دُوِّن خلال الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">67,71</context>
@@ -17072,6 +17102,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.notedCount" datatype="html">
         <source> <x id="ICU" equiv-text="{count, plural, =1 {1 entrée} other {{{count}} entrées}}" xid="7995041518217856986"/> </source>
+        <target state="translated"> <x id="ICU" equiv-text="{count, plural, =1 {1 entrée} other {{{count}} entrées}}" xid="7995041518217856986"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">74,77</context>
@@ -17080,6 +17111,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.notedNone" datatype="html">
         <source> Rien n&apos;a été noté pendant cette séance. </source>
+        <target state="translated"> لم يُدوَّن شيء خلال هذه الجلسة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">91,95</context>
@@ -17088,6 +17120,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.summary" datatype="html">
         <source>Compte rendu</source>
+        <target state="translated">محضر الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">109,111</context>
@@ -17096,6 +17129,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.optional" datatype="html">
         <source>facultatif</source>
+        <target state="translated">اختياري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">112,117</context>
@@ -17104,6 +17138,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.prompt.themeButton" datatype="html">
         <source> + Thème </source>
+        <target state="translated"> + محور </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">130,133</context>
@@ -17112,6 +17147,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.prompt.goalButton" datatype="html">
         <source> + Objectif </source>
+        <target state="translated"> + هدف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">137,140</context>
@@ -17120,6 +17156,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.prompt.hint" datatype="html">
         <source>insère un titre, rien de plus</source>
+        <target state="translated">يُدرج عنوانًا فقط، لا أكثر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">142,148</context>
@@ -17128,6 +17165,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime" datatype="html">
         <source> Prochaine fois </source>
+        <target state="translated"> في الجلسة القادمة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">151,154</context>
@@ -17136,6 +17174,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.add" datatype="html">
         <source>Ajouter une ligne…</source>
+        <target state="translated">إضافة سطر…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">181,183</context>
@@ -17144,6 +17183,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.addLabel" datatype="html">
         <source>Ajouter une ligne à reprendre la prochaine fois</source>
+        <target state="translated">إضافة سطر للعودة إليه في الجلسة القادمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">184,186</context>
@@ -17152,6 +17192,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.hint" datatype="html">
         <source> Enregistré comme dernières lignes du compte rendu (« Prochaine fois : … »). Affiché au début de la prochaine séance. </source>
+        <target state="translated"> يُحفظ في آخر سطور محضر الجلسة (« Prochaine fois : … »). ويُعرض في بداية الجلسة القادمة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">193,200</context>
@@ -17160,6 +17201,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.confirm" datatype="html">
         <source>Clôturer la séance</source>
+        <target state="translated">إنهاء الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">203,206</context>
@@ -17168,6 +17210,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.confirmList" datatype="html">
         <source>Clôturer et revenir à la liste</source>
+        <target state="translated">إنهاء الجلسة والعودة إلى القائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">209,212</context>
@@ -17176,6 +17219,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">214,218</context>
@@ -17184,6 +17228,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.escapeKey" datatype="html">
         <source>Échap</source>
+        <target state="translated">Esc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">218,219</context>
@@ -17192,6 +17237,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.escapeHint" datatype="html">
         <source>garde le brouillon</source>
+        <target state="translated">يحتفظ بالمسودّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.html</context>
           <context context-type="linenumber">220,225</context>
@@ -17200,6 +17246,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.prompt.theme" datatype="html">
         <source>Thème :</source>
+        <target state="translated">محور:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">66</context>
@@ -17208,6 +17255,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.prompt.goal" datatype="html">
         <source>Objectif :</source>
+        <target state="translated">هدف:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">68</context>
@@ -17216,6 +17264,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.title" datatype="html">
         <source>Clôturer la séance</source>
+        <target state="translated">إنهاء الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">118</context>
@@ -17224,6 +17273,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.notedError" datatype="html">
         <source>Impossible de lire ce qui a été noté</source>
+        <target state="translated">تعذّرت قراءة ما دُوِّن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">159</context>
@@ -17232,6 +17282,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.line" datatype="html">
         <source>Point à reprendre <x id="number" equiv-text="n"/></source>
+        <target state="translated">نقطة للعودة إليها <x id="number" equiv-text="n"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">205</context>
@@ -17240,6 +17291,7 @@
       </trans-unit>
       <trans-unit id="patientShell.close.nextTime.remove" datatype="html">
         <source>Retirer la ligne <x id="number" equiv-text="n"/></source>
+        <target state="translated">إزالة السطر <x id="number" equiv-text="n"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/close-session.panel.ts</context>
           <context context-type="linenumber">210</context>
@@ -17248,6 +17300,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.caption" datatype="html">
         <source> Raccourcis disponibles et leur effet </source>
+        <target state="translated"> الاختصارات المتاحة وما تفعله </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">29,33</context>
@@ -17256,6 +17309,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.key" datatype="html">
         <source> Touche </source>
+        <target state="translated"> المفتاح </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">34,36</context>
@@ -17264,6 +17318,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.effect" datatype="html">
         <source> Effet </source>
+        <target state="translated"> الأثر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">37,41</context>
@@ -17272,6 +17327,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.unavailable" datatype="html">
         <source>indisponible ici</source>
+        <target state="translated">غير متاح هنا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">58,63</context>
@@ -17280,6 +17336,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.note" datatype="html">
         <source> Les raccourcis à une lettre sont inactifs dans un champ de saisie. Sur Mac, Ctrl devient ⌘. </source>
+        <target state="translated"> الاختصارات ذات الحرف الواحد لا تعمل داخل حقل إدخال. على Mac، يحلّ ⌘ محلّ Ctrl. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">67,72</context>
@@ -17288,6 +17345,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.title" datatype="html">
         <source>Raccourcis clavier</source>
+        <target state="translated">اختصارات لوحة المفاتيح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/panels/shortcuts-help.panel.ts</context>
           <context context-type="linenumber">130</context>
@@ -17296,6 +17354,7 @@
       </trans-unit>
       <trans-unit id="patientShell.overview.pageTitle" datatype="html">
         <source>Vue d&apos;ensemble · PsyMate</source>
+        <target state="translated">نظرة عامة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">25</context>
@@ -17304,6 +17363,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.pageTitle" datatype="html">
         <source>Séance · PsyMate</source>
+        <target state="translated">الجلسة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">34</context>
@@ -17312,6 +17372,7 @@
       </trans-unit>
       <trans-unit id="patientShell.timeline.pageTitle" datatype="html">
         <source>Timeline · PsyMate</source>
+        <target state="translated">الخط الزمني · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">41</context>
@@ -17320,6 +17381,7 @@
       </trans-unit>
       <trans-unit id="patientShell.graph.pageTitle" datatype="html">
         <source>Graphe · PsyMate</source>
+        <target state="translated">شبكة الروابط · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">48</context>
@@ -17328,6 +17390,7 @@
       </trans-unit>
       <trans-unit id="patientShell.profile.pageTitle" datatype="html">
         <source>Profil 360 · PsyMate</source>
+        <target state="translated">الملف الشامل 360 · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">55</context>
@@ -17336,6 +17399,7 @@
       </trans-unit>
       <trans-unit id="patientShell.search.pageTitle" datatype="html">
         <source>Recherche · PsyMate</source>
+        <target state="translated">البحث في الملف · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/patient-shell.routes.ts</context>
           <context context-type="linenumber">61</context>
@@ -17344,6 +17408,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.enterKey" datatype="html">
         <source>Entrée</source>
+        <target state="translated">Enter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
           <context context-type="linenumber">37</context>
@@ -17352,6 +17417,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.enter" datatype="html">
         <source>Barre de saisie du dossier : enregistrer l&apos;entrée</source>
+        <target state="translated">شريط الإدخال في الملف: حفظ المُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
           <context context-type="linenumber">41</context>
@@ -17360,6 +17426,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.ctrlEnter" datatype="html">
         <source>Enregistrer le formulaire · depuis la barre de saisie, ouvrir l&apos;éditeur prérempli</source>
+        <target state="translated">حفظ النموذج · من شريط الإدخال: فتح المحرّر معبَّأً مسبقًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
           <context context-type="linenumber">47</context>
@@ -17368,6 +17435,7 @@
       </trans-unit>
       <trans-unit id="patientShell.help.ctrlS" datatype="html">
         <source>Enregistrer l&apos;entrée en brouillon, à compléter après la séance</source>
+        <target state="translated">حفظ المُدخَل كمسودّة لاستكماله بعد الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/shortcuts-help.ts</context>
           <context context-type="linenumber">53</context>
@@ -17376,6 +17444,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.ongoing" datatype="html">
         <source>en cours</source>
+        <target state="translated">جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
           <context context-type="linenumber">43,46</context>
@@ -17384,6 +17453,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.draft" datatype="html">
         <source>brouillon</source>
+        <target state="translated">مسودّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
           <context context-type="linenumber">48,51</context>
@@ -17392,6 +17462,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.edit" datatype="html">
         <source>modifier</source>
+        <target state="translated">تعديل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
           <context context-type="linenumber">63,66</context>
@@ -17400,6 +17471,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.correct" datatype="html">
         <source>corriger</source>
+        <target state="translated">تصحيح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
           <context context-type="linenumber">68,71</context>
@@ -17408,6 +17480,7 @@
       </trans-unit>
       <trans-unit id="patientShell.noted.intensity" datatype="html">
         <source>intensité <x id="value" equiv-text="value"/> sur 10</source>
+        <target state="translated">الشدّة <x id="value" equiv-text="value"/> من 10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/noted-entries.component.ts</context>
           <context context-type="linenumber">237</context>
@@ -17416,6 +17489,7 @@
       </trans-unit>
       <trans-unit id="patientShell.planned.note" datatype="html">
         <source>Noter</source>
+        <target state="translated">تدوين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/planned-checklist.component.ts</context>
           <context context-type="linenumber">43,45</context>
@@ -17424,6 +17498,7 @@
       </trans-unit>
       <trans-unit id="patientShell.previous.noSummary" datatype="html">
         <source> Pas de compte rendu. </source>
+        <target state="translated"> لا يوجد محضر جلسة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">38,43</context>
@@ -17432,6 +17507,7 @@
       </trans-unit>
       <trans-unit id="patientShell.reminders.heading" datatype="html">
         <source> À garder en tête </source>
+        <target state="translated"> للتذكّر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">46,48</context>
@@ -17440,6 +17516,7 @@
       </trans-unit>
       <trans-unit id="patientShell.reminders.since" datatype="html">
         <source> · depuis le <x id="INTERPOLATION" equiv-text="{{ day(medication.since) }}"/></source>
+        <target state="translated"> · منذ <x id="INTERPOLATION" equiv-text="{{ day(medication.since) }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">69,70</context>
@@ -17448,6 +17525,7 @@
       </trans-unit>
       <trans-unit id="patientShell.reminders.untitled" datatype="html">
         <source>Situation sans titre</source>
+        <target state="translated">وضعية بلا عنوان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">84,88</context>
@@ -17456,6 +17534,7 @@
       </trans-unit>
       <trans-unit id="patientShell.reminders.ongoing" datatype="html">
         <source> · en cours</source>
+        <target state="translated"> · جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">91,95</context>
@@ -17464,6 +17543,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.title" datatype="html">
         <source> Raccourcis dans le texte </source>
+        <target state="translated"> الاختصارات داخل النص </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.html</context>
           <context context-type="linenumber">101,104</context>
@@ -17472,6 +17552,7 @@
       </trans-unit>
       <trans-unit id="patientShell.context.error" datatype="html">
         <source>Impossible de lire le contexte de la séance</source>
+        <target state="translated">تعذّرت قراءة سياق الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/session-context.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -17480,6 +17561,7 @@
       </trans-unit>
       <trans-unit id="patientShell.flag.watch" datatype="html">
         <source>À surveiller</source>
+        <target state="translated">للمتابعة الدقيقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">13</context>
@@ -17488,6 +17570,7 @@
       </trans-unit>
       <trans-unit id="patientShell.flag.risk" datatype="html">
         <source>Risque</source>
+        <target state="translated">خطر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">15</context>
@@ -17496,6 +17579,7 @@
       </trans-unit>
       <trans-unit id="patientShell.flag.sharedCare" datatype="html">
         <source>Suivi conjoint</source>
+        <target state="translated">متابعة مشتركة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">17</context>
@@ -17504,6 +17588,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.forbidden.title" datatype="html">
         <source>Ce dossier n&apos;est pas le vôtre</source>
+        <target state="translated">هذا الملف ليس من ملفاتك</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">73</context>
@@ -17512,6 +17597,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.forbidden.message" datatype="html">
         <source>Il appartient à un autre praticien : vous ne pouvez ni le lire ni y écrire.</source>
+        <target state="translated">يعود هذا الملف إلى ممارس آخر: لا يمكن الاطلاع عليه ولا الكتابة فيه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">74</context>
@@ -17520,6 +17606,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.notFound.title" datatype="html">
         <source>Ce dossier n&apos;existe pas</source>
+        <target state="translated">هذا الملف غير موجود</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">79</context>
@@ -17528,6 +17615,7 @@
       </trans-unit>
       <trans-unit id="patientShell.error.notFound.message" datatype="html">
         <source>Le lien est peut-être incomplet ; retrouvez le dossier depuis la liste.</source>
+        <target state="translated">ربما يكون الرابط ناقصًا؛ يمكن الوصول إلى الملف من القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">80</context>
@@ -17536,6 +17624,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.alreadyOpen" datatype="html">
         <source>Une séance est déjà ouverte pour ce dossier : l&apos;en-tête a été mis à jour.</source>
+        <target state="translated">توجد جلسة مفتوحة لهذا الملف من قبل: تم تحديث الترويسة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">91</context>
@@ -17544,6 +17633,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.alreadyClosed" datatype="html">
         <source>Cette séance est déjà clôturée : l&apos;en-tête a été mis à jour.</source>
+        <target state="translated">هذه الجلسة منتهية من قبل: تم تحديث الترويسة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">93</context>
@@ -17552,6 +17642,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.failed" datatype="html">
         <source>L&apos;action sur la séance n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">لم يكتمل الإجراء على الجلسة. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">98</context>
@@ -17560,6 +17651,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.closedSummary" datatype="html">
         <source>Séance clôturée · <x id="minutes" equiv-text="duration"/> min · compte rendu enregistré</source>
+        <target state="translated">انتهت الجلسة · <x id="minutes" equiv-text="duration"/> د · تم حفظ المحضر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">110</context>
@@ -17568,6 +17660,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.closedNoSummary" datatype="html">
         <source>Séance clôturée · <x id="minutes" equiv-text="duration"/> min · sans compte rendu</source>
+        <target state="translated">انتهت الجلسة · <x id="minutes" equiv-text="duration"/> د · دون محضر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">111</context>
@@ -17576,6 +17669,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.previousDated" datatype="html">
         <source>Séance précédente · <x id="day" equiv-text="day"/></source>
+        <target state="translated">الجلسة السابقة · <x id="day" equiv-text="day"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">133</context>
@@ -17584,6 +17678,7 @@
       </trans-unit>
       <trans-unit id="patientShell.session.previous" datatype="html">
         <source>Séance précédente</source>
+        <target state="translated">الجلسة السابقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">134</context>
@@ -17592,6 +17687,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.feelingExample" datatype="html">
         <source>anx 7</source>
+        <target state="translated">قلق 7</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">158</context>
@@ -17600,6 +17696,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.feeling" datatype="html">
         <source>ressenti</source>
+        <target state="translated">شعور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">160</context>
@@ -17608,6 +17705,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.event" datatype="html">
         <source>événement</source>
+        <target state="translated">حدث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">164</context>
@@ -17616,6 +17714,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.situation" datatype="html">
         <source>situation</source>
+        <target state="translated">وضعية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">168</context>
@@ -17624,6 +17723,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.medication" datatype="html">
         <source>médicament</source>
+        <target state="translated">دواء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">172</context>
@@ -17632,6 +17732,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.dateYesterday" datatype="html">
         <source>hier</source>
+        <target state="translated">أمس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">177</context>
@@ -17640,6 +17741,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.dateDay" datatype="html">
         <source>12 mars</source>
+        <target state="translated">12 مارس</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">178</context>
@@ -17648,6 +17750,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.dateRelative" datatype="html">
         <source>il y a 3 j</source>
+        <target state="translated">قبل 3 أيام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">179</context>
@@ -17656,6 +17759,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.dates" datatype="html">
         <source>dates</source>
+        <target state="translated">التواريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">181</context>
@@ -17664,6 +17768,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.linkExample" datatype="html">
         <source>&gt; cible</source>
+        <target state="translated">&gt; الهدف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">185</context>
@@ -17672,6 +17777,7 @@
       </trans-unit>
       <trans-unit id="patientShell.ctx.shortcuts.link" datatype="html">
         <source>lien</source>
+        <target state="translated">رابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patient-shell/ui/shell-labels.ts</context>
           <context context-type="linenumber">187</context>
