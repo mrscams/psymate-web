@@ -1,11 +1,7 @@
 @if (navigated()) {
   @switch (layout()) {
     @case ('public') {
-      <pm-public-header
-        [authenticated]="session.authenticated()"
-        [switchHref]="switchHref()"
-        [switchLang]="other"
-      />
+      <pm-public-header [authenticated]="session.authenticated()" [localeLinks]="localeLinks()" />
     }
     @case ('admin') {
       <pm-admin-bar [user]="user()" (logout)="logout()" />
@@ -17,8 +13,7 @@
     @default {
       <pm-app-bar
         [user]="user()"
-        [switchHref]="switchHref()"
-        [switchLang]="other"
+        [localeLinks]="localeLinks()"
         [query]="searchBar.query()"
         [searchPlaceholder]="searchBar.placeholder()"
         [navigation]="true"

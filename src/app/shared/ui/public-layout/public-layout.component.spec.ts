@@ -12,8 +12,7 @@ import { PublicLayoutComponent } from './public-layout.component';
       [authenticated]="authenticated()"
       [narrow]="narrow()"
       [wide]="wide()"
-      switchHref="/en/annuaire"
-      switchLang="en"
+      [localeLinks]="localeLinks"
     >
       <h1>Contenu</h1>
     </pm-public-layout>
@@ -21,6 +20,10 @@ import { PublicLayoutComponent } from './public-layout.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class Host {
+  readonly localeLinks = [
+    { locale: 'en', href: '/en/annuaire' },
+    { locale: 'ar', href: '/ar/annuaire' },
+  ] as const;
   readonly authenticated = input(false);
   readonly narrow = input(false);
   readonly wide = input(false);
@@ -69,7 +72,24 @@ describe('PublicLayoutComponent', () => {
     const footerLinks = [...el.querySelectorAll('footer a')];
     expect(footerLinks).toHaveLength(3);
     for (const link of footerLinks) expect(link.classList).toContain('pm-link-target');
-    expect(el.querySelector('a.locale-switch')?.classList).toContain('pm-link-target');
+    const localeLinks = [...el.querySelectorAll('a.locale-switch')];
+    expect(localeLinks).toHaveLength(2);
+    for (const link of localeLinks) expect(link.classList).toContain('pm-link-target');
+  });
+
+  it('M16-29 : les autres langues, chacune nommée dans sa langue, avec lang, dir et hreflang', async () => {
+    const { el } = await render();
+    const links = [...el.querySelectorAll<HTMLAnchorElement>('header nav.locale a')].map((a) => [
+      a.getAttribute('href'),
+      a.getAttribute('hreflang'),
+      a.getAttribute('lang'),
+      a.getAttribute('dir'),
+      a.textContent?.trim(),
+    ]);
+    expect(links).toEqual([
+      ['/en/annuaire', 'en', 'en', 'ltr', 'English'],
+      ['/ar/annuaire', 'ar', 'ar', 'rtl', 'العربية'],
+    ]);
   });
 
   it('connecté : Espace praticien mène à /patients ; narrow : conteneur 480 px', async () => {

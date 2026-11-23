@@ -1,8 +1,4 @@
-<pm-public-header
-  [authenticated]="authenticated()"
-  [switchHref]="switchHref()"
-  [switchLang]="switchLang()"
-/>
+<pm-public-header [authenticated]="authenticated()" [localeLinks]="localeLinks()" />
 
 <div class="public-main" [class.narrow]="narrow()" [class.wide]="wide() && !narrow()">
   <ng-content />

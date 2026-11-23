@@ -7,6 +7,8 @@
 > Mis à jour le 11 novembre 2026 (UX-F1, audit UX du 9 novembre) : maquette alignée sur le délai de correction de 1 h 15 (G Q31) ; résumé « Compte et sécurité » limité à ce que le contrat fournit (trois tuiles, connexion précédente sans ville ni lien de journal). Voir « Écarts avec la maquette ».
 >
 > Mis à jour le 22 novembre 2026 (M14-09, jalon M14, G Q64) : section « Prise de rendez-vous en ligne » et ses huit clés `booking.*` (contrat `contract-v0.15.0`). Maquette de la section : `propositions-2026-11/14-preferences-prise-de-rendez-vous.html` ; la maquette `14-preferences-praticien.html` n'est pas modifiée. Voir « Prise de rendez-vous en ligne (M14) ».
+>
+> Mis à jour le 23 novembre 2026 (M16-29, ouverture de l'arabe, G Q80) : `locale` admet `ar` (contrat `contract-v0.16.0`) ; le choix de langue propose Français, English et العربية, chacune écrite dans sa langue (l'option arabe porte `lang="ar"` et `dir="rtl"`). Sur `main`, l'option anglaise affiche « English », sans mention « traduction partielle » : inchangé.
 
 ## Objectif
 Un seul endroit pour tout ce qui est mémorisé **par compte** et retrouvé sur tous les appareils : affichage, vocabulaire, émotions personnalisées, sécurité. Chaque réglage s'enregistre immédiatement.
@@ -20,7 +22,7 @@ Un seul endroit pour tout ce qui est mémorisé **par compte** et retrouvé sur 
   | `overview.window` | `30d` \| `90d` \| `12m` | `90d` |
   | `timeline.groupBy` | `session` \| `month` \| `chronological` | `session` |
   | `theme` | `light` \| `soft` \| `dark` \| `system` | `light` |
-  | `locale` | `fr` \| `en` | `fr` |
+  | `locale` | `fr` \| `en` \| `ar` | `fr` |
   | `vocabulary.subjectLabel` | `patient` \| `client` | selon profession (`coach` → `client`) |
   | `entryTypes.medicationVisible` | bool | `psychiatrist` → true, sinon false |
   | `entries.defaultVisibility` | `clinical` \| `private` | `clinical` |
@@ -39,7 +41,7 @@ Un seul endroit pour tout ce qui est mémorisé **par compte** et retrouvé sur 
 
 ## Structure
 1. **Barre d'application** + **navigation du compte** (Préférences actif).
-2. **Affichage** : vue d'ensemble par défaut (Simple / Complète), fenêtre d'analyse (30 j / 90 j / 1 an), timeline (Par séance / Par mois / Chronologique), thème (Clair / Doux / Sombre / Système, avec vignette), langue (Français ; Anglais avec la mention « traduction partielle » tant que les fichiers EN sont en retard).
+2. **Affichage** : vue d'ensemble par défaut (Simple / Complète), fenêtre d'analyse (30 j / 90 j / 1 an), timeline (Par séance / Par mois / Chronologique), thème (Clair / Doux / Sombre / Système, avec vignette), langue (Français ; English ; العربية depuis M16-29). La mention « traduction partielle » prévue pour l'anglais n'est pas affichée sur `main` (voir la note du 23 novembre 2026).
 3. **Vocabulaire et saisie** : désignation (Patient·e / Client·e), type médicament visible (interrupteur), visibilité par défaut (Clinique / Privée), durée de séance par défaut (60 min), délai de correction (lecture seule).
 3 bis. **Prise de rendez-vous en ligne** (M14) : entre « Vocabulaire et saisie » et « Émotions personnalisées ». Détail dans la section du même nom ci-dessous.
 4. **Émotions personnalisées · n** : tableau (émotion, famille avec pastille couleur, nombre d'utilisations, statut *custom*), lien « Gérer la liste complète » (page dédiée, écran 17 : ajouter, renommer, fusionner ; la promotion au vocabulaire global est V2).
@@ -119,6 +121,7 @@ Carte `aria-labelledby`, même gabarit que les autres sections (lignes libellé 
 - [ ] `PATCH {"theme":"dark"}` → `data-theme="dark"` immédiat, persistant après reconnexion sur un autre navigateur.
 - [ ] Clé inconnue dans le `PATCH` → ignorée, `200`, pas d'erreur.
 - [ ] Praticien `coach` nouvellement inscrit → `subjectLabel = client`, `medicationVisible = false` sans action ; tout compte neuf lit `sessions.defaultDurationMin = 60` et `locale = fr`.
+- [ ] (M16-29) Choisir العربية enregistre `locale = ar` (`PATCH`, réponse du serveur relue) et recharge l'application sous `/ar/` sur la même route ; après déconnexion et reconnexion, l'application revient en `/ar/` ; depuis `/ar/`, revenir au français ou à l'anglais marche de la même façon.
 - [ ] Désactiver le type médicament puis `/med sertraline` dans la barre → message « type masqué dans vos préférences » + lien.
 - [ ] Tableau des émotions : compteur d'utilisations exact vs `entry_feeling` (test d'intégration).
 - [ ] (M14) Activer, choisir « Acceptation automatique dans mes plages », ajouter lundi 09:00–12:00, « Enregistrer les plages », recharger : les valeurs sont relues à l'identique ; le test lit les requêtes `PATCH /api/me/preferences` et leurs clés `booking.enabled`, `booking.confirmation`, `booking.windows`.

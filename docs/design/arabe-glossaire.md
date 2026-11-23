@@ -4,6 +4,8 @@
 
 **Statut.** Toutes les propositions ci-dessous sont faites par l'agent, en arabe standard moderne (Q72). **Aucune n'est relue.** La colonne « Relu par » reste vide jusqu'à la relecture par une personne arabophone, idéalement un clinicien, qui a lieu avant l'ouverture (M16-29, Q80). Les tâches qui traduisent (API : M16-03, M16-04, M16-05 ; web : M16-26 à M16-28) emploient la colonne « Proposition » **sans attendre cette relecture** ; quand le relecteur retient une variante ou corrige un terme, il modifie la colonne « Proposition », signe « Relu par », et la correction est reportée dans les fichiers déjà traduits par la tâche suivante du couloir (ou par M16-29).
 
+**Ouverture sans relecture (23 novembre 2026).** L'utilisateur a décidé d'ouvrir `/ar/` (M16-29) sans attendre la relecture arabophone (G Q80). Aucune relecture n'ayant eu lieu, aucune correction n'est reportée ici et la colonne « Relu par » reste vide ; la relecture se fera après l'ouverture, selon la règle ci-dessus.
+
 **Qui s'en sert.**
 
 - psymate-api : libellés `label_ar` des catalogues globaux (M16-03 : sections 4, 5, 6, 9), `messages_ar.properties` (M16-04), e-mails (M16-05).

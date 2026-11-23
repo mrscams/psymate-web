@@ -14,11 +14,12 @@ export {
 export type { DateStyle } from './formats';
 export type { CatalogLabels } from './catalog-label';
 export { catalogLabel } from './catalog-label';
-export type { AppLocale, OfferedLocale, TextDirection } from './locales';
+export type { AppLocale, LocaleLink, OfferedLocale, TextDirection } from './locales';
 export {
   APP_LOCALES,
   ARABIC_FORMAT_LOCALE,
   formatLocale,
+  localeName,
   localeSwitchHref,
   OFFERED_LOCALES,
   switchLocales,

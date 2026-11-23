@@ -1,5 +1,6 @@
 import {
   APP_LOCALES,
+  localeName,
   localeSwitchHref,
   OFFERED_LOCALES,
   switchLocales,
@@ -25,17 +26,23 @@ describe('locales', () => {
     expect(toAppLocale('arn')).toBe('fr');
   });
 
-  it("propose le français et l'anglais, jamais l'arabe avant l'ouverture (Q80)", () => {
-    expect(OFFERED_LOCALES).toEqual(['fr', 'en']);
+  it("propose les trois langues depuis l'ouverture de l'arabe (M16-29, Q80)", () => {
+    expect(OFFERED_LOCALES).toEqual(['fr', 'en', 'ar']);
     expect(toOfferedLocale('fr')).toBe('fr');
     expect(toOfferedLocale('en')).toBe('en');
-    expect(toOfferedLocale('ar')).toBe('fr');
+    expect(toOfferedLocale('ar')).toBe('ar');
   });
 
-  it('donne les autres langues proposées, sans la courante ni l’arabe', () => {
-    expect(switchLocales('fr')).toEqual(['en']);
-    expect(switchLocales('en')).toEqual(['fr']);
+  it('donne les autres langues proposées, sans la courante, dans l’ordre fr, en, ar', () => {
+    expect(switchLocales('fr')).toEqual(['en', 'ar']);
+    expect(switchLocales('en')).toEqual(['fr', 'ar']);
     expect(switchLocales('ar')).toEqual(['fr', 'en']);
+  });
+
+  it('nomme chaque langue dans sa propre langue (source des trois bundles)', () => {
+    expect(localeName('fr')).toBe('Français');
+    expect(localeName('en')).toBe('English');
+    expect(localeName('ar')).toBe('العربية');
   });
 
   it('sens de lecture : de droite à gauche en arabe seulement (Q74)', () => {

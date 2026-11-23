@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T20:48:44.875Z",
+  "task": "M16-29",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Ouverture de l'arabe : ar proposé par la barre, le bandeau public et les préférences (rechargement sous /ar/, suivi à la reconnexion), hreflang ar, règle no-physical-direction sur tout src, parcours B3 en /ar/ (e2e/arabe/parcours.spec.ts). Ouverture décidée par l'utilisateur sans relecture arabophone.",
+  "pr": "https://github.com/mrscams/psymate-web/pull/145",
+  "branch": "M16-29-ouverture",
+  "checkout": "agent-a2f30d6778c46792f"
+}

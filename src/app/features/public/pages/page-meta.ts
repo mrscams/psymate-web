@@ -2,7 +2,7 @@ import { DOCUMENT, isPlatformBrowser, PlatformLocation } from '@angular/common';
 import { DestroyRef, inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
-import { APP_LOCALES, OFFERED_LOCALES } from '../../../core/i18n';
+import { APP_LOCALES, OFFERED_LOCALES, toAppLocale, toOfferedLocale } from '../../../core/i18n';
 
 export type RobotsPolicy = 'index,follow' | 'noindex,follow';
 
@@ -111,9 +111,9 @@ export class PublicMeta {
   }
 
   /**
-   * URL canonique et alternatives des langues proposées, fr / en (absolues dans le navigateur,
-   * relatives au prérendu). /ar/ est construit sans être proposé (G Q80, M16-08) : aucune
-   * alternative hreflang="ar", et ses pages renvoient à la version française comme canonique.
+   * URL canonique et alternatives des langues proposées, fr, en et ar depuis l'ouverture de l'arabe
+   * (G Q80, M16-29) : absolues dans le navigateur, relatives au prérendu. Chaque page est canonique
+   * dans sa langue ; un bundle construit mais pas proposé renverrait à la version française.
    */
   private links(path: string | null): void {
     this.document.head.querySelectorAll(`link${MANAGED_SELECTOR}`).forEach((node) => node.remove());
@@ -121,7 +121,7 @@ export class PublicMeta {
     const built = new RegExp(`/(${APP_LOCALES.join('|')})/?$`);
     const root = this.baseHref.replace(built, '/').replace(/\/?$/, '/');
     const href = (locale: string) => `${this.origin}${root}${locale}${path}`;
-    const current = /\/en\/?$/.test(this.baseHref) ? 'en' : 'fr';
+    const current = toOfferedLocale(toAppLocale(this.baseHref.match(built)?.[1] ?? 'fr'));
     this.link({ rel: 'canonical', href: href(current) });
     for (const locale of OFFERED_LOCALES) {
       this.link({ rel: 'alternate', hreflang: locale, href: href(locale) });

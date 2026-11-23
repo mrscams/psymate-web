@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { AppLocale } from '../../../core/i18n';
+import { LocaleLink } from '../../../core/i18n';
 import { PublicFooterComponent } from './public-footer.component';
 import { PublicHeaderComponent } from './public-header.component';
 
@@ -33,6 +33,6 @@ export class PublicLayoutComponent {
   readonly narrow = input(false);
   /** Contenu jusqu'à 1 280 px (annuaire, maquette 08) ; `narrow` l'emporte s'il est aussi posé. */
   readonly wide = input(false);
-  readonly switchHref = input.required<string>();
-  readonly switchLang = input.required<AppLocale>();
+  /** Liens vers la même page dans les autres langues (voir PublicHeaderComponent). */
+  readonly localeLinks = input.required<readonly LocaleLink[]>();
 }

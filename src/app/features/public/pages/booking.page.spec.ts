@@ -1,5 +1,6 @@
 import { Component, LOCALE_ID } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, registerLocaleData } from '@angular/common';
+import localeAr from '@angular/common/locales/ar';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
@@ -9,12 +10,15 @@ import { CLAIRE_BOOKING, KARIM_BOOKING, NO_SLOTS, SLOTS } from '../data/booking.
 import { BookingRequest } from '../data/booking.models';
 import { BookingPage } from './booking.page';
 
+// Le bundle /ar/ embarque ces données ; le test M16-29 les enregistre pour les pluriels ICU du gabarit.
+registerLocaleData(localeAr);
+
 @Component({ template: 'fiche' })
 class PractitionerStub {}
 
 type Mock = Record<keyof BookingApi, ReturnType<typeof vi.fn>>;
 
-async function render(api: Partial<Mock> = {}) {
+async function render(api: Partial<Mock> = {}, locale = 'fr') {
   const mock: Mock = {
     settings: vi.fn().mockResolvedValue(CLAIRE_BOOKING),
     slots: vi.fn().mockResolvedValue(SLOTS),
@@ -34,7 +38,7 @@ async function render(api: Partial<Mock> = {}) {
         withComponentInputBinding(),
       ),
       { provide: BookingApi, useValue: mock },
-      { provide: LOCALE_ID, useValue: 'fr' },
+      { provide: LOCALE_ID, useValue: locale },
     ],
   });
   const harness = await RouterTestingHarness.create('/praticiens/claire-martin/rendez-vous');
@@ -309,6 +313,22 @@ describe('BookingPage (fiche 31)', () => {
     expect(box?.getAttribute('aria-describedby') ?? '').toContain('consent-error');
     expect(el.querySelector('mat-checkbox')?.hasAttribute('aria-describedby')).toBe(false);
   });
+
+  it.each([
+    ['en-US', 'en'],
+    ['ar', 'ar'],
+  ] as const)(
+    'M16-29 : bundle %s, la demande part avec locale = %s (contrat 0.16.0)',
+    async (localeId, expected) => {
+      const { el, api, harness } = await render({}, localeId);
+      slotButtons(el)[1].click();
+      await settle(harness);
+      await fill(el, harness);
+      await submit(el, harness);
+      expect(api.request).toHaveBeenCalledTimes(1);
+      expect(sentBody(api).locale).toBe(expected);
+    },
+  );
 
   it('envoi complet : corps du contrat, écran d’attente, focus sur son titre, ni nom ni adresse', async () => {
     const { el, api, harness } = await render();

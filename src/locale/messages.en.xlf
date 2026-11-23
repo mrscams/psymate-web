@@ -74,6 +74,33 @@
         </context-group>
         <note priority="1" from="description">Désignation de la personne suivie (coach), pluriel, capitale</note>
       </trans-unit>
+      <trans-unit id="app.localeName.fr" datatype="html">
+        <source>Français</source>
+        <target state="translated">Français</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/locales.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <note priority="1" from="description">Nom du français, écrit en français, identique dans toutes les langues</note>
+      </trans-unit>
+      <trans-unit id="app.localeName.en" datatype="html">
+        <source>English</source>
+        <target state="translated">English</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/locales.ts</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+        <note priority="1" from="description">Nom de l&apos;anglais, écrit en anglais, identique dans toutes les langues</note>
+      </trans-unit>
+      <trans-unit id="app.localeName.ar" datatype="html">
+        <source>العربية</source>
+        <target state="translated">العربية</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/i18n/locales.ts</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <note priority="1" from="description">Nom de l&apos;arabe, écrit en arabe, identique dans toutes les langues</note>
+      </trans-unit>
       <trans-unit id="shortcuts.n" datatype="html">
         <source>Nouvelle entrée</source>
         <target state="translated">New entry</target>
@@ -2511,19 +2538,6 @@
         </context-group>
         <note priority="1" from="description">Étiquette de la navigation de langue</note>
       </trans-unit>
-      <trans-unit id="app.localeSwitch" datatype="html">
-        <source>English</source>
-        <target state="translated">Français</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
-          <context context-type="linenumber">61,66</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/ui/public-layout/public-layout.component.html</context>
-          <context context-type="linenumber">46,52</context>
-        </context-group>
-        <note priority="1" from="description">Lien vers l&apos;autre langue, écrit dans cette autre langue</note>
-      </trans-unit>
       <trans-unit id="appBar.menu.account" datatype="html">
         <source>Mon compte</source>
         <target state="translated">My account</target>
@@ -3171,6 +3185,15 @@
           <context context-type="linenumber">105,108</context>
         </context-group>
         <note priority="1" from="description">Option English, traduction partielle</note>
+      </trans-unit>
+      <trans-unit id="preferences.locale.ar" datatype="html">
+        <source> العربية </source>
+        <target state="translated"> العربية </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/account/pages/preferences.page.html</context>
+          <context context-type="linenumber">101,103</context>
+        </context-group>
+        <note priority="1" from="description">Option العربية</note>
       </trans-unit>
       <trans-unit id="preferences.section.vocabulary" datatype="html">
         <source> Vocabulaire et saisie </source>

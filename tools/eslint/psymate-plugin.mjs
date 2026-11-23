@@ -94,8 +94,8 @@ const noHardcodedColor = {
 
 // no-physical-direction : propriétés logiques seulement (G Q74, docs/design/arabe.md §2). Une
 // propriété physique (margin-left, right:, text-align: left, rayon d'un coin gauche, raccourci à
-// quatre valeurs dont la gauche et la droite diffèrent) ne se retourne pas en arabe. Active zone par
-// zone (liste LOGICAL_DIRECTION_ZONES d'eslint.config.mjs). Couvre les feuilles .scss et .css, les
+// quatre valeurs dont la gauche et la droite diffèrent) ne se retourne pas en arabe. Active dans tout
+// src depuis M16-29 (eslint.config.mjs), zone par zone avant. Couvre les feuilles .scss et .css, les
 // styles en ligne des composants (`styles`), les gabarits (attribut style, [style.x], [style] et
 // [ngStyle]), les liaisons d'hôte '[style.x]' et les écritures DOM (el.style.marginLeft, setProperty).
 
@@ -201,8 +201,7 @@ const noPhysicalDirection = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'Interdit les propriétés de direction physiques dans les zones converties (G Q74).',
+      description: 'Interdit les propriétés de direction physiques dans tout src (G Q74).',
     },
     schema: [],
     messages: { physical: physicalMessage },

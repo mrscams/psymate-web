@@ -202,7 +202,7 @@ describe('preferences.model · clés booking.*', () => {
   });
 });
 
-/** Langue du compte (M16-25, contrat 0.16.0) : fr, en ou ar ; aucun écran ne propose ar (Q80). */
+/** Langue du compte (M16-25, contrat 0.16.0) : fr, en ou ar ; ar proposé depuis M16-29 (Q80). */
 describe('preferences.model · locale', () => {
   it('admet fr, en et ar ; une valeur ar lue est gardée telle quelle', () => {
     expect(isValidPreference('locale', 'fr')).toBe(true);

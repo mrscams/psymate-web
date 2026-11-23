@@ -144,6 +144,18 @@
   stroke-linecap: round;
 }
 
+/* Liens de langue (M16-29) : les autres langues côte à côte, chacune centrée sur la ligne. Le premier
+   lien garde sa hauteur de ligne (20 px), pas sa place en largeur : la navigation s'élargit de
+   l'écart et du second lien (environ 50 px en /fr/ et /en/), donc ce lien et ce qui le précède sur
+   la ligne glissent d'autant vers le début. En /fr/ et /en/,
+   « العربية » s'affiche dans la police arabe du système : IBM Plex Sans Arabic n'est téléchargée
+   qu'en /ar/ (Q76), la police vient de la pile de <html>, résolue dans la langue de la page. */
+.locale {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .locale-switch {
   color: var(--primary);
   font: var(--mat-sys-label-large);

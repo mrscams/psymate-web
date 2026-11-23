@@ -4,35 +4,37 @@
 
 ## 1. Ce qui est couvert
 
-| N° | Écran | Fiche | Maquette | Tâches web |
-| --- | --- | --- | --- | --- |
-| 01 | Liste des patients | `01-liste-patients.md` | html + png | M1-06 |
-| 02 | Vue d'ensemble complète | `02-vue-ensemble-patient.md` | html + png | M4-05 |
-| 02b | Vue d'ensemble simple « Récit » | même fiche (section vue simple) | `02b-vue-ensemble-simple.html` + png | M4-07 |
-| 04 | Graphe | `04-graphe-patient.md` | html + png | M2-06 |
-| 06 | Éditeur de lien (panneau) | `06-editeur-de-lien.md` | html + png | M2-04 |
-| 07 | Recherche dans le dossier | `07-recherche-dossier.md` | html + png | M4-04, M4-08 |
-| 09 | Fiche publique d'un praticien | `09-fiche-publique-praticien.md` | html + png | M5-05 |
-| 10 | Mon profil public | `10-mon-profil-public.md` | html + png | M5-04 |
-| 11 | Connexion (avec bloc OTP) | `11-connexion.md` | html + png | M0-07, M1-15 |
-| 12 | Inscription | `12-inscription.md` | html + png | M0-07, M1-15 |
-| 13 | Dossier professionnel | `13-dossier-professionnel.md` | html + png | M1-15 |
-| 14 | Préférences | `14-preferences-praticien.md` | html + png | M1-16 |
-| 15 | Agenda | `15-agenda.md` | html + png | hors plan C : rendu livré le 15 novembre 2026 (PR #86, G Q25 amendée), API jalon M11 de psymate-api |
-| 15b | Nouveau rendez-vous (panneau) | `15b-nouveau-rendez-vous.md` | html + png | idem ; soumission avec l'API |
-| 16 | Fiche patient (création, modification, archivage) | `16-fiche-patient.md` | html + png | M1-06 |
-| 17 | Émotions personnalisées | `17-emotions-personnalisees.md` | html + png | M1-09 |
-| 20 | Admin · Validation des praticiens | `20-admin-validation-praticiens.md` | html + png | M7-07 |
-| 21 | Admin · Praticiens | `21-admin-praticiens.md` | html + png | M7-07 |
-| 22 | Admin · Journal | `22-admin-journal.md` | html + png | M7-07 |
-| 24 | Comment ça marche | `24-comment-ca-marche.md` | html + png | M5-05 |
-| 25 | Confirmation d'e-mail | `25-confirmation-email.md` | html + png | M0-07, M1-15 |
-| 26 | Mot de passe oublié | `26-mot-de-passe-oublie.md` | html + png | M0-07 |
-| 27 | Compte suspendu / refusé | `27-compte-suspendu.md` | html + png | M1-15 (état), M7-07 (recours) |
-| 30 | Profil 360 (quatrième onglet du dossier, panneau « Ajouter au profil ») | `30-profil-360.md` | html (png après livraison) | hors plan C2 : C11, M13-04 à M13-07 (plan `J-plan-profil-360-web.md`, G Q52 à Q57) ; API jalon M13 de psymate-api, `contract-v0.14.0` ; onglet et squelette posés par M13-05, lecture M13-06 (PR #98), écriture M13-07 (bouton « Ajouter au profil » et panneau : ajouter, modifier, retirer) : **écran livré** le 18 novembre 2026 (capture `.png` à produire, J5) |
-| 31 | Prise de rendez-vous publique (créneaux, coordonnées, écran d'attente) | `31-prise-de-rendez-vous-publique.md` | html + png (Fluent 2, une vue par état ; autres captures dans `captures-m14-09/`) | hors plan C2 : C12, **M14-12** (plan `K-plan-prise-de-rendez-vous.md`, G Q60 à Q63) ; API jalon M14 de psymate-api, `contract-v0.15.0` ; fiche et maquette écrites le 22 novembre 2026 (M14-09), **écran livré le 22 novembre 2026** (M14-12, PR #109) |
-| 32 | Rendez-vous par lien (vérification de l'e-mail, gestion, annulation) | `32-rendez-vous-par-lien.md` | html + png (Fluent 2, une vue par réponse de l'API) | C12, **M14-13** ; **écran livré le 22 novembre 2026** (M14-13, PR #112) |
-| 09, 14, 15 | Compléments M14 : bouton « Prendre rendez-vous » ; section « Prise de rendez-vous en ligne » des préférences ; demandes en ligne dans l'agenda | sections « (M14) » des fiches 09, 14 et 15 | 09 : vue « Fiche du praticien » de la maquette 31 ; 14 : `propositions-2026-11/14-preferences-prise-de-rendez-vous.html` ; 15 : `propositions-2026-11/15-agenda-demandes-en-ligne.html` (captures dans `captures-m14-09/`) | C12 : M14-12 (09), M14-11 (14), M14-14 puis M14-15 (15) ; **livrés le 22 novembre 2026** (PR #109, #108, #110, #113) |
+| N° | Écran | Fiche | Maquette | Tâches web | Arabe (`/ar/`, `e2e/arabe/*.spec.ts`, M16) |
+| --- | --- | --- | --- | --- | --- |
+| 01 | Liste des patients | `01-liste-patients.md` | html + png | M1-06 | `arabe/patients` (vide, pleine, filtrée, archivés, 390 px) ; `arabe/parcours` (liste vide après connexion) |
+| 02 | Vue d'ensemble complète | `02-vue-ensemble-patient.md` | html + png | M4-05 | `arabe/overview` (complète au bureau, une colonne au téléphone, dossier vide ; clair et sombre) ; `arabe/parcours` (après saisie, projection relue) |
+| 02b | Vue d'ensemble simple « Récit » | même fiche (section vue simple) | `02b-vue-ensemble-simple.html` + png | M4-07 | — (vue simple retirée par UX-S6) |
+| 04 | Graphe | `04-graphe-patient.md` | html + png | M2-06 | `arabe/graph` (de droite à gauche, de haut en bas, détail, liste équivalente) |
+| 06 | Éditeur de lien (panneau) | `06-editeur-de-lien.md` | html + png | M2-04 | `arabe/graph` (éditeur ouvert, non enregistré) ; `arabe/parcours` (lien enregistré par `?link=`, relu par l'API) |
+| 07 | Recherche dans le dossier | `07-recherche-dossier.md` | html + png | M4-04, M4-08 | `arabe/search` (résultats, aperçu, aucun résultat, mot arabe) ; `arabe/parcours` (/ depuis la timeline) |
+| 09 | Fiche publique d'un praticien | `09-fiche-publique-praticien.md` | html + png | M5-05 | `arabe/public` (fiche, formulaire de contact non envoyé) ; `arabe/parcours` (fiche ouverte depuis l'annuaire) |
+| 10 | Mon profil public | `10-mon-profil-public.md` | html + png | M5-04 | `arabe/account` (profil public) |
+| 11 | Connexion (avec bloc OTP) | `11-connexion.md` | html + png | M0-07, M1-15 | `arabe/auth` (bureau, téléphone, bloc code 2FA) ; `arabe/parcours` (connexion effective en /ar/, reconnexion qui revient en /ar/) |
+| 12 | Inscription | `12-inscription.md` | html + png | M0-07, M1-15 | `arabe/auth` |
+| 13 | Dossier professionnel | `13-dossier-professionnel.md` | html + png | M1-15 | `arabe/account` (dossier professionnel) |
+| 14 | Préférences | `14-preferences-praticien.md` | html + png | M1-16 | `arabe/account` (segments, plages horaires, thème au clavier) ; `arabe/parcours` (choix de langue fr → ar → fr, en ; reconnexion) |
+| 15 | Agenda | `15-agenda.md` | html + png | hors plan C : rendu livré le 15 novembre 2026 (PR #86, G Q25 amendée), API jalon M11 de psymate-api | `arabe/agenda` (semaine, jour, mois, liste, détail, demandes en ligne) |
+| 15b | Nouveau rendez-vous (panneau) | `15b-nouveau-rendez-vous.md` | html + png | idem ; soumission avec l'API | `arabe/agenda` (panneau, récurrence, chevauchement ; rendez-vous non enregistré) |
+| 16 | Fiche patient (création, modification, archivage) | `16-fiche-patient.md` | html + png | M1-06 | `arabe/patients` (création, modification ; l'archivage seulement par l'API) ; `arabe/parcours` (création par N et Ctrl+Entrée) |
+| 17 | Émotions personnalisées | `17-emotions-personnalisees.md` | html + png | M1-09 | `arabe/account` (vocabulaire : émotions, journal des fusions, tags) |
+| 20 | Admin · Validation des praticiens | `20-admin-validation-praticiens.md` | html + png | M7-07 | `arabe/admin` **(admin)** (file, dossier et visionneuse) |
+| 21 | Admin · Praticiens | `21-admin-praticiens.md` | html + png | M7-07 | `arabe/admin` **(admin)** |
+| 22 | Admin · Journal | `22-admin-journal.md` | html + png | M7-07 | `arabe/admin` **(admin)** |
+| 24 | Comment ça marche | `24-comment-ca-marche.md` | html + png | M5-05 | `arabe/public` (bureau, téléphone) ; `arabe/public` « arabe proposé » (alternatives et liens de langue) |
+| 25 | Confirmation d'e-mail | `25-confirmation-email.md` | html + png | M0-07, M1-15 | `arabe/auth` (en attente, lien expiré) |
+| 26 | Mot de passe oublié | `26-mot-de-passe-oublie.md` | html + png | M0-07 | `arabe/auth` (mot de passe oublié, nouveau mot de passe, lien expiré) |
+| 27 | Compte suspendu / refusé | `27-compte-suspendu.md` | html + png | M1-15 (état), M7-07 (recours) | `arabe/auth` (compte suspendu) ; recours : `arabe/admin` **(admin)** |
+| 30 | Profil 360 (quatrième onglet du dossier, panneau « Ajouter au profil ») | `30-profil-360.md` | html (png après livraison) | hors plan C2 : C11, M13-04 à M13-07 (plan `J-plan-profil-360-web.md`, G Q52 à Q57) ; API jalon M13 de psymate-api, `contract-v0.14.0` ; onglet et squelette posés par M13-05, lecture M13-06 (PR #98), écriture M13-07 (bouton « Ajouter au profil » et panneau : ajouter, modifier, retirer) : **écran livré** le 18 novembre 2026 (capture `.png` à produire, J5) | `arabe/profile360` (vide, quatre rubriques, panneau en création et en modification, 390 px) ; `arabe/parcours` (information ajoutée, relue) |
+| 31 | Prise de rendez-vous publique (créneaux, coordonnées, écran d'attente) | `31-prise-de-rendez-vous-publique.md` | html + png (Fluent 2, une vue par état ; autres captures dans `captures-m14-09/`) | hors plan C2 : C12, **M14-12** (plan `K-plan-prise-de-rendez-vous.md`, G Q60 à Q63) ; API jalon M14 de psymate-api, `contract-v0.15.0` ; fiche et maquette écrites le 22 novembre 2026 (M14-09), **écran livré le 22 novembre 2026** (M14-12, PR #109) | `arabe/public` (créneaux ou « aucun créneau », coordonnées ; aucune demande envoyée, donc pas d'écran d'attente) |
+| 32 | Rendez-vous par lien (vérification de l'e-mail, gestion, annulation) | `32-rendez-vous-par-lien.md` | html + png (Fluent 2, une vue par réponse de l'API) | C12, **M14-13** ; **écran livré le 22 novembre 2026** (M14-13, PR #112) | non couvert en /ar/ |
+| 09, 14, 15 | Compléments M14 : bouton « Prendre rendez-vous » ; section « Prise de rendez-vous en ligne » des préférences ; demandes en ligne dans l'agenda | sections « (M14) » des fiches 09, 14 et 15 | 09 : vue « Fiche du praticien » de la maquette 31 ; 14 : `propositions-2026-11/14-preferences-prise-de-rendez-vous.html` ; 15 : `propositions-2026-11/15-agenda-demandes-en-ligne.html` (captures dans `captures-m14-09/`) | C12 : M14-12 (09), M14-11 (14), M14-14 puis M14-15 (15) ; **livrés le 22 novembre 2026** (PR #109, #108, #110, #113) | `arabe/public` (créneaux), `arabe/account` (section de prise de rendez-vous), `arabe/agenda` (demandes en ligne) |
+
+Colonne « Arabe » (M16-29, 23 novembre 2026) : la spec de `e2e/arabe/` qui ouvre l'écran en `/ar/` (`<html dir="rtl">`, aucun défilement horizontal, axe-core sans violation, rendu mesuré). **(admin)** : ignoré sans `PSYMATE_E2E_ADMIN_*`, donc jamais joué en CI. Les écrans hors de ce tableau sont au §5.
 
 Hors V1, fiche conservée mais rien à implémenter : 23 Signalements (V1.1, G Q26). L'agenda (15, 15b), hors V1 à l'origine (G Q25), est entré en V1 le 15 novembre 2026 : écrans rendus sur données de démonstration, API en cours, synchronisation Google toujours hors V1.
 
@@ -85,3 +87,20 @@ Les sept écrans manquants ont maintenant leur **fiche `.md` et leur maquette `.
 | Module `patients` : `errors[]` sans `code` de champ (seulement `field`, `message`) | Les messages 422 viennent du serveur tels quels | Harmoniser avec les autres modules (`FieldProblem` avec `code`) |
 
 Les trois maquettes de `UI/` (Timeline, Patient en séance, Annuaire) ne sont pas copiées dans `design/` : ce sont des exports de canevas (`Main.dc.html` + scripts de l'outil de maquettage), pas des `.html` statiques autonomes comme les autres fiches. Il faut en tirer un `.html` autonome et un `.png` au moment d'écrire la fiche. Aucun de ces fichiers n'est du code du projet : `psymate-web` est en Angular.
+
+## 5. Version arabe (jalon M16, ouverture le 23 novembre 2026)
+
+`/ar/` est proposé par les sélecteurs de langue depuis M16-29 (G Q80), **sans relecture arabophone du glossaire ni des traductions** (décision de l'utilisateur, à faire après coup). Écrans du §4, absents du tableau du §1 :
+
+| N° | Écran | Arabe (`/ar/`) |
+| --- | --- | --- |
+| 03 | Timeline | `arabe/timeline` (chronologique, par séance, filtres, décennie de gauche à droite ; bureau et téléphone) ; `arabe/parcours` (entrées saisies dans le parcours) |
+| 05 | Éditeur d'entrée et historique des versions | `arabe/entries` (six types, curseur d'intensité, erreur, versions) ; bloc de saisie : `arabe/capture` ; `arabe/parcours` (événement, ressenti lié, note saisis dans le bloc) |
+| 08 | Annuaire public | `arabe/public` (résultats, filtres ouverts, aucun résultat) ; `arabe/parcours` (premier praticien ouvert) |
+| 18 | Compte et sécurité | `arabe/account` (2FA, secret, codes de secours) ; première connexion : `arabe/auth` |
+| 19 | Données et export | `arabe/account` |
+| 28 | Admin · Vocabulaire | `arabe/admin` **(admin)** ; libellé arabe d'une spécialité : `arabe/libelles-catalogue` **(admin)** |
+| 29 | Planche d'états | `arabe/socle` (`/_demo`, coquilles publique, praticien et d'administration, panneau latéral, confirmation) |
+| 00 | Dossier patient (en-tête, onglet Séance, clôture, aide des raccourcis) | `arabe/patient-shell` ; champs de saisie : `arabe/champs` |
+
+Ce qui n'est pas couvert en `/ar/` : la vue simple (02b, retirée), le rendez-vous par lien (32), l'écran d'attente de la prise de rendez-vous (31, aucune demande envoyée par `arabe/public`), l'enregistrement d'un rendez-vous de l'agenda (15b), l'archivage d'un patient par l'écran (16). Les tests **(admin)** n'ont jamais été joués. Les e2e arabes tournent en CI contre l'API réelle ; M16-29 n'a pas pu jouer `arabe/parcours` en local (pas d'API sur le poste).

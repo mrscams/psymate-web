@@ -41,7 +41,7 @@ import { SidePanelComponent, SidePanelService } from '../shared/ui';
       display: block;
     }
     kbd {
-      margin-left: 6px;
+      margin-inline-start: 6px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

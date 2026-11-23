@@ -49,7 +49,8 @@ export interface BookingRequest {
   email: string;
   /** Chaîne vide : aucun téléphone. */
   phone: string;
-  locale: 'fr' | 'en';
+  /** Langue des e-mails du demandeur : celle du bundle (contrat 0.16.0 : fr, en ou ar). */
+  locale: 'fr' | 'en' | 'ar';
   consent: boolean;
   /** Pot de miel, toujours vide pour un humain. */
   website: string;

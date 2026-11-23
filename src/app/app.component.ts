@@ -23,7 +23,7 @@ import {
 import { filter, map } from 'rxjs';
 
 import { AUTH_PATHS, SessionStore } from './core/auth';
-import { localeSwitchHref, switchLocales, toAppLocale } from './core/i18n';
+import { LocaleLink, localeSwitchHref, switchLocales, toAppLocale } from './core/i18n';
 import { ShortcutsHelpComponent } from './features/patient-shell';
 import { DossierSearchBar } from './features/search';
 import { ThemeService } from './core/theme';
@@ -138,12 +138,11 @@ export class AppComponent {
 
   protected readonly locale = toAppLocale(inject(LOCALE_ID));
   /**
-   * Langue du lien « autre langue » : la dernière des langues proposées autres que la courante
-   * (core/i18n switchLocales), donc l'anglais en français, le français en anglais. En arabe, bundle
-   * construit mais pas encore proposé (Q80), l'anglais : c'est la langue que nomme le libellé
-   * source « English », tant que l'arabe n'est pas traduit (M16-28) ni ouvert (M16-29).
+   * Langues du sélecteur : les langues proposées autres que la courante (core/i18n switchLocales),
+   * dans l'ordre fr, en, ar. En /fr/ : English puis العربية ; en /en/ : Français puis العربية ; en
+   * /ar/ : Français puis English (M16-29, Q80).
    */
-  protected readonly other = switchLocales(this.locale).at(-1) ?? 'fr';
+  private readonly others = switchLocales(this.locale);
 
   private readonly navigation = toSignal(
     this.router.events.pipe(
@@ -193,8 +192,12 @@ export class AppComponent {
   protected readonly narrow = computed(
     () => !this.navigation().wide && this.navigation().contentWidth !== 'wide',
   );
-  protected readonly switchHref = computed(() =>
-    localeSwitchHref(this.baseHref, this.navigation().url, this.other),
+  /** Liens vers la même page dans chacune des autres langues (core/i18n localeSwitchHref). */
+  protected readonly localeLinks = computed<LocaleLink[]>(() =>
+    this.others.map((locale) => ({
+      locale,
+      href: localeSwitchHref(this.baseHref, this.navigation().url, locale),
+    })),
   );
   protected readonly user = computed(() => {
     const me = this.session.me();
