@@ -3,5 +3,5 @@
 /* Idem pour #fff dans un commentaire de bloc. */
 :host {
   color: var(--text-primary);
-  border-left: 3px solid var(--entry-medication);
+  border-inline-start: 3px solid var(--entry-medication);
 }

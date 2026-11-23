@@ -74,7 +74,7 @@
             <span aria-hidden="true">−</span>
           </button>
           <span class="track" aria-hidden="true"
-            ><span class="track-thumb" [style.left.%]="zoomPosition()"></span
+            ><span class="track-thumb" [style.inset-inline-start.%]="zoomPosition()"></span
           ></span>
           <button
             type="button"
@@ -211,7 +211,7 @@
               >
                 <i aria-hidden="true"></i>
                 <span class="band-text" aria-hidden="true"
-                  ><b>{{ entry.name }}</b> · {{ entry.when }}</span
+                  ><b dir="auto">{{ entry.name }}</b> · {{ entry.when }}</span
                 >
                 <a
                   class="band-link"
@@ -269,6 +269,7 @@
                       }
                       <span
                         class="lane-label"
+                        dir="auto"
                         [style.max-height.px]="entry.bandSpans[$index] - 16"
                         >{{ laneText(head.item) }}</span
                       >
