@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  LOCALE_ID,
+} from '@angular/core';
+
+import { formatLocale } from '../../../../core/i18n';
 
 import { Emotion, EMOTION_FAMILIES } from '../../data/emotions.api';
 import { familyColor, familyLabel } from './vocabulary-labels';
@@ -28,6 +37,9 @@ import { familyColor, familyLabel } from './vocabulary-labels';
 export class GlobalVocabularyComponent {
   readonly globals = input.required<readonly Emotion[]>();
 
+  /** Minuscules selon la locale de formatage (Q73) : sans effet sur l'arabe, qui n'a pas de casse. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
+
   protected readonly groups = computed(() =>
     EMOTION_FAMILIES.map((family) => ({
       family,
@@ -35,7 +47,7 @@ export class GlobalVocabularyComponent {
       color: familyColor(family),
       names: this.globals()
         .filter((e) => e.family === family)
-        .map((e) => e.labelFr.toLocaleLowerCase())
+        .map((e) => e.labelFr.toLocaleLowerCase(this.locale))
         .join(' · '),
     })).filter((group) => group.names.length > 0),
   );

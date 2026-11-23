@@ -28,4 +28,9 @@ describe('profile-labels', () => {
     expect(missingLabel('verification')).toContain('doit être approuvé');
     expect(missingLabel('contact')).toContain('au moins un moyen de contact');
   });
+
+  it('M16-12 : itemLabel passe par catalogLabel, repli sur le français en arabe', () => {
+    expect(itemLabel(VOCABULARY.specialties[0], 'ar')).toBe('Anxiété');
+    expect(itemLabel({ code: 'x', labelFr: 'Deuil', labelEn: '' }, 'en')).toBe('Deuil');
+  });
 });

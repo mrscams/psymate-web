@@ -51,6 +51,7 @@ import { INVALID_CODE_MESSAGE, UNAVAILABLE_MESSAGE } from '../ui/security-messag
             type="password"
             class="mono"
             formControlName="password"
+            dir="ltr"
             autocomplete="current-password"
             required
             [attr.aria-invalid]="invalid('password')"
@@ -72,6 +73,7 @@ import { INVALID_CODE_MESSAGE, UNAVAILABLE_MESSAGE } from '../ui/security-messag
             type="text"
             class="otp"
             formControlName="code"
+            dir="ltr"
             inputmode="numeric"
             autocomplete="one-time-code"
             maxlength="32"

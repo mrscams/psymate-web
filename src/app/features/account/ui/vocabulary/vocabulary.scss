@@ -38,7 +38,7 @@ input[type='text'],
 
 .required {
   color: var(--danger);
-  margin-left: 2px;
+  margin-inline-start: 2px;
 }
 
 .hint,
@@ -153,7 +153,7 @@ input[type='text'],
 
   th {
     padding: 8px 10px;
-    text-align: left;
+    text-align: start;
     color: var(--text-secondary);
     font: var(--mat-sys-body-small);
     border-bottom: 1px solid var(--border-subtle);
@@ -166,7 +166,7 @@ input[type='text'],
   }
 
   .actions-col {
-    text-align: right;
+    text-align: end;
 
     .row-actions {
       justify-content: flex-end;
@@ -187,12 +187,14 @@ input[type='text'],
   font-weight: 400;
 }
 
+// Date de création (« 17 nov. 2026 ») : nom de mois, donc police d'interface en arabe (Q76).
 .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .badge-perso {
-  margin-left: 8px;
+  margin-inline-start: 8px;
   padding: 1px 6px;
   border-radius: 6px;
   background: var(--feeling-tint);
@@ -253,6 +255,12 @@ input[type='text'],
 
   p {
     margin: 0;
+  }
+
+  // Flèche source → cible : retournée en arabe (.pm-flip-rtl) ; une transformation ne s'applique
+  // qu'à une boîte, d'où l'inline-block sous :dir(rtl) seulement (rendu inchangé en fr et en en).
+  .arrow:dir(rtl) {
+    display: inline-block;
   }
 }
 

@@ -1,4 +1,5 @@
 import { Profession } from '../../../core/auth';
+import { formatLocale, toAppLocale } from '../../../core/i18n';
 import { DocumentType, ReviewStatus } from '../data/verification.api';
 
 /** Libellé d'un type de justificatif (fiche 13, liste et formulaire). */
@@ -62,8 +63,20 @@ export function professionLabel(profession: Profession | null): string {
   }
 }
 
-/** « 1,8 Mo », « 420 Ko ». */
-export function formatBytes(bytes: number, locale: string): string {
+/**
+ * Liste de justificatifs insérée dans une phrase (« Il manque : diplôme, pièce d'identité. ») : en
+ * français et en anglais, des virgules, comme avant M16-12 ; en arabe, la liste de la locale de
+ * formatage (« و » et virgule arabe), une virgule latine n'ayant pas sa place dans une phrase arabe.
+ */
+export function documentListText(items: readonly string[], locale: string): string {
+  return toAppLocale(locale) === 'ar'
+    ? new Intl.ListFormat(formatLocale(locale), { type: 'conjunction' }).format(items)
+    : items.join(', ');
+}
+
+/** « 1,8 Mo », « 420 Ko » ; nombre par la locale de formatage (Q73). */
+export function formatBytes(bytes: number, localeId: string): string {
+  const locale = formatLocale(localeId);
   const mo = bytes / (1024 * 1024);
   if (mo >= 1) {
     return $localize`:Taille de fichier en mégaoctets@@account.verification.size.mo:${new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(mo)}:size: Mo`;

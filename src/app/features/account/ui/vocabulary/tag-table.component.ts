@@ -13,6 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
 import { ApiProblem } from '../../../../core/http';
+import { formatLocale } from '../../../../core/i18n';
 import { Tag } from '../../data/tags.api';
 import { tagProblemMessage } from './vocabulary-messages';
 
@@ -45,7 +46,9 @@ export class TagTableComponent {
   readonly merge = input.required<MergeTagFn>();
 
   private readonly injector = inject(Injector);
-  private readonly date = new Intl.DateTimeFormat(inject(LOCALE_ID), { dateStyle: 'medium' });
+  private readonly date = new Intl.DateTimeFormat(formatLocale(inject(LOCALE_ID)), {
+    dateStyle: 'medium',
+  });
 
   protected readonly editing = signal<Editing | null>(null);
   protected readonly draft = signal('');

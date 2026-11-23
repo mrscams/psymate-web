@@ -84,4 +84,10 @@ describe('vocabulary-messages', () => {
     );
     expect(tagProblemMessage({ status: 409, code: 'TAG_EXISTS' })).toContain('porte déjà');
   });
+
+  it('M16-12 : minuscules par la locale de formatage, même résultat en fr et en en', () => {
+    expect(normalizeLabel('  #Appréhension   SOCIALE ', 'en-US')).toBe('apprehension sociale');
+    expect(normalizeLabel('#قلق اجتماعي', 'ar-u-ca-gregory-hc-h23-nu-latn')).toBe('قلق اجتماعي');
+    expect(closestEmotion('Anx', EMOTIONS, 'en-US')?.labelFr).toBe('Anxiété');
+  });
 });
