@@ -80,7 +80,7 @@ const ALL_OPTION_ID = 'all';
             <path d="M4 4l8 1M12 5l-5 7M4 4l3 8" />
           </svg>
         }
-        <span class="value" [id]="valueId">{{ current()?.name ?? allLabel }}</span>
+        <span class="value" dir="auto" [id]="valueId">{{ current()?.name ?? allLabel }}</span>
         <svg class="chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
           <path d="M2 4l3 3 3-3" />
         </svg>
@@ -92,6 +92,7 @@ const ALL_OPTION_ID = 'all';
             #search
             type="text"
             class="search"
+            dir="auto"
             role="combobox"
             autocomplete="off"
             aria-autocomplete="list"
@@ -143,7 +144,7 @@ const ALL_OPTION_ID = 'all';
                     >
                       <pm-entry-icon [type]="option.type" [size]="14" />
                       <span class="option-text">
-                        <span class="option-name">{{ option.name }}</span>
+                        <span class="option-name" dir="auto">{{ option.name }}</span>
                         @if (option.date) {
                           &ngsp;<span class="option-meta mono">{{ option.date }}</span>
                         }

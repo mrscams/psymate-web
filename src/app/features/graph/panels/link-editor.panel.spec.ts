@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { LOCALE_ID, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { SessionStore } from '../../../core/auth';
@@ -174,6 +174,31 @@ describe('LinkEditorPanel', () => {
     await click(triggers);
     expect(triggers.getAttribute('aria-pressed')).toBe('false');
     expect(sentence(el)).toBe("Anxiété 8/10 … Entretien d'évaluation");
+  });
+
+  it('sens de lecture (M16-18) : textes saisis et verbes isolés, flèche d’inversion retournée en arabe', async () => {
+    const { el } = await render();
+    await chooseTarget(el, 'e-situation');
+    await click(chip(el, 'follows'));
+    expect(el.querySelector('.card-name')!.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('label.target .row-name')!.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('textarea')!.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('#pm-link-search')!.getAttribute('dir')).toBe('auto');
+    expect(chip(el, 'follows').getAttribute('dir')).toBe('auto');
+    // La phrase « source, verbe, cible » : chaque morceau garde son propre sens.
+    const parts = [...el.querySelectorAll('.reading .sentence > *')];
+    expect(parts.map((part) => part.getAttribute('dir'))).toEqual(['auto', 'auto', 'auto']);
+    expect(el.querySelector('button.invert svg')!.classList.contains('pm-flip-rtl')).toBe(true);
+    expect(el.querySelector('[data-link-id] .sentence')!.getAttribute('dir')).toBe('auto');
+  });
+
+  it('/ar/ : l’aide d’une puce refusée liste les types sans virgule latine', async () => {
+    TestBed.configureTestingModule({ providers: [{ provide: LOCALE_ID, useValue: 'ar' }] });
+    const { el } = await render();
+    await chooseTarget(el, 'e-event');
+    const triggers = chip(el, 'triggers');
+    const help = text(el.querySelector(`#${triggers.getAttribute('aria-describedby')}`));
+    expect(help).toContain('événement وsituation وséance');
   });
 
   it('inverser le sens recompose la phrase et rouvre les types de l’autre sens', async () => {

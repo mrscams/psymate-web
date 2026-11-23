@@ -11,8 +11,15 @@
   (pointercancel)="onPointerUp($event)"
 >
   @if (scene(); as scene) {
+    <!--
+      Le dessin : un repère de coordonnées (elkjs, graph-layout.ts), de gauche à droite dans toutes
+      les langues (docs/design/arabe.md §2, coordonnées d'un dessin). En arabe, c'est la disposition
+      qui se lit vers la gauche (elk.direction LEFT), pas le repère qui se retourne. Cartes et
+      étiquettes reprennent le sens de la page pour leur texte.
+    -->
     <div
       class="world"
+      dir="ltr"
       [class.animated]="animated()"
       [class.rearranging]="rearranging()"
       [style.transform]="worldTransform()"
@@ -28,8 +35,8 @@
         <span
           class="band-label"
           [class.beside]="!scene.horizontal"
-          [style.left.px]="band.labelAt.x"
-          [style.top.px]="band.labelAt.y"
+          [attr.dir]="textDirection"
+          [style.transform]="bandLabelTransform(band)"
           >{{ band.label }}</span
         >
       }
@@ -86,11 +93,14 @@
 
       @for (link of scene.links; track link.id) {
         @if (link.name; as name) {
+          <!-- Nom du lien : verbe du catalogue servi par le serveur, dans sa langue (Q77). -->
           <span
             class="link-name"
+            dir="auto"
             [class.thread]="link.state === 'thread'"
-            [style.left.px]="name.x"
-            [style.top.px]="name.y"
+            [style.transform]="
+              'translate(' + name.x + 'px, ' + name.y + 'px) translate(-50%, -50%)'
+            "
             >{{ name.text }}</span
           >
         }
@@ -109,6 +119,7 @@
           [class.dragging]="drag()?.id === card.id"
           [class.drop-target]="drag()?.target === card.id"
           [attr.data-node-id]="card.id"
+          [attr.dir]="textDirection"
           [attr.aria-pressed]="card.selected"
           [style.transform]="cardTransform(card)"
           [style.width.px]="card.box.width"
@@ -122,7 +133,7 @@
             [dim]="card.state === 'dim'"
           />
           <span class="text">
-            <span class="title">{{ card.title }}</span>
+            <span class="title" dir="auto">{{ card.title }}</span>
             @if (card.sub) {
               <span class="sub">{{ card.sub }}</span>
             }

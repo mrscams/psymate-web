@@ -96,7 +96,7 @@ export interface GraphScene {
   links: LinkView[];
   /** Cadre de chaque bloc d'entrées sœurs. */
   frames: { id: string; box: Box }[];
-  /** true : lecture de gauche à droite ; false : de haut en bas. */
+  /** true : lecture horizontale (de gauche à droite, vers la gauche en arabe) ; false : de haut en bas. */
   horizontal: boolean;
   /** Colonnes (rangées, de haut en bas) des lectures par type et par mois, avec leur titre. */
   bands: BandView[];
@@ -108,8 +108,13 @@ export interface BandView {
   key: string;
   label: string;
   box: Box;
-  /** Coin du titre : en haut à gauche de la colonne, ou à gauche de la rangée (aligné à droite). */
+  /**
+   * Point d'accroche du titre : en haut à gauche de la colonne (en haut à droite vers la gauche, en
+   * arabe), ou à gauche de la rangée.
+   */
   labelAt: Point;
+  /** Le titre finit au point d'accroche (à gauche d'une rangée, ou colonne lue vers la gauche). */
+  labelEnds: boolean;
   /** Une colonne sur deux est plus claire. */
   alt: boolean;
 }
@@ -144,9 +149,12 @@ function bandViews(layout: GraphLayout, labels: GraphCanvasLabels): BandView[] {
       box: layout.horizontal
         ? { x: band.from, y: -BAND_MARGIN, width: length, height: across }
         : { x: -BAND_MARGIN, y: band.from, width: across, height: length },
-      labelAt: layout.horizontal
-        ? { x: band.from + 10, y: -BAND_MARGIN - BAND_TITLE + 4 }
-        : { x: -BAND_MARGIN - 12, y: band.from + 8 },
+      labelAt: !layout.horizontal
+        ? { x: -BAND_MARGIN - 12, y: band.from + 8 }
+        : layout.leftward
+          ? { x: band.to - 10, y: -BAND_MARGIN - BAND_TITLE + 4 }
+          : { x: band.from + 10, y: -BAND_MARGIN - BAND_TITLE + 4 },
+      labelEnds: !layout.horizontal || !!layout.leftward,
     };
   });
 }

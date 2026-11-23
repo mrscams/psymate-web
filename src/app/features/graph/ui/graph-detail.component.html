@@ -1,7 +1,7 @@
 <aside class="detail" role="complementary" [attr.aria-labelledby]="headingId">
   <header class="head">
     <pm-entry-icon [type]="type()" [size]="16" />
-    <h2 #heading class="title" tabindex="-1" [id]="headingId">{{ title() }}</h2>
+    <h2 #heading class="title" tabindex="-1" dir="auto" [id]="headingId">{{ title() }}</h2>
     <span class="type-chip">{{ typeLabel() }}</span>
     <button type="button" class="close" [attr.aria-label]="closeLabel" (click)="closed.emit()">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -62,7 +62,7 @@
           }
         </dl>
         @if (data.excerpt) {
-          <p class="text">{{ data.excerpt }}</p>
+          <p class="text" dir="auto">{{ data.excerpt }}</p>
         }
 
         <h3 class="links-title">{{ linksHeading() }}</h3>
@@ -70,7 +70,13 @@
           <ul class="links">
             @for (item of links(); track item.id) {
               <li>
-                <button type="button" class="link" (click)="selectEntry.emit(item.other)">
+                <!-- Phrase rendue par le serveur dans sa langue (Q77). -->
+                <button
+                  type="button"
+                  class="link"
+                  dir="auto"
+                  (click)="selectEntry.emit(item.other)"
+                >
                   {{ item.sentence }}
                 </button>
               </li>

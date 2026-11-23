@@ -18,10 +18,12 @@
   }
 }
 
+// Repère du dessin, en dir="ltr" (voir le gabarit) : inset-inline-start y vaut left. Les positions
+// d'elkjs passent par transform (coordonnées d'un dessin, pas de la mise en page).
 .world {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   transform-origin: 0 0;
 
   &.animated {
@@ -33,7 +35,7 @@
 .band {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   border-radius: 8px;
   background: var(--surface-ground);
   opacity: 0.55;
@@ -45,6 +47,7 @@
 
 .band-label {
   position: absolute;
+  top: 0;
   color: var(--text-secondary);
   font-family: var(--font-ui);
   font-size: 12px;
@@ -52,18 +55,15 @@
   letter-spacing: 0.02em;
   line-height: 16px;
   white-space: nowrap;
-
-  // De haut en bas : le titre est à gauche de sa rangée, aligné sur elle.
-  &.beside {
-    transform: translateX(-100%);
-  }
+  // Placé par transform (bandLabelTransform) : à gauche d'une rangée de haut en bas, le titre finit
+  // au point d'accroche ; sans inset horizontal, il part du bord gauche du repère (dir="ltr").
 }
 
 // Cadre d'un bloc d'entrées sœurs (même pivot, même lien).
 .frame {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   box-sizing: border-box;
   border: 1px solid var(--border-subtle);
   border-radius: 14px;
@@ -74,7 +74,7 @@
 .links {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 1px;
   height: 1px;
   overflow: visible;
@@ -153,9 +153,11 @@
   fill: var(--link-proposed);
 }
 
+// Placé par transform, centré sur son point (gabarit) ; sans inset horizontal, il part du bord
+// gauche du repère (dir="ltr"), même si son texte est de droite à gauche (dir="auto").
 .link-name {
   position: absolute;
-  transform: translate(-50%, -50%);
+  top: 0;
   padding: 0 6px;
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
@@ -175,21 +177,24 @@
 }
 
 // ── Cartes ───────────────────────────────────────────────────────────────────────────
+// La carte porte le sens de la page (dir) pour son contenu : forme du type au début, texte ensuite.
+// Sans inset horizontal, elle part du bord gauche du repère (dir="ltr", position statique d'une boîte
+// absolue dans un bloc de gauche à droite) ; elkjs la place par transform.
 .card {
   position: absolute;
   top: 0;
-  left: 0;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 12px 0 9px;
+  padding-block: 0;
+  padding-inline: 9px 12px;
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   background: var(--surface-raised);
   color: var(--text-primary);
   font-family: var(--font-ui);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition:
     border-color 0.2s,
@@ -285,7 +290,7 @@
 .zoom {
   position: absolute;
   bottom: 16px;
-  left: 16px;
+  inset-inline-start: 16px;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--border-subtle);

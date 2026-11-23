@@ -1,9 +1,13 @@
+import type { ElkNode } from 'elkjs/lib/elk-api';
+
+import { textDirection } from '../../../core/i18n';
 import { edge, graphView, node, superNode } from '../data/graph.fixtures';
 import { GraphView } from '../data/graph.model';
 import {
   anchorEdges,
   bandKeys,
   CARD_SIZE,
+  elkDirection,
   flowEdges,
   groupEdgeId,
   layoutGraph,
@@ -247,5 +251,110 @@ describe('graph-layout', () => {
       'e-situation',
     ]);
     expect([...thread.edges].sort()).toEqual(['l-1', 'l-2', 'l-3', 'l-4']);
+  });
+  describe('sens de lecture de l’interface (Q75)', () => {
+    /** Le moteur réel, qui garde le sens demandé à elkjs. */
+    function spyEngine() {
+      const engine = testEngine();
+      const asked: string[] = [];
+      return {
+        asked,
+        engine: {
+          layout: (graph: ElkNode) => {
+            asked.push(String(graph.layoutOptions?.['elk.direction']));
+            return engine.layout(graph);
+          },
+        },
+      };
+    }
+
+    it.each([
+      ['fr', 'RIGHT'],
+      ['en', 'RIGHT'],
+      ['ar', 'LEFT'],
+    ] as const)('/%s/ : le sens horizontal est donné à elkjs en %s', async (locale, expected) => {
+      const { asked, engine } = spyEngine();
+      await layoutGraph(engine, graphView(), 'e-situation', {
+        reading: 'causal',
+        direction: 'right',
+        textDirection: textDirection(locale),
+      });
+      expect(asked).toEqual([expected]);
+      expect(elkDirection('right', textDirection(locale))).toBe(expected);
+    });
+
+    it.each(['fr', 'en', 'ar'])('/%s/ : de haut en bas ne change pas (DOWN)', async (locale) => {
+      const { asked, engine } = spyEngine();
+      const layout = await layoutGraph(engine, graphView(), 'e-situation', {
+        reading: 'causal',
+        direction: 'down',
+        textDirection: textDirection(locale),
+      });
+      expect(asked).toEqual(['DOWN']);
+      expect(layout.horizontal).toBe(false);
+      expect(layout.leftward).toBe(false);
+    });
+
+    it('sans sens donné : de gauche à droite (RIGHT)', () => {
+      expect(elkDirection('right')).toBe('RIGHT');
+    });
+
+    it('vers la gauche : la cause est à droite, l’effet à gauche', async () => {
+      const layout = await layoutGraph(testEngine(), graphView(), 'e-situation', {
+        reading: 'causal',
+        direction: 'right',
+        textDirection: 'rtl',
+      });
+      const { boxes, routes } = layout;
+      expect(layout.horizontal).toBe(true);
+      expect(layout.leftward).toBe(true);
+      expect(boxes['e-event'].x).toBeGreaterThan(boxes['e-situation'].x);
+      expect(boxes['e-situation'].x).toBeGreaterThan(boxes['e-feeling'].x);
+      expect(boxes['e-feeling'].x).toBeGreaterThan(boxes['e-med'].x);
+      // Le tracé part de ce qui est traité (à droite) vers le traitement (à gauche).
+      expect(routes['l-3'][0].x).toBeGreaterThan(routes['l-3'].at(-1)!.x);
+    });
+
+    it('vers la gauche, par type : la première colonne est à droite, les colonnes se suivent', async () => {
+      const layout = await layoutGraph(testEngine(), graphView(), 'e-situation', {
+        reading: 'type',
+        direction: 'right',
+        textDirection: 'rtl',
+      });
+      expect(layout.bands.map((band) => band.key)).toEqual([
+        'events',
+        'situations',
+        'feelings',
+        'responses',
+      ]);
+      const column = Object.fromEntries(layout.bands.map((band) => [band.key, band]));
+      const inside = (id: string, key: string) => {
+        const box = layout.boxes[id];
+        expect(box.x).toBeGreaterThanOrEqual(column[key].from);
+        expect(box.x + box.width).toBeLessThanOrEqual(column[key].to);
+      };
+      inside('e-event', 'events');
+      inside('e-situation', 'situations');
+      inside('e-feeling', 'feelings');
+      inside('e-med', 'responses');
+      // Chaque colonne commence là où finit la suivante (à sa gauche).
+      layout.bands.slice(1).forEach((band, i) => expect(band.to).toBe(layout.bands[i].from));
+    });
+
+    it('vers la gauche : un bloc remplit sa grille de droite à gauche', async () => {
+      const ltr = await layoutGraph(testEngine(), crowded(12), 'e-situation');
+      const rtl = await layoutGraph(testEngine(), crowded(12), 'e-situation', {
+        reading: 'causal',
+        direction: 'right',
+        textDirection: 'rtl',
+      });
+      const [block] = rtl.blocks;
+      const [first, second] = block.members;
+      expect(rtl.boxes[first].x).toBeGreaterThan(rtl.boxes[second].x);
+      expect(ltr.boxes[ltr.blocks[0].members[0]].x).toBeLessThan(
+        ltr.boxes[ltr.blocks[0].members[1]].x,
+      );
+      expect(block.box.x).toBeLessThan(rtl.boxes['e-situation'].x);
+    });
   });
 });
