@@ -303,6 +303,10 @@ Autres termes des liens :
 | `search.*` | trigrammes ; sans accents ni casse | trigrams | مقاطع ثلاثية ؛ دون اعتبار للنبرات ولا لحالة الأحرف | — | Employé par M16-27. Ne promet pas que l'API ignore les voyelles brèves de l'arabe (تشكيل) : non vérifié. | |
 | `search.help.example.*` | Jetons de recherche (tag:, émotion:, avant:, après:) | Search tokens | tag:، emotion:، before:، after: | — | Employé par M16-27 : les jetons restent en caractères latins, sous leur forme anglaise acceptée par l'API ; l'exemple d'émotion emploie le code (« emotion:anxiety »). | |
 | `profile360.*` | Profil (forme courte de Profil 360) | Profile | الملف الشامل | — | Employé par M16-27. | |
+| `vocabulary.*` | Vocabulaire global (des émotions) | Global vocabulary | المفردات العامة | — | Employé par M16-28 ; « مفرداتي » pour « mon vocabulaire ». | |
+| `vocabulary.*` | Libellé (d'une émotion, d'un tag) | Label | التسمية | — | Employé par M16-28. | |
+| `vocabulary.tags.*` | Réétiqueter (après une fusion de tags) ; mot-clé | Relabel ; keyword | إعادة الوسم ؛ كلمة مفتاحية | — | Employé par M16-28. | |
+| `vocabulary.intro` | Plutchik (modèle des émotions) | Plutchik | بلوتشيك | — | Employé par M16-28 : nom propre transcrit. | |
 
 ## 8. Profil 360
 
@@ -408,6 +412,8 @@ Autres termes des liens :
 | `agenda.*` | Fuseau horaire | Time zone | المنطقة الزمنية | — | | |
 | `preferences.booking.*` | Délai minimal, horizon | Minimum notice, horizon | أدنى مهلة، أقصى مدى للحجز | — | | |
 | `preferences.booking.mode.*` | Confirmation des demandes (manuelle, automatique) | Request confirmation | تأكيد الطلبات (يدوي، تلقائي) | — | | |
+| `preferences.booking.*` | Demandeur (personne qui demande un rendez-vous en ligne) | Requester | مقدّم الطلب | صاحب الطلب | Employé par M16-28 ; masculin générique (règle 4). | |
+| `preferences.booking.*` | Plage, plages ouvertes | Booking window | فترة إتاحة، فترات الإتاحة | — | Employé par M16-28 sous la forme indéfinie « فترة إتاحة » pour la distinguer du créneau (« فترة زمنية »). | |
 | `public.*` | PsyMate n'est pas un service d'urgence | PsyMate is not an emergency service | PsyMate ليس خدمة طوارئ | — | Les numéros d'urgence restent en chiffres latins. | |
 
 Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، الأربعاء، الخميس، الجمعة، السبت، الأحد. Les noms de mois viennent d'`Intl` avec la locale de formatage (يناير، فبراير، مارس…) ; l'usage levantin (كانون الثاني، شباط…) et l'usage maghrébin (جانفي، فيفري…) ne sont pas employés, faute de variante par pays (Q72). À confirmer par le relecteur.
@@ -438,6 +444,21 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `profile.*` | N° professionnel | Professional number | الرقم المهني | — | | |
 | `profile.*` | Adresse du cabinet | Practice address | عنوان العيادة | عنوان المكتب | Pour un coach, « المكتب » convient mieux. | |
 | `profile.*` | Publier, publié | Publish, published | نشر، منشور | — | | |
+| `account.security.*` | Activer, désactiver (la double authentification) ; activée, non activée | Enable, disable | تفعيل، تعطيل ؛ مفعّلة، غير مفعّلة | — | Employé par M16-28 ; l'état s'accorde à « المصادقة » (féminin). | |
+| `account.security.*` | Régénérer (les codes de secours) | Regenerate | إعادة توليد | — | Employé par M16-28. | |
+| `account.security.*` | Secret (TOTP), QR code | Secret, QR code | المفتاح السرّي، رمز QR | — | Employé par M16-28 ; « QR », « TOTP », « SHA-1 » restent en caractères latins. | |
+| `account.security.*` | Application d'authentification | Authenticator app | تطبيق المصادقة | — | Employé par M16-28 (déjà dans `auth.*`). | |
+| `account.security.sessions.*` | Appareil, appareils | Device, devices | جهاز، أجهزة | — | Employé par M16-28 ; six formes dans le sous-message ICU (جهاز واحد، جهازان، 3 أجهزة، 11 جهازًا). | |
+| `account.security.sessions.revoke` | Déconnecter (une session, un appareil) | Sign out | تسجيل الخروج | — | Employé par M16-28 ; « إنهاء الجلسة » est réservé à la séance clinique. | |
+| `account.security.lastLogin.*` | Connexion précédente | Previous sign-in | تسجيل الدخول السابق | — | Employé par M16-28. | |
+| `account.data.*` | Préparer, lancer, relancer l'export | Prepare, start, restart export | تحضير التصدير، إطلاق التصدير، إعادة الإطلاق | — | Employé par M16-28, sur le modèle de « إعادة إطلاق التصدير » (M16-26). | |
+| `account.data.yours.journal.title` | Journal des accès | Access log | سجلّ الوصول | — | Employé par M16-28. | |
+| `profile.*` | Fiche publique, retirer la fiche de l'annuaire | Public page, unpublish | البطاقة العامة، سحب البطاقة من دليل الممارسين | — | Employé par M16-28, sur le modèle de « بطاقة الممارس ». | |
+| `profile.*` | Nom affiché, titre affiché, présentation | Display name, title, bio | الاسم المعروض، اللقب المعروض، التعريف | — | Employé par M16-28. | |
+| `profile.responseDelay` | Délai de réponse | Response time | مهلة الرد | — | Employé par M16-28. | |
+| `profile.checklist.label` | Liste de contrôle (avant publication) | Checklist | قائمة التحقّق | — | Employé par M16-28. | |
+| `profile.photo.*` | Recadrer (la photo) | Crop | قصّ | اقتصاص | Employé par M16-28. | |
+| `preferences.save*`, `profile.save.*` | Enregistré automatiquement | Saved automatically | حفظ تلقائي | — | Employé par M16-28. | |
 
 ## 12. Vérification des praticiens et administration
 
@@ -467,6 +488,11 @@ Jours de la semaine, du lundi au dimanche : الاثنين، الثلاثاء، 
 | `admin.*` | File de validation | Review queue | قائمة انتظار التحقّق | — | | |
 | `admin.*` | Visionneuse de document | Document viewer | عارض المستندات | — | | |
 | `adminBar.reminder` | Aucune donnée patient n'est accessible depuis l'administration. | — | لا يمكن الوصول إلى أي بيانات للمرضى من الإدارة. | — | | |
+| `accountNav.badge.pending` | en attente (pastille du dossier) | pending | قيد الانتظار | — | Employé par M16-28 ; couvre « justificatifs attendus » et « en cours de vérification ». | |
+| `account.verification.*` | Déposer, déposé (un justificatif) ; retirer | Upload, uploaded ; remove | إيداع، مُودَع ؛ إزالة | — | Employé par M16-28, comme « إيداع » de M16-26. | |
+| `account.verification.*` | Soumettre, soumis (le dossier) | Submit, submitted | إرسال، مُرسَل | — | Employé par M16-28, sur le modèle de « إرسال الملف للتحقّق ». | |
+| `account.verification.progress.validation` | Validation (jalon du dossier) | Validation | التحقّق | — | Employé par M16-28, comme `adminBar.tab.validation`. | |
+| `account.verification.*` | Profession déclarée | Declared profession | المهنة المصرَّح بها | — | Employé par M16-28. | |
 | `admin.*` | Libellé FR, libellé EN, libellé AR | FR label | التسمية بالفرنسية، بالإنجليزية، بالعربية | — | Champ ajouté par M16-25. | |
 
 ## 13. Socle : états, messages, actions
