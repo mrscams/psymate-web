@@ -17909,6 +17909,7 @@
       </trans-unit>
       <trans-unit id="patients.form.crumbs" datatype="html">
         <source>Fil d&apos;Ariane</source>
+        <target state="translated">مسار التنقّل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">1</context>
@@ -17917,6 +17918,7 @@
       </trans-unit>
       <trans-unit id="patients.form.crumbs.sheet" datatype="html">
         <source>Fiche</source>
+        <target state="translated">البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">12,14</context>
@@ -17925,6 +17927,7 @@
       </trans-unit>
       <trans-unit id="patients.form.crumbs.new" datatype="html">
         <source>Nouveau</source>
+        <target state="translated">جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">14,20</context>
@@ -17933,6 +17936,7 @@
       </trans-unit>
       <trans-unit id="patients.history.title" datatype="html">
         <source> Historique des versions </source>
+        <target state="translated"> سجلّ النسخ </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">42,48</context>
@@ -17941,6 +17945,7 @@
       </trans-unit>
       <trans-unit id="patients.form.archivedBanner" datatype="html">
         <source>Ce dossier est archivé : il n&apos;apparaît plus dans la liste et ne peut pas être modifié.</source>
+        <target state="translated">هذا الملف مؤرشف: لم يعد يظهر في القائمة ولا يمكن تعديله.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">58,63</context>
@@ -17949,6 +17954,7 @@
       </trans-unit>
       <trans-unit id="patients.form.restore" datatype="html">
         <source> Restaurer </source>
+        <target state="translated"> استعادة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">68,72</context>
@@ -17957,6 +17963,7 @@
       </trans-unit>
       <trans-unit id="patients.form.identity.help" datatype="html">
         <source> Un prénom et une initiale suffisent : c&apos;est le nom affiché partout dans l&apos;application. Le reste est facultatif. </source>
+        <target state="translated"> يكفي الاسم الأول والحرف الأول من اسم العائلة: هذا هو الاسم المعروض في كل أنحاء التطبيق. وما تبقّى اختياري. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">112,116</context>
@@ -17965,6 +17972,7 @@
       </trans-unit>
       <trans-unit id="patients.field.displayName" datatype="html">
         <source>Nom affiché</source>
+        <target state="translated">الاسم المعروض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">119,121</context>
@@ -17977,6 +17985,7 @@
       </trans-unit>
       <trans-unit id="patients.field.firstName" datatype="html">
         <source>Prénom</source>
+        <target state="translated">الاسم الأول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">141,144</context>
@@ -17989,6 +17998,7 @@
       </trans-unit>
       <trans-unit id="patients.field.lastName" datatype="html">
         <source>Nom</source>
+        <target state="translated">اسم العائلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">160,163</context>
@@ -18001,6 +18011,7 @@
       </trans-unit>
       <trans-unit id="patients.form.lastName.placeholder" datatype="html">
         <source>Nom de famille</source>
+        <target state="translated">اسم العائلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">167,168</context>
@@ -18009,6 +18020,7 @@
       </trans-unit>
       <trans-unit id="patients.field.birthDate" datatype="html">
         <source>Date de naissance</source>
+        <target state="translated">تاريخ الميلاد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">181,183</context>
@@ -18021,6 +18033,7 @@
       </trans-unit>
       <trans-unit id="patients.field.pronoun" datatype="html">
         <source>Pronom / accord</source>
+        <target state="translated">الضمير وصيغة المخاطبة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">200,203</context>
@@ -18033,6 +18046,7 @@
       </trans-unit>
       <trans-unit id="patients.form.unset" datatype="html">
         <source> Non renseigné </source>
+        <target state="translated"> غير محدَّد </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">209,211</context>
@@ -18049,6 +18063,7 @@
       </trans-unit>
       <trans-unit id="patients.field.phone" datatype="html">
         <source>Téléphone</source>
+        <target state="translated">الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">219,222</context>
@@ -18061,6 +18076,7 @@
       </trans-unit>
       <trans-unit id="patients.form.phone.placeholder" datatype="html">
         <source>06 12 34 56 78</source>
+        <target state="translated">06 12 34 56 78</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">227,228</context>
@@ -18069,6 +18085,7 @@
       </trans-unit>
       <trans-unit id="patients.field.email" datatype="html">
         <source>E-mail</source>
+        <target state="translated">البريد الإلكتروني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">236,239</context>
@@ -18081,6 +18098,7 @@
       </trans-unit>
       <trans-unit id="patients.form.email.placeholder" datatype="html">
         <source>prenom@exemple.fr</source>
+        <target state="translated">prenom@exemple.fr</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">243,244</context>
@@ -18089,6 +18107,7 @@
       </trans-unit>
       <trans-unit id="patients.form.privacy.text" datatype="html">
         <source> Les coordonnées ne sont jamais synchronisées avec un agenda externe ni publiées dans l&apos;annuaire. </source>
+        <target state="translated"> لا تُزامَن بيانات التواصل أبدًا مع أي أجندة خارجية، ولا تُنشر في دليل الممارسين. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">256,261</context>
@@ -18097,6 +18116,7 @@
       </trans-unit>
       <trans-unit id="patients.form.context.help" datatype="html">
         <source> Ce qui décrit la personne et le cadre, pas ce qui se passe : les faits datés (décès, épisodes) se saisissent dans la timeline, avec leur précision. </source>
+        <target state="translated"> ما يصف الشخص والإطار، لا ما يحدث: الوقائع المؤرَّخة (وفاة، نوبات) تُدخَل في الخط الزمني، مع دقّة تاريخها. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">271,274</context>
@@ -18105,6 +18125,7 @@
       </trans-unit>
       <trans-unit id="patients.field.situation" datatype="html">
         <source>Situation</source>
+        <target state="translated">الوضعية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">279,281</context>
@@ -18117,6 +18138,7 @@
       </trans-unit>
       <trans-unit id="patients.field.activity" datatype="html">
         <source>Activité</source>
+        <target state="translated">النشاط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">287,289</context>
@@ -18129,6 +18151,7 @@
       </trans-unit>
       <trans-unit id="patients.field.referredBy" datatype="html">
         <source>Adressé·e par</source>
+        <target state="translated">جهة الإحالة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">295,297</context>
@@ -18141,6 +18164,7 @@
       </trans-unit>
       <trans-unit id="patients.field.initialReason" datatype="html">
         <source>Motif initial</source>
+        <target state="translated">سبب الاستشارة الأولي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">303,306</context>
@@ -18153,6 +18177,7 @@
       </trans-unit>
       <trans-unit id="patients.field.history" datatype="html">
         <source>Histoire et éléments à garder en tête</source>
+        <target state="translated">السيرة وعناصر للتذكّر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">315,318</context>
@@ -18165,6 +18190,7 @@
       </trans-unit>
       <trans-unit id="patients.form.history.placeholder" datatype="html">
         <source>Texte libre, visible dans la vue d&apos;ensemble.</source>
+        <target state="translated">نص حرّ، يظهر في النظرة العامة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">321,322</context>
@@ -18173,6 +18199,7 @@
       </trans-unit>
       <trans-unit id="patients.field.since" datatype="html">
         <source>Suivi·e depuis</source>
+        <target state="translated">بداية المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">342,345</context>
@@ -18185,6 +18212,7 @@
       </trans-unit>
       <trans-unit id="patients.field.rhythm" datatype="html">
         <source>Rythme habituel</source>
+        <target state="translated">الوتيرة المعتادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">359,361</context>
@@ -18197,6 +18225,7 @@
       </trans-unit>
       <trans-unit id="patients.field.modality" datatype="html">
         <source>Modalité par défaut</source>
+        <target state="translated">طريقة الاستشارة الافتراضية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">374,376</context>
@@ -18209,6 +18238,7 @@
       </trans-unit>
       <trans-unit id="patients.form.durationLabel" datatype="html">
         <source>Durée de séance</source>
+        <target state="translated">مدّة الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">389,392</context>
@@ -18217,6 +18247,7 @@
       </trans-unit>
       <trans-unit id="patients.form.durationUnit" datatype="html">
         <source>min</source>
+        <target state="translated">د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">412,415</context>
@@ -18225,6 +18256,7 @@
       </trans-unit>
       <trans-unit id="patients.field.fee" datatype="html">
         <source>Tarif</source>
+        <target state="translated">السعر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">427,430</context>
@@ -18237,6 +18269,7 @@
       </trans-unit>
       <trans-unit id="patients.form.fee.placeholder" datatype="html">
         <source>70 €</source>
+        <target state="translated">70 €</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">435</context>
@@ -18245,6 +18278,7 @@
       </trans-unit>
       <trans-unit id="patients.field.prescriber" datatype="html">
         <source>Médecin / prescripteur</source>
+        <target state="translated">الطبيب الواصف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">442,445</context>
@@ -18257,6 +18291,7 @@
       </trans-unit>
       <trans-unit id="patients.form.prescriber.placeholder" datatype="html">
         <source>Dr …</source>
+        <target state="translated">د. …</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">449,450</context>
@@ -18265,6 +18300,7 @@
       </trans-unit>
       <trans-unit id="patients.form.onCreate.session" datatype="html">
         <source> Une séance d&apos;accueil est créée avec le dossier : toute entrée se rattache à une séance. </source>
+        <target state="translated"> تُنشأ جلسة استقبال مع الملف: كل مُدخَل يُربط بجلسة. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">455,459</context>
@@ -18273,6 +18309,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flags.lead" datatype="html">
         <source> Un repère posé par vous, visible dans l&apos;en-tête et dans la liste. Jamais déduit automatiquement, jamais en rouge. </source>
+        <target state="translated"> علامة تُوضع يدويًا، وتظهر في الترويسة وفي القائمة. لا تُستنتج آليًا أبدًا، ولا تظهر باللون الأحمر أبدًا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">464,467</context>
@@ -18281,6 +18318,7 @@
       </trans-unit>
       <trans-unit id="patients.form.tags" datatype="html">
         <source> Tags du dossier </source>
+        <target state="translated"> وسوم الملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">481,484</context>
@@ -18289,6 +18327,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.title" datatype="html">
         <source> Archiver ce dossier </source>
+        <target state="translated"> أرشفة هذا الملف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">510,512</context>
@@ -18297,6 +18336,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.text" datatype="html">
         <source> Il disparaît de la liste ; entrées, liens et séances sont conservés, la restauration est possible à tout moment. </source>
+        <target state="translated"> يختفي من القائمة؛ وتُحفظ المُدخَلات والروابط والجلسات، والاستعادة ممكنة في أي وقت. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">513,517</context>
@@ -18305,6 +18345,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.button" datatype="html">
         <source> Archiver… </source>
+        <target state="translated"> أرشفة… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.html</context>
           <context context-type="linenumber">524,527</context>
@@ -18313,6 +18354,7 @@
       </trans-unit>
       <trans-unit id="patients.form.editTitle" datatype="html">
         <source>Fiche · <x id="name" equiv-text="patient.displayName"/></source>
+        <target state="translated">البطاقة · <x id="name" equiv-text="patient.displayName"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">202</context>
@@ -18321,6 +18363,7 @@
       </trans-unit>
       <trans-unit id="patients.form.newTitle" datatype="html">
         <source>Nouveau <x id="subject" equiv-text="subject"/></source>
+        <target state="translated"><x id="subject" equiv-text="subject"/> جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">205</context>
@@ -18329,6 +18372,7 @@
       </trans-unit>
       <trans-unit id="patients.form.birthDate.hint" datatype="html">
         <source>L&apos;âge et les phases de vie en découlent</source>
+        <target state="translated">يُستنتج منه العمر والمراحل العمرية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">220</context>
@@ -18337,6 +18381,7 @@
       </trans-unit>
       <trans-unit id="patients.form.birthDate.hintAge" datatype="html">
         <source><x id="age" equiv-text="age"/> ans · l&apos;âge et les phases de vie en découlent</source>
+        <target state="translated">العمر: <x id="age" equiv-text="age"/> · تُستنتج المراحل العمرية من هذا التاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">221</context>
@@ -18345,6 +18390,7 @@
       </trans-unit>
       <trans-unit id="patients.form.duration.hint" datatype="html">
         <source>préférence du compte : <x id="minutes" equiv-text="minutes"/> min</source>
+        <target state="translated">تفضيل الحساب: <x id="minutes" equiv-text="minutes"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">226</context>
@@ -18353,6 +18399,7 @@
       </trans-unit>
       <trans-unit id="patients.form.save" datatype="html">
         <source>Enregistrer</source>
+        <target state="translated">حفظ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">337</context>
@@ -18361,6 +18408,7 @@
       </trans-unit>
       <trans-unit id="patients.form.create" datatype="html">
         <source>Créer le dossier</source>
+        <target state="translated">إنشاء الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">338</context>
@@ -18369,6 +18417,7 @@
       </trans-unit>
       <trans-unit id="patients.form.discard" datatype="html">
         <source>Annuler les modifications</source>
+        <target state="translated">إلغاء التعديلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">342</context>
@@ -18377,6 +18426,7 @@
       </trans-unit>
       <trans-unit id="patients.form.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">343</context>
@@ -18389,6 +18439,7 @@
       </trans-unit>
       <trans-unit id="patients.form.stamp" datatype="html">
         <source>Chaque enregistrement crée une version horodatée.</source>
+        <target state="translated">كل حفظ يُنشئ نسخة مؤرَّخة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">349</context>
@@ -18397,6 +18448,7 @@
       </trans-unit>
       <trans-unit id="patients.form.stamp.many" datatype="html">
         <source><x id="count" equiv-text="count"/> champs modifiés · chaque enregistrement crée une version horodatée.</source>
+        <target state="translated">الحقول المعدَّلة: <x id="count" equiv-text="count"/> · كل حفظ يُنشئ نسخة مؤرَّخة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">352</context>
@@ -18405,6 +18457,7 @@
       </trans-unit>
       <trans-unit id="patients.form.stamp.one" datatype="html">
         <source>1 champ modifié · chaque enregistrement crée une version horodatée.</source>
+        <target state="translated">حقل واحد معدَّل · كل حفظ يُنشئ نسخة مؤرَّخة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">353</context>
@@ -18413,6 +18466,7 @@
       </trans-unit>
       <trans-unit id="patients.form.loadError" datatype="html">
         <source>Impossible de charger cette fiche</source>
+        <target state="translated">تعذّر تحميل هذه البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">360</context>
@@ -18421,6 +18475,7 @@
       </trans-unit>
       <trans-unit id="patients.form.saved" datatype="html">
         <source>Fiche enregistrée</source>
+        <target state="translated">تم حفظ البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">419</context>
@@ -18429,6 +18484,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.confirmTitle" datatype="html">
         <source>Archiver <x id="name" equiv-text="patient.displayName"/> ?</source>
+        <target state="translated">أرشفة <x id="name" equiv-text="patient.displayName"/>؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">507</context>
@@ -18441,6 +18497,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.confirmText" datatype="html">
         <source>Le dossier disparaît de la liste ; rien n&apos;est supprimé et vous pourrez le restaurer.</source>
+        <target state="translated">يختفي الملف من القائمة؛ لا يُحذف شيء، ويمكن استعادته لاحقًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">508</context>
@@ -18453,6 +18510,7 @@
       </trans-unit>
       <trans-unit id="patients.archive.confirm" datatype="html">
         <source>Archiver ce <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">أرشفة ملف <x id="subject" equiv-text="subject"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">509</context>
@@ -18465,6 +18523,7 @@
       </trans-unit>
       <trans-unit id="patients.form.identity" datatype="html">
         <source>Identité</source>
+        <target state="translated">الهوية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">621</context>
@@ -18473,6 +18532,7 @@
       </trans-unit>
       <trans-unit id="patients.form.context" datatype="html">
         <source>Contexte</source>
+        <target state="translated">السياق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">622</context>
@@ -18481,6 +18541,7 @@
       </trans-unit>
       <trans-unit id="patients.form.followUp" datatype="html">
         <source>Suivi</source>
+        <target state="translated">المتابعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">623</context>
@@ -18489,6 +18550,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flags" datatype="html">
         <source>Drapeaux</source>
+        <target state="translated">علامات التنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">624</context>
@@ -18497,6 +18559,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.tags" datatype="html">
         <source>Tags</source>
+        <target state="translated">الوسوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">625</context>
@@ -18505,6 +18568,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.archive" datatype="html">
         <source>Archivage</source>
+        <target state="translated">الأرشفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">626</context>
@@ -18513,6 +18577,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.created" datatype="html">
         <source>Créée le <x id="date" equiv-text="created"/></source>
+        <target state="translated">تاريخ الإنشاء: <x id="date" equiv-text="created"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">644</context>
@@ -18521,6 +18586,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.updatedOn" datatype="html">
         <source>dernière modification le <x id="date" equiv-text="date"/></source>
+        <target state="translated">آخر تعديل: <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">659</context>
@@ -18529,6 +18595,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.updated" datatype="html">
         <source>dernière modification <x id="when" equiv-text="relative"/></source>
+        <target state="translated">آخر تعديل <x id="when" equiv-text="relative"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">660</context>
@@ -18537,6 +18604,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.noSession" datatype="html">
         <source>aucune séance</source>
+        <target state="translated">لا جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">665</context>
@@ -18545,6 +18613,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.sessions" datatype="html">
         <source><x id="count" equiv-text="count"/> séances</source>
+        <target state="translated">الجلسات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">668</context>
@@ -18553,6 +18622,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.session" datatype="html">
         <source>1 séance</source>
+        <target state="translated">جلسة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">669</context>
@@ -18561,6 +18631,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.versions" datatype="html">
         <source><x id="count" equiv-text="count"/> versions</source>
+        <target state="translated">النسخ: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">675</context>
@@ -18569,6 +18640,7 @@
       </trans-unit>
       <trans-unit id="patients.form.meta.version" datatype="html">
         <source>1 version</source>
+        <target state="translated">نسخة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">676</context>
@@ -18577,6 +18649,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.fields" datatype="html">
         <source><x id="count" equiv-text="count"/> champs</source>
+        <target state="translated"><x id="count" equiv-text="count"/> حقول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">687</context>
@@ -18585,6 +18658,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.field" datatype="html">
         <source>1 champ</source>
+        <target state="translated">حقل واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">688</context>
@@ -18593,6 +18667,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.filled.many" datatype="html">
         <source>renseignés</source>
+        <target state="translated">مُعبّأة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">694</context>
@@ -18601,6 +18676,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.filled.one" datatype="html">
         <source>renseigné</source>
+        <target state="translated">مُعبّأ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">695</context>
@@ -18609,6 +18685,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.fieldsFilled.many" datatype="html">
         <source>champs renseignés</source>
+        <target state="translated">حقول مُعبّأة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">701</context>
@@ -18617,6 +18694,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.fieldsFilled.one" datatype="html">
         <source>champ renseigné</source>
+        <target state="translated">حقل مُعبّأ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">702</context>
@@ -18625,6 +18703,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.flags.many" datatype="html">
         <source><x id="count" equiv-text="count"/> posés</source>
+        <target state="translated">المُفعّلة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">708</context>
@@ -18633,6 +18712,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.flags.one" datatype="html">
         <source>1 posé</source>
+        <target state="translated">المُفعّلة: 1</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">709</context>
@@ -18641,6 +18721,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.tags.many" datatype="html">
         <source>tags</source>
+        <target state="translated">وسوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">715</context>
@@ -18649,6 +18730,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.tags.one" datatype="html">
         <source>tag</source>
+        <target state="translated">وسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-form.page.ts</context>
           <context context-type="linenumber">716</context>
@@ -18657,6 +18739,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.back" datatype="html">
         <source>Revenir aux actifs</source>
+        <target state="translated">العودة إلى الملفات النشطة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">7,10</context>
@@ -18665,6 +18748,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.toggle" datatype="html">
         <source>Afficher les archivés</source>
+        <target state="translated">عرض الملفات المؤرشفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">11,15</context>
@@ -18673,6 +18757,7 @@
       </trans-unit>
       <trans-unit id="patients.welcome.explore" datatype="html">
         <source> ou explorez un patient de démonstration </source>
+        <target state="translated"> أو استكشاف ملف تجريبي </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">97,101</context>
@@ -18681,6 +18766,7 @@
       </trans-unit>
       <trans-unit id="patients.pager.label" datatype="html">
         <source>Pages de la liste</source>
+        <target state="translated">صفحات القائمة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">138,139</context>
@@ -18689,6 +18775,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.keys" datatype="html">
         <source><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↑<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↓<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> choisir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Entrée<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> ouvrir · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>?<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> aide</source>
+        <target state="translated"><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↑<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/><x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>↓<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> اختيار · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>Enter<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> فتح · <x id="START_TAG_KBD" ctype="x-kbd" equiv-text="&lt;kbd&gt;"/>?<x id="CLOSE_TAG_KBD" ctype="x-kbd" equiv-text="&lt;/kbd&gt;"/> مساعدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">143,146</context>
@@ -18697,6 +18784,7 @@
       </trans-unit>
       <trans-unit id="patients.pager.previous" datatype="html">
         <source>Précédent</source>
+        <target state="translated">السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">158,161</context>
@@ -18705,6 +18793,7 @@
       </trans-unit>
       <trans-unit id="patients.pager.next" datatype="html">
         <source>Suivant</source>
+        <target state="translated">التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.html</context>
           <context context-type="linenumber">169,171</context>
@@ -18713,6 +18802,7 @@
       </trans-unit>
       <trans-unit id="patients.list.archivedTitle" datatype="html">
         <source><x id="subjects" equiv-text="subjects"/> archivés</source>
+        <target state="translated">ملفات <x id="subjects" equiv-text="subjects"/> المؤرشفة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">97</context>
@@ -18721,6 +18811,7 @@
       </trans-unit>
       <trans-unit id="patients.list.title" datatype="html">
         <source>Mes <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">قائمة <x id="subjects" equiv-text="subjects"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">100</context>
@@ -18729,6 +18820,7 @@
       </trans-unit>
       <trans-unit id="patients.shortcut.filter" datatype="html">
         <source>Filtrer mes <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">تصفية قائمة <x id="subjects" equiv-text="subjects"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">105</context>
@@ -18737,6 +18829,7 @@
       </trans-unit>
       <trans-unit id="patients.list.new" datatype="html">
         <source>Nouveau <x id="subject" equiv-text="subject"/></source>
+        <target state="translated"><x id="subject" equiv-text="subject"/> جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">109</context>
@@ -18745,6 +18838,7 @@
       </trans-unit>
       <trans-unit id="patients.empty.filtered" datatype="html">
         <source>Aucun <x id="subject" equiv-text="subject"/> ne correspond</source>
+        <target state="translated">لا يوجد <x id="subject" equiv-text="subject"/> مطابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">122</context>
@@ -18753,6 +18847,7 @@
       </trans-unit>
       <trans-unit id="patients.empty.title" datatype="html">
         <source>Créez votre premier <x id="subject" equiv-text="subject"/></source>
+        <target state="translated">إضافة أول <x id="subject" equiv-text="subject"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">123</context>
@@ -18761,6 +18856,7 @@
       </trans-unit>
       <trans-unit id="patients.empty.message" datatype="html">
         <source>Le dossier, la timeline et le graphe se construisent à partir de la première entrée.</source>
+        <target state="translated">يُبنى الملف والخط الزمني وشبكة الروابط انطلاقًا من أول مُدخَل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">129</context>
@@ -18769,6 +18865,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.removeFailed" datatype="html">
         <source>Le patient de démonstration n&apos;a pas pu être retiré. Réessayez.</source>
+        <target state="translated">تعذّرت إزالة الملف التجريبي. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">138</context>
@@ -18777,6 +18874,7 @@
       </trans-unit>
       <trans-unit id="patients.list.archiveFailed" datatype="html">
         <source>L&apos;archivage n&apos;a pas abouti. Réessayez.</source>
+        <target state="translated">لم تكتمل الأرشفة. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">140</context>
@@ -18785,6 +18883,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.restoreFailed" datatype="html">
         <source>La restauration n&apos;a pas abouti. Réessayez depuis les archivés.</source>
+        <target state="translated">لم تكتمل الاستعادة. يُرجى إعادة المحاولة من الملفات المؤرشفة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">142</context>
@@ -18793,6 +18892,7 @@
       </trans-unit>
       <trans-unit id="patients.warning.level" datatype="html">
         <source>Avertissement</source>
+        <target state="translated">تنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">147</context>
@@ -18801,6 +18901,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.shownMany" datatype="html">
         <source><x id="count" equiv-text="count"/> <x id="subjects" equiv-text="subjects"/> affichés</source>
+        <target state="translated"><x id="subjects" equiv-text="subjects"/> المعروضون: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">154</context>
@@ -18809,6 +18910,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.shownOne" datatype="html">
         <source><x id="count" equiv-text="count"/> <x id="subjects" equiv-text="subjects"/> affiché</source>
+        <target state="translated">العدد المعروض: <x id="count" equiv-text="count"/> (<x id="subjects" equiv-text="subjects"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">155</context>
@@ -18817,6 +18919,7 @@
       </trans-unit>
       <trans-unit id="patients.footer.pageNote" datatype="html">
         <source>Filtre et tri appliqués à cette page.</source>
+        <target state="translated">طُبِّقت التصفية والترتيب على هذه الصفحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">164</context>
@@ -18825,6 +18928,7 @@
       </trans-unit>
       <trans-unit id="patients.activity.failedOne" datatype="html">
         <source>Le résumé d&apos;une ligne n&apos;a pas pu être chargé.</source>
+        <target state="translated">تعذّر تحميل ملخّص سطر واحد.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">173</context>
@@ -18833,6 +18937,7 @@
       </trans-unit>
       <trans-unit id="patients.activity.failedMany" datatype="html">
         <source>Le résumé de <x id="count" equiv-text="failures"/> lignes n&apos;a pas pu être chargé.</source>
+        <target state="translated">تعذّر تحميل ملخّص بعض الأسطر (<x id="count" equiv-text="failures"/>).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">174</context>
@@ -18841,6 +18946,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.emptyPaged" datatype="html">
         <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> » sur cette page.</source>
+        <target state="translated">لا أسطر وفق عامل التصفية « <x id="filter" equiv-text="filter"/> » في هذه الصفحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">181</context>
@@ -18849,6 +18955,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.emptyMessage" datatype="html">
         <source>Aucune ligne pour le filtre « <x id="filter" equiv-text="filter"/> ».</source>
+        <target state="translated">لا أسطر وفق عامل التصفية « <x id="filter" equiv-text="filter"/> ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">182</context>
@@ -18857,6 +18964,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.showAll" datatype="html">
         <source>Afficher tous</source>
+        <target state="translated">عرض الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">185</context>
@@ -18865,6 +18973,7 @@
       </trans-unit>
       <trans-unit id="patients.empty.clear" datatype="html">
         <source>Effacer les filtres</source>
+        <target state="translated">مسح عوامل التصفية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">191</context>
@@ -18873,6 +18982,7 @@
       </trans-unit>
       <trans-unit id="patients.error.title" datatype="html">
         <source>Impossible de charger vos <x id="subjects" equiv-text="subjects"/></source>
+        <target state="translated">تعذّر تحميل قائمة <x id="subjects" equiv-text="subjects"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">202</context>
@@ -18881,6 +18991,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.confirmTitle" datatype="html">
         <source>Supprimer le patient de démonstration ?</source>
+        <target state="translated">حذف الملف التجريبي؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">311</context>
@@ -18889,6 +19000,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.confirmText" datatype="html">
         <source><x id="name" equiv-text="patient.displayName"/> quitte votre liste. Rien n&apos;est effacé : vous pourrez le restaurer depuis les archivés.</source>
+        <target state="translated">يخرج ملف <x id="name" equiv-text="patient.displayName"/> من قائمتك. لا يُمحى شيء: يمكن استعادته من الملفات المؤرشفة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">312</context>
@@ -18897,6 +19009,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.confirm" datatype="html">
         <source>Supprimer la démo</source>
+        <target state="translated">حذف الملف التجريبي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">313</context>
@@ -18905,6 +19018,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.removed" datatype="html">
         <source>Patient de démonstration retiré</source>
+        <target state="translated">أُزيل الملف التجريبي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">321</context>
@@ -18913,6 +19027,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.restored" datatype="html">
         <source>Patient de démonstration restauré</source>
+        <target state="translated">استُعيد الملف التجريبي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/pages/patient-list.page.ts</context>
           <context context-type="linenumber">331</context>
@@ -18921,6 +19036,7 @@
       </trans-unit>
       <trans-unit id="patients.history.panelTitle" datatype="html">
         <source>Historique des versions</source>
+        <target state="translated">سجلّ النسخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/panels/version-history.panel.ts</context>
           <context context-type="linenumber">44</context>
@@ -18929,6 +19045,7 @@
       </trans-unit>
       <trans-unit id="patients.list.pageTitle" datatype="html">
         <source>Mes <x id="subjects" equiv-text="subjects"/> · PsyMate</source>
+        <target state="translated">قائمة <x id="subjects" equiv-text="subjects"/> · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
           <context context-type="linenumber">11</context>
@@ -18937,6 +19054,7 @@
       </trans-unit>
       <trans-unit id="patients.form.newPageTitle" datatype="html">
         <source>Nouveau <x id="subject" equiv-text="subject"/> · PsyMate</source>
+        <target state="translated"><x id="subject" equiv-text="subject"/> جديد · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
           <context context-type="linenumber">16</context>
@@ -18945,6 +19063,7 @@
       </trans-unit>
       <trans-unit id="patients.form.pageTitle" datatype="html">
         <source>Fiche · PsyMate</source>
+        <target state="translated">البطاقة · PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/patients.routes.ts</context>
           <context context-type="linenumber">42</context>
@@ -18953,6 +19072,7 @@
       </trans-unit>
       <trans-unit id="patients.export.button" datatype="html">
         <source>Exporter le dossier</source>
+        <target state="translated">تصدير الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">25,29</context>
@@ -18961,6 +19081,7 @@
       </trans-unit>
       <trans-unit id="patients.export.menu" datatype="html">
         <source>Format d&apos;export</source>
+        <target state="translated">صيغة التصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">31,32</context>
@@ -18973,6 +19094,7 @@
       </trans-unit>
       <trans-unit id="patients.export.pdf" datatype="html">
         <source>PDF</source>
+        <target state="translated">PDF</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">36,37</context>
@@ -18985,6 +19107,7 @@
       </trans-unit>
       <trans-unit id="patients.export.pdfHint" datatype="html">
         <source>thème clair · à imprimer</source>
+        <target state="translated">مظهر فاتح · للطباعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">38,42</context>
@@ -18993,6 +19116,7 @@
       </trans-unit>
       <trans-unit id="patients.export.md" datatype="html">
         <source>Markdown</source>
+        <target state="translated">Markdown</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">44,45</context>
@@ -19005,6 +19129,7 @@
       </trans-unit>
       <trans-unit id="patients.export.mdHint" datatype="html">
         <source>texte brut · réutilisable</source>
+        <target state="translated">نص خام · قابل لإعادة الاستخدام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">46,50</context>
@@ -19013,6 +19138,7 @@
       </trans-unit>
       <trans-unit id="patients.export.note" datatype="html">
         <source><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>Entrées privées exclues<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, ainsi que les entrées archivées. Ordre chronologique, version courante du texte. </source>
+        <target state="translated"><x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>المُدخَلات الخاصة مستبعدة<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>، وكذلك المُدخَلات المؤرشفة. ترتيب زمني، والنسخة الحالية من النص. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">57,60</context>
@@ -19021,6 +19147,7 @@
       </trans-unit>
       <trans-unit id="patients.export.direct" datatype="html">
         <source>Téléchargement immédiat, rien n&apos;est conservé côté serveur. Pour tous vos dossiers d&apos;un coup :</source>
+        <target state="translated">تنزيل فوري، ولا يُحفظ شيء على الخادم. لتصدير كل الملفات دفعة واحدة:</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">62,66</context>
@@ -19029,6 +19156,7 @@
       </trans-unit>
       <trans-unit id="patients.export.accountLink" datatype="html">
         <source>Mon compte › Données et export</source>
+        <target state="translated">حسابي › البيانات والتصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">68,75</context>
@@ -19037,6 +19165,7 @@
       </trans-unit>
       <trans-unit id="patients.export.busy" datatype="html">
         <source>Préparation du fichier…</source>
+        <target state="translated">جارٍ إعداد الملف…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">154</context>
@@ -19045,6 +19174,7 @@
       </trans-unit>
       <trans-unit id="patients.export.error.offline" datatype="html">
         <source>Connexion perdue : réessayez une fois le réseau revenu.</source>
+        <target state="translated">انقطع الاتصال: يُرجى إعادة المحاولة عند عودة الشبكة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">171</context>
@@ -19053,6 +19183,7 @@
       </trans-unit>
       <trans-unit id="patients.export.error.forbidden" datatype="html">
         <source>Ce dossier n&apos;est pas accessible depuis votre compte.</source>
+        <target state="translated">لا يمكن الوصول إلى هذا الملف من حسابك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">173</context>
@@ -19061,6 +19192,7 @@
       </trans-unit>
       <trans-unit id="patients.export.error.notFound" datatype="html">
         <source>Ce dossier n&apos;existe pas ou plus.</source>
+        <target state="translated">هذا الملف غير موجود أو لم يعد موجودًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">175</context>
@@ -19069,6 +19201,7 @@
       </trans-unit>
       <trans-unit id="patients.export.error.rateLimited" datatype="html">
         <source>Trop de demandes rapprochées : réessayez dans quelques instants.</source>
+        <target state="translated">طلبات كثيرة متقاربة: يُرجى إعادة المحاولة بعد لحظات.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">177</context>
@@ -19077,6 +19210,7 @@
       </trans-unit>
       <trans-unit id="patients.export.error.failed" datatype="html">
         <source>La génération du fichier a échoué. Rien n&apos;a été modifié ; réessayez dans un instant.</source>
+        <target state="translated">تعذّر إنشاء الملف. لم يتغيّر شيء؛ يُرجى إعادة المحاولة بعد لحظة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/export-menu.component.ts</context>
           <context context-type="linenumber">179</context>
@@ -19085,6 +19219,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.watch.help" datatype="html">
         <source>Avec une raison, visible dans l&apos;en-tête et la liste.</source>
+        <target state="translated">مع ذكر السبب، وتظهر في الترويسة وفي القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">45,49</context>
@@ -19093,6 +19228,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.reasonShort" datatype="html">
         <source>Raison</source>
+        <target state="translated">السبب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">52,55</context>
@@ -19101,6 +19237,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.reasonEnd" datatype="html">
         <source>du drapeau « à surveiller »</source>
+        <target state="translated">لعلامة « للمتابعة الدقيقة »</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">57,61</context>
@@ -19109,6 +19246,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.risk.help" datatype="html">
         <source>Idées suicidaires, mise en danger. Les éléments se notent dans la timeline, en note privée.</source>
+        <target state="translated">أفكار انتحارية، تعريض النفس للخطر. تُدوَّن التفاصيل في الخط الزمني، كملاحظة خاصة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">89,94</context>
@@ -19117,6 +19255,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.shared.help" datatype="html">
         <source>Suivi partagé avec un autre professionnel.</source>
+        <target state="translated">متابعة مشتركة مع مختص آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">111,117</context>
@@ -19125,6 +19264,7 @@
       </trans-unit>
       <trans-unit id="patients.form.flag.setAt" datatype="html">
         <source>Posé le <x id="date" equiv-text="date"/></source>
+        <target state="translated">تاريخ التفعيل: <x id="date" equiv-text="date"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/flag-fields.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -19133,6 +19273,7 @@
       </trans-unit>
       <trans-unit id="patients.preview.title" datatype="html">
         <source> Aperçu de l&apos;en-tête </source>
+        <target state="translated"> معاينة الترويسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
           <context context-type="linenumber">28,31</context>
@@ -19141,6 +19282,7 @@
       </trans-unit>
       <trans-unit id="patients.preview.noName" datatype="html">
         <source>Nom affiché</source>
+        <target state="translated">الاسم المعروض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
           <context context-type="linenumber">33,36</context>
@@ -19149,6 +19291,7 @@
       </trans-unit>
       <trans-unit id="patients.flags.list" datatype="html">
         <source>Drapeaux</source>
+        <target state="translated">علامات التنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
           <context context-type="linenumber">121</context>
@@ -19157,6 +19300,7 @@
       </trans-unit>
       <trans-unit id="patients.preview.age" datatype="html">
         <source><x id="age" equiv-text="age"/> ans</source>
+        <target state="translated">العمر: <x id="age" equiv-text="age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -19165,6 +19309,7 @@
       </trans-unit>
       <trans-unit id="patients.preview.since" datatype="html">
         <source>suivi·e depuis <x id="since" equiv-text="since"/></source>
+        <target state="translated">بداية المتابعة: <x id="since" equiv-text="since"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/header-preview.component.ts</context>
           <context context-type="linenumber">143</context>
@@ -19173,6 +19318,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.title" datatype="html">
         <source> Bienvenue dans PsyMate </source>
+        <target state="translated"> مرحبًا بك في PsyMate </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">39,41</context>
@@ -19181,6 +19327,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.lead" datatype="html">
         <source> Trois étapes jusqu&apos;à votre première entrée : </source>
+        <target state="translated"> ثلاث خطوات حتى أول مُدخَل: </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">42,45</context>
@@ -19189,6 +19336,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.current" datatype="html">
         <source>Étape en cours</source>
+        <target state="translated">الخطوة الحالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">58,63</context>
@@ -19197,6 +19345,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.demo" datatype="html">
         <source> Vous pouvez aussi explorer le dossier de démonstration ci-dessous, puis le supprimer. </source>
+        <target state="translated"> يمكن أيضًا استكشاف الملف التجريبي أدناه، ثم حذفه. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">69,72</context>
@@ -19205,6 +19354,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.shortcuts" datatype="html">
         <source>Voir les raccourcis</source>
+        <target state="translated">عرض الاختصارات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">74,78</context>
@@ -19213,6 +19363,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.suggestions" datatype="html">
         <source> Bientôt : des suggestions de liens entre vos entrées. Elles résumeront des régularités dans ce que vous avez saisi ; vous seul déciderez de ce qui fait sens. </source>
+        <target state="translated"> قريبًا: اقتراحات روابط بين مُدخَلاتك. ستلخّص أنماطًا متكرّرة فيما أُدخل؛ ويبقى لك وحدك القرار فيما له معنى. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">82,89</context>
@@ -19221,6 +19372,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step1.title" datatype="html">
         <source>Créez un <x id="subject" equiv-text="one"/></source>
+        <target state="translated">إضافة <x id="subject" equiv-text="one"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">215</context>
@@ -19229,6 +19381,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step1.detail" datatype="html">
         <source>Seul le nom affiché est obligatoire. Touche N depuis cette liste.</source>
+        <target state="translated">الاسم المعروض وحده إلزامي. مفتاح N من هذه القائمة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">216</context>
@@ -19237,6 +19390,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step2.title" datatype="html">
         <source>Ouvrez son dossier</source>
+        <target state="translated">فتح الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">219</context>
@@ -19245,6 +19399,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step2.detail" datatype="html">
         <source>Il s&apos;ouvre dès la création, sur la vue d&apos;ensemble.</source>
+        <target state="translated">يُفتح فور الإنشاء، على النظرة العامة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">220</context>
@@ -19253,6 +19408,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step3.title" datatype="html">
         <source>Saisissez la première entrée</source>
+        <target state="translated">تدوين أول مُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">223</context>
@@ -19261,6 +19417,7 @@
       </trans-unit>
       <trans-unit id="patients.onboarding.step3.detail" datatype="html">
         <source>Dans le dossier : touche N, le bouton + ou la barre « Noter quelque chose ».</source>
+        <target state="translated">داخل الملف: مفتاح N، أو زر +، أو شريط « تدوين ملاحظة ».</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/onboarding.component.ts</context>
           <context context-type="linenumber">224</context>
@@ -19269,6 +19426,7 @@
       </trans-unit>
       <trans-unit id="patients.filter.hint" datatype="html">
         <source>Accents et majuscules ignorés, à partir de 2 caractères ; « #tag » filtre par tag.</source>
+        <target state="translated">لا تُراعى علامات التشكيل ولا الأحرف الكبيرة، بدءًا من حرفين؛ و« #وسم » يصفّي حسب الوسم.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
           <context context-type="linenumber">24,30</context>
@@ -19277,6 +19435,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.label" datatype="html">
         <source>Filtres rapides</source>
+        <target state="translated">عوامل تصفية سريعة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
           <context context-type="linenumber">31,32</context>
@@ -19285,6 +19444,7 @@
       </trans-unit>
       <trans-unit id="patients.sort.label" datatype="html">
         <source>Trier par</source>
+        <target state="translated">الترتيب حسب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.html</context>
           <context context-type="linenumber">50,52</context>
@@ -19293,6 +19453,7 @@
       </trans-unit>
       <trans-unit id="patients.filter.label" datatype="html">
         <source>Filtrer les <x id="subjects" equiv-text="subjects"/> par nom ou par tag</source>
+        <target state="translated">تصفية <x id="subjects" equiv-text="subjects"/> حسب الاسم أو الوسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -19301,6 +19462,7 @@
       </trans-unit>
       <trans-unit id="patients.filter.placeholder" datatype="html">
         <source>Filtrer par nom ou tag…</source>
+        <target state="translated">تصفية حسب الاسم أو الوسم…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-filters.component.ts</context>
           <context context-type="linenumber">50</context>
@@ -19309,6 +19471,7 @@
       </trans-unit>
       <trans-unit id="patients.flag.watch" datatype="html">
         <source>À surveiller</source>
+        <target state="translated">للمتابعة الدقيقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">16</context>
@@ -19317,6 +19480,7 @@
       </trans-unit>
       <trans-unit id="patients.flag.risk" datatype="html">
         <source>Risque</source>
+        <target state="translated">خطر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">18</context>
@@ -19325,6 +19489,7 @@
       </trans-unit>
       <trans-unit id="patients.flag.sharedCare" datatype="html">
         <source>Suivi conjoint</source>
+        <target state="translated">متابعة مشتركة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">20</context>
@@ -19333,6 +19498,7 @@
       </trans-unit>
       <trans-unit id="patients.pronoun.elle" datatype="html">
         <source>Elle</source>
+        <target state="translated">Elle</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">27</context>
@@ -19341,6 +19507,7 @@
       </trans-unit>
       <trans-unit id="patients.pronoun.il" datatype="html">
         <source>Il</source>
+        <target state="translated">Il</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">29</context>
@@ -19349,6 +19516,7 @@
       </trans-unit>
       <trans-unit id="patients.pronoun.iel" datatype="html">
         <source>Iel</source>
+        <target state="translated">Iel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">31</context>
@@ -19357,6 +19525,7 @@
       </trans-unit>
       <trans-unit id="patients.pronoun.neutre" datatype="html">
         <source>Neutre</source>
+        <target state="translated">Neutre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">33</context>
@@ -19365,6 +19534,7 @@
       </trans-unit>
       <trans-unit id="patients.rhythm.weekly" datatype="html">
         <source>Hebdomadaire</source>
+        <target state="translated">أسبوعي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">40</context>
@@ -19373,6 +19543,7 @@
       </trans-unit>
       <trans-unit id="patients.rhythm.biweekly" datatype="html">
         <source>Toutes les 1 à 2 semaines</source>
+        <target state="translated">كل أسبوع إلى أسبوعين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">42</context>
@@ -19381,6 +19552,7 @@
       </trans-unit>
       <trans-unit id="patients.rhythm.monthly" datatype="html">
         <source>Mensuel</source>
+        <target state="translated">شهري</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">44</context>
@@ -19389,6 +19561,7 @@
       </trans-unit>
       <trans-unit id="patients.rhythm.irregular" datatype="html">
         <source>Irrégulier</source>
+        <target state="translated">غير منتظم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">46</context>
@@ -19397,6 +19570,7 @@
       </trans-unit>
       <trans-unit id="patients.modality.inPerson" datatype="html">
         <source>Cabinet</source>
+        <target state="translated">حضوريًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">53</context>
@@ -19405,6 +19579,7 @@
       </trans-unit>
       <trans-unit id="patients.modality.video" datatype="html">
         <source>Visio</source>
+        <target state="translated">عبر الفيديو</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">55</context>
@@ -19413,6 +19588,7 @@
       </trans-unit>
       <trans-unit id="patients.modality.phone" datatype="html">
         <source>Téléphone</source>
+        <target state="translated">عبر الهاتف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">57</context>
@@ -19421,6 +19597,7 @@
       </trans-unit>
       <trans-unit id="patients.sort.name" datatype="html">
         <source>Nom</source>
+        <target state="translated">الاسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">65</context>
@@ -19429,6 +19606,7 @@
       </trans-unit>
       <trans-unit id="patients.sort.created" datatype="html">
         <source>Création</source>
+        <target state="translated">تاريخ الإنشاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">67</context>
@@ -19437,6 +19615,7 @@
       </trans-unit>
       <trans-unit id="patients.sort.updated" datatype="html">
         <source>Modification</source>
+        <target state="translated">تاريخ التعديل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">69</context>
@@ -19445,6 +19624,7 @@
       </trans-unit>
       <trans-unit id="patients.sort.lastSession" datatype="html">
         <source>Dernière séance</source>
+        <target state="translated">آخر جلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">71</context>
@@ -19453,6 +19633,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.all" datatype="html">
         <source>Tous</source>
+        <target state="translated">الكل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">79</context>
@@ -19461,6 +19642,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.today" datatype="html">
         <source>Aujourd&apos;hui</source>
+        <target state="translated">اليوم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">81</context>
@@ -19469,6 +19651,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.watch" datatype="html">
         <source>À surveiller</source>
+        <target state="translated">للمتابعة الدقيقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">83</context>
@@ -19477,6 +19660,7 @@
       </trans-unit>
       <trans-unit id="patients.quick.drafts" datatype="html">
         <source>Brouillons</source>
+        <target state="translated">المسودّات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">85</context>
@@ -19485,6 +19669,7 @@
       </trans-unit>
       <trans-unit id="patients.field.durationMin" datatype="html">
         <source>Durée de séance (min)</source>
+        <target state="translated">مدّة الجلسة (بالدقائق)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">118</context>
@@ -19493,6 +19678,7 @@
       </trans-unit>
       <trans-unit id="patients.field.watchReason" datatype="html">
         <source>Raison du drapeau</source>
+        <target state="translated">سبب علامة التنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">123</context>
@@ -19501,6 +19687,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.toast.f" datatype="html">
         <source><x id="name" equiv-text="name"/> archivée</source>
+        <target state="translated">تمت أرشفة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">135</context>
@@ -19509,6 +19696,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.toast.m" datatype="html">
         <source><x id="name" equiv-text="name"/> archivé</source>
+        <target state="translated">تمت أرشفة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">137</context>
@@ -19517,6 +19705,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.toast.n" datatype="html">
         <source><x id="name" equiv-text="name"/> archivé·e</source>
+        <target state="translated">تمت أرشفة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">139</context>
@@ -19525,6 +19714,7 @@
       </trans-unit>
       <trans-unit id="patients.restored.toast.f" datatype="html">
         <source><x id="name" equiv-text="name"/> restaurée</source>
+        <target state="translated">تمت استعادة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">146</context>
@@ -19533,6 +19723,7 @@
       </trans-unit>
       <trans-unit id="patients.restored.toast.m" datatype="html">
         <source><x id="name" equiv-text="name"/> restauré</source>
+        <target state="translated">تمت استعادة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">148</context>
@@ -19541,6 +19732,7 @@
       </trans-unit>
       <trans-unit id="patients.restored.toast.n" datatype="html">
         <source><x id="name" equiv-text="name"/> restauré·e</source>
+        <target state="translated">تمت استعادة ملف <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">150</context>
@@ -19549,6 +19741,7 @@
       </trans-unit>
       <trans-unit id="patients.archived.restore" datatype="html">
         <source>Restaurer</source>
+        <target state="translated">استعادة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">155</context>
@@ -19557,6 +19750,7 @@
       </trans-unit>
       <trans-unit id="patients.error.archived" datatype="html">
         <source>Ce dossier est archivé : restaurez-le avant de le modifier.</source>
+        <target state="translated">هذا الملف مؤرشف: يلزم استعادته قبل تعديله.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">161</context>
@@ -19565,6 +19759,7 @@
       </trans-unit>
       <trans-unit id="patients.error.flagActive" datatype="html">
         <source>Ce drapeau est déjà posé : la fiche a été rechargée.</source>
+        <target state="translated">هذه العلامة مُفعّلة من قبل: أُعيد تحميل البطاقة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">163</context>
@@ -19573,6 +19768,7 @@
       </trans-unit>
       <trans-unit id="patients.error.notFound" datatype="html">
         <source>Ce dossier n&apos;existe pas ou ne vous appartient pas.</source>
+        <target state="translated">هذا الملف غير موجود أو لا يعود إليك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">166</context>
@@ -19581,6 +19777,7 @@
       </trans-unit>
       <trans-unit id="patients.error.generic" datatype="html">
         <source>L&apos;enregistrement n&apos;a pas abouti. Vos saisies sont conservées : réessayez.</source>
+        <target state="translated">لم يكتمل الحفظ. ما أُدخل محفوظ: يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-labels.ts</context>
           <context context-type="linenumber">168</context>
@@ -19589,6 +19786,7 @@
       </trans-unit>
       <trans-unit id="patients.attention.report" datatype="html">
         <source>compte rendu à écrire</source>
+        <target state="translated">محضر جلسة بانتظار الكتابة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">133</context>
@@ -19597,6 +19795,7 @@
       </trans-unit>
       <trans-unit id="patients.table.live" datatype="html">
         <source>en cours · <x id="minutes" equiv-text="minutes"/> min</source>
+        <target state="translated">جارية · <x id="minutes" equiv-text="minutes"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">154</context>
@@ -19605,6 +19804,7 @@
       </trans-unit>
       <trans-unit id="patients.card.live" datatype="html">
         <source><x id="minutes" equiv-text="minutes"/> min</source>
+        <target state="translated"><x id="minutes" equiv-text="minutes"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">159</context>
@@ -19613,6 +19813,7 @@
       </trans-unit>
       <trans-unit id="patients.table.archivedSince" datatype="html">
         <source>Archivé·e <x id="when" equiv-text="when"/></source>
+        <target state="translated">الأرشفة: <x id="when" equiv-text="when"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">172</context>
@@ -19621,6 +19822,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.detail" datatype="html">
         <source>données fictives · supprimable</source>
+        <target state="translated">بيانات وهمية · قابل للحذف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">175</context>
@@ -19629,6 +19831,7 @@
       </trans-unit>
       <trans-unit id="patients.table.ageYears" datatype="html">
         <source><x id="age" equiv-text="age"/> ans</source>
+        <target state="translated">العمر: <x id="age" equiv-text="age"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">180</context>
@@ -19637,6 +19840,7 @@
       </trans-unit>
       <trans-unit id="patients.table.followedSince" datatype="html">
         <source>depuis <x id="month" equiv-text="month"/></source>
+        <target state="translated">منذ <x id="month" equiv-text="month"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">192</context>
@@ -19645,6 +19849,7 @@
       </trans-unit>
       <trans-unit id="patients.since.entry" datatype="html">
         <source>entrée</source>
+        <target state="translated">مُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">205</context>
@@ -19653,6 +19858,7 @@
       </trans-unit>
       <trans-unit id="patients.since.entries" datatype="html">
         <source>entrées</source>
+        <target state="translated">مُدخَلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">206</context>
@@ -19661,6 +19867,7 @@
       </trans-unit>
       <trans-unit id="patients.since.strongest" datatype="html">
         <source><x id="emotion" equiv-text="name"/> <x id="intensity" equiv-text="intensity"/>/10</source>
+        <target state="translated"><x id="emotion" equiv-text="name"/> <x id="intensity" equiv-text="intensity"/>/10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">211</context>
@@ -19669,6 +19876,7 @@
       </trans-unit>
       <trans-unit id="patients.dominant.up" datatype="html">
         <source><x id="emotion" equiv-text="name"/> en hausse</source>
+        <target state="translated"><x id="emotion" equiv-text="name"/> في ارتفاع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">222</context>
@@ -19677,6 +19885,7 @@
       </trans-unit>
       <trans-unit id="patients.dominant.down" datatype="html">
         <source><x id="emotion" equiv-text="name"/> en baisse</source>
+        <target state="translated"><x id="emotion" equiv-text="name"/> في انخفاض</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">228</context>
@@ -19685,6 +19894,7 @@
       </trans-unit>
       <trans-unit id="patients.dominant.stable" datatype="html">
         <source><x id="emotion" equiv-text="name"/> stable</source>
+        <target state="translated"><x id="emotion" equiv-text="name"/> دون تغيّر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">233</context>
@@ -19693,6 +19903,7 @@
       </trans-unit>
       <trans-unit id="patients.table.draftOne" datatype="html">
         <source>1 brouillon</source>
+        <target state="translated">مسودّة واحدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">239</context>
@@ -19701,6 +19912,7 @@
       </trans-unit>
       <trans-unit id="patients.table.drafts" datatype="html">
         <source><x id="count" equiv-text="count"/> brouillons</source>
+        <target state="translated">المسودّات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">240</context>
@@ -19709,6 +19921,7 @@
       </trans-unit>
       <trans-unit id="patients.spark.label" datatype="html">
         <source>Intensité moyenne sur 30 jours : de <x id="from" equiv-text="from"/> à <x id="to" equiv-text="to"/> sur 10</source>
+        <target state="translated">متوسّط الشدّة خلال 30 يومًا: من <x id="from" equiv-text="from"/> إلى <x id="to" equiv-text="to"/> من 10</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-row.ts</context>
           <context context-type="linenumber">271</context>
@@ -19717,6 +19930,7 @@
       </trans-unit>
       <trans-unit id="patients.table.lastSession" datatype="html">
         <source> Dernière séance </source>
+        <target state="translated"> آخر جلسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">10,12</context>
@@ -19725,6 +19939,7 @@
       </trans-unit>
       <trans-unit id="patients.table.since" datatype="html">
         <source> Depuis la séance </source>
+        <target state="translated"> منذ الجلسة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">13,15</context>
@@ -19733,6 +19948,7 @@
       </trans-unit>
       <trans-unit id="patients.table.feelings" datatype="html">
         <source> Ressentis · 30 j </source>
+        <target state="translated"> المشاعر · 30 يومًا </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">16,18</context>
@@ -19741,6 +19957,7 @@
       </trans-unit>
       <trans-unit id="patients.table.situations" datatype="html">
         <source> Situations </source>
+        <target state="translated"> الوضعيات </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">19,21</context>
@@ -19749,6 +19966,7 @@
       </trans-unit>
       <trans-unit id="patients.table.attention" datatype="html">
         <source> Attention </source>
+        <target state="translated"> للانتباه </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">22,25</context>
@@ -19757,6 +19975,7 @@
       </trans-unit>
       <trans-unit id="patients.table.actions" datatype="html">
         <source>Actions</source>
+        <target state="translated">الإجراءات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">26,32</context>
@@ -19765,6 +19984,7 @@
       </trans-unit>
       <trans-unit id="patients.table.noSession" datatype="html">
         <source>aucune séance</source>
+        <target state="translated">لا جلسات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">71,75</context>
@@ -19773,6 +19993,7 @@
       </trans-unit>
       <trans-unit id="patients.table.noSince" datatype="html">
         <source>aucune entrée depuis la séance</source>
+        <target state="translated">لا مُدخَلات منذ الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">101,104</context>
@@ -19781,6 +20002,7 @@
       </trans-unit>
       <trans-unit id="patients.table.noFeeling" datatype="html">
         <source>pas encore de ressenti</source>
+        <target state="translated">لا مشاعر بعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">142,145</context>
@@ -19789,6 +20011,7 @@
       </trans-unit>
       <trans-unit id="patients.table.noSituation" datatype="html">
         <source>aucune situation active</source>
+        <target state="translated">لا وضعيات جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">166,169</context>
@@ -19797,6 +20020,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.removeShort" datatype="html">
         <source> Supprimer </source>
+        <target state="translated"> حذف </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">202,205</context>
@@ -19805,6 +20029,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.restore" datatype="html">
         <source> Restaurer </source>
+        <target state="translated"> استعادة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">212,216</context>
@@ -19813,6 +20038,7 @@
       </trans-unit>
       <trans-unit id="patients.table.openItem" datatype="html">
         <source>Ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">235,239</context>
@@ -19821,6 +20047,7 @@
       </trans-unit>
       <trans-unit id="patients.table.editItem" datatype="html">
         <source>Fiche</source>
+        <target state="translated">البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">242,244</context>
@@ -19829,6 +20056,7 @@
       </trans-unit>
       <trans-unit id="patients.table.exportItem" datatype="html">
         <source> Exporter </source>
+        <target state="translated"> تصدير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">249,251</context>
@@ -19837,6 +20065,7 @@
       </trans-unit>
       <trans-unit id="patients.table.restoreItem" datatype="html">
         <source> Restaurer </source>
+        <target state="translated"> استعادة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">258,261</context>
@@ -19845,6 +20074,7 @@
       </trans-unit>
       <trans-unit id="patients.table.archiveItem" datatype="html">
         <source> Archiver </source>
+        <target state="translated"> أرشفة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.html</context>
           <context context-type="linenumber">267,270</context>
@@ -19853,6 +20083,7 @@
       </trans-unit>
       <trans-unit id="patients.table.unavailable" datatype="html">
         <source>Résumé indisponible</source>
+        <target state="translated">الملخّص غير متاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">78</context>
@@ -19861,6 +20092,7 @@
       </trans-unit>
       <trans-unit id="patients.table.loading" datatype="html">
         <source>Chargement…</source>
+        <target state="translated">جارٍ التحميل…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">79</context>
@@ -19869,6 +20101,7 @@
       </trans-unit>
       <trans-unit id="patients.table.ficheTitle" datatype="html">
         <source>Fiche</source>
+        <target state="translated">البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -19877,6 +20110,7 @@
       </trans-unit>
       <trans-unit id="patients.card.flagged" datatype="html">
         <source>Drapeau posé</source>
+        <target state="translated">علامة تنبيه مُفعّلة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -19885,6 +20119,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.removeLabel" datatype="html">
         <source>Supprimer la démo : <x id="name" equiv-text="name"/></source>
+        <target state="translated">حذف الملف التجريبي: <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -19893,6 +20128,7 @@
       </trans-unit>
       <trans-unit id="patients.demo.restoreLabel" datatype="html">
         <source>Restaurer le patient de démonstration <x id="name" equiv-text="name"/></source>
+        <target state="translated">استعادة الملف التجريبي <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">112</context>
@@ -19901,6 +20137,7 @@
       </trans-unit>
       <trans-unit id="patients.table.moreLabel" datatype="html">
         <source>Plus d&apos;actions pour <x id="name" equiv-text="name"/></source>
+        <target state="translated">إجراءات أخرى: <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">116</context>
@@ -19909,6 +20146,7 @@
       </trans-unit>
       <trans-unit id="patients.table.editLabel" datatype="html">
         <source>Fiche de <x id="name" equiv-text="name"/></source>
+        <target state="translated">بطاقة <x id="name" equiv-text="name"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-table.component.ts</context>
           <context context-type="linenumber">120</context>
@@ -19917,6 +20155,7 @@
       </trans-unit>
       <trans-unit id="patients.today.title" datatype="html">
         <source> Aujourd&apos;hui </source>
+        <target state="translated"> اليوم </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">42,45</context>
@@ -19925,6 +20164,7 @@
       </trans-unit>
       <trans-unit id="patients.today.live" datatype="html">
         <source>en séance · <x id="minutes" equiv-text="minutes"/> min</source>
+        <target state="translated">في جلسة · <x id="minutes" equiv-text="minutes"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">95</context>
@@ -19933,6 +20173,7 @@
       </trans-unit>
       <trans-unit id="patients.today.resume" datatype="html">
         <source>Reprendre</source>
+        <target state="translated">استئناف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">98</context>
@@ -19941,6 +20182,7 @@
       </trans-unit>
       <trans-unit id="patients.today.closedAt" datatype="html">
         <source>clôturée à <x id="time" equiv-text="closed"/></source>
+        <target state="translated">انتهت الساعة <x id="time" equiv-text="closed"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">106</context>
@@ -19949,6 +20191,7 @@
       </trans-unit>
       <trans-unit id="patients.today.report" datatype="html">
         <source>Compte rendu</source>
+        <target state="translated">محضر الجلسة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">120</context>
@@ -19957,6 +20200,7 @@
       </trans-unit>
       <trans-unit id="patients.today.open" datatype="html">
         <source>Ouvrir</source>
+        <target state="translated">فتح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">125</context>
@@ -19965,6 +20209,7 @@
       </trans-unit>
       <trans-unit id="patients.today.entryOne" datatype="html">
         <source>1 entrée notée</source>
+        <target state="translated">مُدخَل واحد مدوَّن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">135</context>
@@ -19973,6 +20218,7 @@
       </trans-unit>
       <trans-unit id="patients.today.entries" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées notées</source>
+        <target state="translated">المُدخَلات المدوَّنة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/patient-today.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -19981,6 +20227,7 @@
       </trans-unit>
       <trans-unit id="patients.form.saveShortcut" datatype="html">
         <source>Ctrl+↵</source>
+        <target state="translated">Ctrl+↵</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/record-rail.component.ts</context>
           <context context-type="linenumber">60,64</context>
@@ -19989,6 +20236,7 @@
       </trans-unit>
       <trans-unit id="patients.rail.sections" datatype="html">
         <source>Sections de la fiche</source>
+        <target state="translated">أقسام البطاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/record-rail.component.ts</context>
           <context context-type="linenumber">271</context>
@@ -19997,6 +20245,7 @@
       </trans-unit>
       <trans-unit id="patients.tags.add" datatype="html">
         <source>Ajouter un tag</source>
+        <target state="translated">إضافة وسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
           <context context-type="linenumber">15,17</context>
@@ -20005,6 +20254,7 @@
       </trans-unit>
       <trans-unit id="patients.tags.hint" datatype="html">
         <source> Communs à tous vos dossiers. Une émotion du vocabulaire ne peut pas servir de tag. </source>
+        <target state="translated"> مشتركة بين كل ملفاتك. لا يمكن استخدام شعور من المفردات وسمًا. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
           <context context-type="linenumber">59,62</context>
@@ -20013,6 +20263,7 @@
       </trans-unit>
       <trans-unit id="patients.tags.list" datatype="html">
         <source>Tags du dossier</source>
+        <target state="translated">وسوم الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
           <context context-type="linenumber">80</context>
@@ -20021,6 +20272,7 @@
       </trans-unit>
       <trans-unit id="patients.tags.placeholder" datatype="html">
         <source>Ajouter un tag…</source>
+        <target state="translated">إضافة وسم…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
           <context context-type="linenumber">81</context>
@@ -20029,6 +20281,7 @@
       </trans-unit>
       <trans-unit id="patients.tags.remove" datatype="html">
         <source>Retirer le tag #<x id="tag" equiv-text="tag"/></source>
+        <target state="translated">إزالة الوسم #<x id="tag" equiv-text="tag"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/tag-editor.component.ts</context>
           <context context-type="linenumber">89</context>
@@ -20037,6 +20290,7 @@
       </trans-unit>
       <trans-unit id="patients.history.baseUnknown" datatype="html">
         <source> La création n&apos;a pas d&apos;instantané : valeurs enregistrées par cette modification. </source>
+        <target state="translated"> لا توجد لقطة للإنشاء: القيم المعروضة هي المحفوظة بهذا التعديل. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.html</context>
           <context context-type="linenumber">26,30</context>
@@ -20045,6 +20299,7 @@
       </trans-unit>
       <trans-unit id="patients.history.empty" datatype="html">
         <source>Aucune modification depuis la création</source>
+        <target state="translated">لا تعديلات منذ الإنشاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
           <context context-type="linenumber">49</context>
@@ -20053,6 +20308,7 @@
       </trans-unit>
       <trans-unit id="patients.history.error" datatype="html">
         <source>Impossible de charger l&apos;historique</source>
+        <target state="translated">تعذّر تحميل السجلّ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
           <context context-type="linenumber">50</context>
@@ -20061,6 +20317,7 @@
       </trans-unit>
       <trans-unit id="patients.history.version" datatype="html">
         <source>Version <x id="version" equiv-text="version"/></source>
+        <target state="translated">النسخة <x id="version" equiv-text="version"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
           <context context-type="linenumber">66</context>
@@ -20069,6 +20326,7 @@
       </trans-unit>
       <trans-unit id="patients.history.emptyValue" datatype="html">
         <source>(vide)</source>
+        <target state="translated">(فارغ)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/patients/ui/version-history.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -24530,7 +24788,7 @@
       </trans-unit>
       <trans-unit id="timeline.decade.trend.flat" datatype="html">
         <source>, stable</source>
-        <target state="translated">، مستقرّة</target>
+        <target state="translated">، دون تغيّر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/timeline/ui/timeline-decade.component.ts</context>
           <context context-type="linenumber">209</context>
