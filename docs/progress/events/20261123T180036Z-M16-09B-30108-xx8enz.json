@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T18:00:36.054Z",
+  "task": "M16-09B",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Partie A (thème arabe) : interlettrage des champs de code gardé, champs dir=ltr alignés au début de la page, champs vides dir=auto selon la page, subject du panneau latéral ; partie B fusionnée (#137)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/141",
+  "branch": "M16-09B-theme-arabe",
+  "checkout": "psymate-ux-audit-design-b1ba83"
+}

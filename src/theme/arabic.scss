@@ -11,41 +11,37 @@
 // Supplement, Arabic Extended-A, formes de présentation A et B, marques de sens) ; lettres latines
 // et chiffres restent dans la police latine du thème, et une page sans arabe ne charge rien.
 // Le builder copie chaque fichier dans media/ avec une empreinte (cache) : l'url est relative.
+// Ni descripteur font-style (sa valeur par défaut est déjà normal) ni format('woff2') (une seule
+// source, en woff2, que tous les navigateurs visés lisent) : octets du bundle initial (M16-09B).
 @font-face {
   font-family: 'IBM Plex Sans Arabic';
-  font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Regular.woff2')
-    format('woff2');
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Regular.woff2');
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
 }
 
 @font-face {
   font-family: 'IBM Plex Sans Arabic';
-  font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Medium.woff2') format('woff2');
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Medium.woff2');
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
 }
 
 @font-face {
   font-family: 'IBM Plex Sans Arabic';
-  font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-SemiBold.woff2')
-    format('woff2');
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-SemiBold.woff2');
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
 }
 
 @font-face {
   font-family: 'IBM Plex Sans Arabic';
-  font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Bold.woff2') format('woff2');
+  src: url('../../public/fonts/ibm-plex-sans-arabic/IBMPlexSansArabic-Bold.woff2');
   unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200F;
 }
 
@@ -53,15 +49,43 @@
 // composant : pas d'interlettrage (il casse la liaison des lettres), pas de capitales forcées (sans
 // effet sur l'arabe, mais elles touchent un mot latin inséré), pas d'italique (synthétisé, il penche
 // les lettres ; la mise en relief passe par la graisse ou la couleur). !important : ces règles
-// l'emportent sur celles des composants (classe et attribut d'encapsulation), dans le seul bundle
-// arabe ; un élément en lang="fr" (feuille de facture) garde les siennes.
-:lang(ar),
+// l'emportent sur celles des composants (classe et attribut d'encapsulation) ; la feuille est la même
+// dans les trois bundles, :lang(ar) et :dir(rtl) confinent ces règles à l'arabe ; un élément en lang="fr" (feuille de facture) garde les siennes.
+// Exclus (M16-09B) : les champs de saisie en dir="ltr" et leur texte indicatif (code à six chiffres,
+// code de secours, mot de passe, e-mail, numéros) ; leur contenu est latin, leur interlettrage reste
+// celui de /fr/ (0.25em du champ code). L'exclusion vise le champ lui-même (input[dir='ltr'] ;
+// ::placeholder n'existe que sur un champ, d'où [dir='ltr'] seul), pas tout élément en sens ltr (pas
+// de :not(:dir(ltr))) : un libellé arabe dans un conteneur dir="ltr" (graphiques temporels, Q75)
+// reste sans interlettrage. Aucun textarea en dir="ltr" dans l'application (octets du bundle
+// initial) : en ajouter un ici le jour où il existe.
+:lang(ar):not(input[dir='ltr']),
 :lang(ar)::before,
 :lang(ar)::after,
-:lang(ar)::placeholder {
+:lang(ar):not([dir='ltr'])::placeholder {
   letter-spacing: normal !important;
   text-transform: none !important;
   font-style: normal !important;
+}
+
+// Champ en dir="ltr" (e-mail, mot de passe, téléphone, code, numéro : docs/design/arabe.md §5) dans
+// un contexte de droite à gauche : son texte se lit de gauche à droite, mais il s'aligne du côté de
+// début de la page (à droite en arabe), comme les champs voisins. `end` vaut `right` dans un champ en
+// dir="ltr". Le contexte est le parent direct du champ (:dir(rtl)) : rien en /fr/ ni en /en/, rien
+// dans un conteneur en dir="ltr". Spécificité nulle (:where) : une feature garde un champ centré
+// (code à six chiffres de la connexion) ou aligné autrement par une simple classe.
+:where(:dir(rtl) > input[dir='ltr']) {
+  text-align: end;
+}
+
+// Champ vide en dir="auto" (Q77) : sans caractère fort, le navigateur lui donne le sens ltr, même dans
+// une page arabe ; texte indicatif aligné à gauche, curseur à gauche. Tant que le texte indicatif est
+// affiché (champ vide), le champ prend le sens de son contexte ; dès le premier caractère, dir="auto"
+// reprend la main (arabe : de droite à gauche ; latin : de gauche à droite). Un champ sans texte
+// indicatif porte placeholder=" " pour en profiter (docs/design/arabe.md §5) : aucune règle CSS ne
+// voit qu'un champ est vide autrement. Rien en /fr/ ni en /en/ (contexte ltr, déjà le sens d'un champ
+// vide). Spécificité nulle (:where). :placeholder-shown ne vise qu'un input ou un textarea.
+:where(:dir(rtl) > [dir='auto']:placeholder-shown) {
+  direction: rtl;
 }
 
 // Icône de direction (flèche avant ou arrière, chevron de navigation, retour, sortie, flèche d'un

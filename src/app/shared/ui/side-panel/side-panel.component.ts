@@ -19,16 +19,25 @@ import { uniqueId } from '../../util';
  * sur la croix. Emplacements : contenu par défaut = corps ; `[pmPanelHeader]` à droite du titre ;
  * `[pmPanelFooter]` dans le pied. `subtitle` (UX-A8, maquettes 05 et 06 : « Marie D. · le lien est
  * visible dans le graphe et la timeline ») : une ligne secondaire sous le titre, reliée au dialogue
- * par `aria-describedby` ; sans elle, l'en-tête est rendu comme avant.
+ * par `aria-describedby` ; sans elle, l'en-tête est rendu comme avant. `subject` (M16-09B, Q77) : la
+ * valeur saisie en tête de cette ligne (nom du patient), isolée dans un `<bdi>` : elle garde son
+ * sens sans déplacer ce qui l'entoure (en arabe, « Marie D. » ne s'affiche plus « .Marie D »). Avec
+ * `subtitle`, rendue « subject · subtitle » : même texte qu'une chaîne composée à la main. Une valeur
+ * saisie composée dans `subtitle` n'est pas isolée : la passer par `subject`.
  */
 @Component({
   selector: 'pm-side-panel',
   template: `
     <header class="panel-header">
-      @if (subtitle(); as text) {
+      @if (subject() || subtitle()) {
         <div class="heading">
           <h2 class="title" [id]="titleId">{{ title() }}</h2>
-          <p class="subtitle" [id]="subtitleId">{{ text }}</p>
+          <p class="subtitle" [id]="subtitleId">
+            <bdi>{{ subject() }}</bdi
+            ><span
+              [textContent]="(subject() && subtitle() ? ' · ' : '') + (subtitle() ?? '')"
+            ></span>
+          </p>
         </div>
       } @else {
         <h2 class="title" [id]="titleId">{{ title() }}</h2>
@@ -55,6 +64,8 @@ export class SidePanelComponent {
   readonly title = input.required<string>();
   /** Ligne secondaire sous le titre (patient, portée de l'action) ; null ou vide : aucune. */
   readonly subtitle = input<string | null>(null);
+  /** Valeur saisie en tête du sous-titre (nom du patient), isolée (Q77) ; null ou vide : aucune. */
+  readonly subject = input<string | null>(null);
   /** Émis à la croix ; le dialogue est fermé dans tous les cas (le store garde le brouillon). */
   readonly closeRequested = output<void>();
 
@@ -74,7 +85,7 @@ export class SidePanelComponent {
     });
     // Le sous-titre décrit le dialogue ; une description posée par le contenu est laissée telle quelle.
     afterRenderEffect(() => {
-      const described = Boolean(this.subtitle());
+      const described = Boolean(this.subject() || this.subtitle());
       const dialog = this.element.nativeElement.closest('[role="dialog"]');
       if (!dialog) return;
       const current = dialog.getAttribute('aria-describedby');
