@@ -25737,6 +25737,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.current" datatype="html">
         <source>Séance en cours</source>
+        <target state="translated">جلسة جارية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
           <context context-type="linenumber">12,13</context>
@@ -25745,6 +25746,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.overtime" datatype="html">
         <source><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{ overtimeMin() }}"/> min<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> au-delà des <x id="INTERPOLATION_1" equiv-text="{{ plannedMin() }}"/> prévues</source>
+        <target state="translated"><x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/><x id="INTERPOLATION" equiv-text="{{ overtimeMin() }}"/> د<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> زيادة على المدة المقرّرة (<x id="INTERPOLATION_1" equiv-text="{{ plannedMin() }}"/> د)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
           <context context-type="linenumber">21,23</context>
@@ -25753,6 +25755,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.close.short" datatype="html">
         <source>Clôturer</source>
+        <target state="translated">إنهاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
           <context context-type="linenumber">43,47</context>
@@ -25761,6 +25764,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.resume" datatype="html">
         <source>Reprendre</source>
+        <target state="translated">استئناف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.html</context>
           <context context-type="linenumber">49,54</context>
@@ -25769,6 +25773,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.startedAt" datatype="html">
         <source>démarrée à <x id="time" equiv-text="time"/></source>
+        <target state="translated">بدأت الساعة <x id="time" equiv-text="time"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -25777,6 +25782,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.unclosed" datatype="html">
         <source>Séance du <x id="day" equiv-text="day"/> · <x id="detail" equiv-text="this.detail()"/> · non clôturée</source>
+        <target state="translated">جلسة <x id="day" equiv-text="day"/> · <x id="detail" equiv-text="this.detail()"/> · لم تُنهَ بعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">118</context>
@@ -25785,6 +25791,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.planned" datatype="html">
         <source>sur <x id="minutes" equiv-text="planned"/> min prévues</source>
+        <target state="translated">من أصل <x id="minutes" equiv-text="planned"/> د مقرّرة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">124</context>
@@ -25793,6 +25800,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.countPlain.none" datatype="html">
         <source>aucune entrée</source>
+        <target state="translated">لا مُدخَلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">133</context>
@@ -25801,6 +25809,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.countPlain.one" datatype="html">
         <source>1 entrée</source>
+        <target state="translated">مُدخَل واحد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">136</context>
@@ -25809,6 +25818,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.countPlain.many" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées</source>
+        <target state="translated">المُدخَلات: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">138</context>
@@ -25817,6 +25827,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.count.none" datatype="html">
         <source>rien de noté encore</source>
+        <target state="translated">لم يُدوَّن شيء بعد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">141</context>
@@ -25825,6 +25836,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.count.one" datatype="html">
         <source>1 entrée notée</source>
+        <target state="translated">مُدخَل واحد مدوَّن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">144</context>
@@ -25833,6 +25845,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.count.many" datatype="html">
         <source><x id="count" equiv-text="count"/> entrées notées</source>
+        <target state="translated">المُدخَلات المدوَّنة: <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">146</context>
@@ -25841,6 +25854,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.timer.label" datatype="html">
         <source>Temps écoulé</source>
+        <target state="translated">الوقت المنقضي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">149</context>
@@ -25849,6 +25863,7 @@
       </trans-unit>
       <trans-unit id="sessionBar.closeNow" datatype="html">
         <source>Clôturer maintenant</source>
+        <target state="translated">إنهاء الآن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/patient-header/session-bar.component.ts</context>
           <context context-type="linenumber">153</context>
