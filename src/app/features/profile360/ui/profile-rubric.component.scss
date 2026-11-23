@@ -72,7 +72,7 @@
   color: inherit;
   font: inherit;
   line-height: 1.45;
-  text-align: left;
+  text-align: start;
 }
 
 button.item {
@@ -133,7 +133,8 @@ h3:focus {
   font-weight: 600;
 }
 
-// Histoire et souvenirs : fil chronologique vertical, la période à gauche (96 px, alignée à droite).
+// Histoire et souvenirs : fil chronologique vertical, la période en début de ligne (96 px, alignée
+// vers le fil) : à gauche, à droite en arabe ; le fil se retourne avec la mise en page.
 .rows.tl {
   padding-top: 8px;
 
@@ -146,7 +147,7 @@ h3:focus {
       position: absolute;
       top: 12px;
       bottom: -6px;
-      left: 115px;
+      inset-inline-start: 115px;
       width: 2px;
       background: var(--border-subtle);
     }
@@ -166,14 +167,15 @@ h3:focus {
     display: grid;
     grid-template-columns: 96px 16px minmax(0, 1fr);
     gap: 12px;
-    padding: 0 8px 22px 0;
+    padding-block: 0 22px;
+    padding-inline: 0 8px;
     border-top: 0;
     border-radius: 8px;
   }
 
   .k {
     padding-top: 2px;
-    text-align: right;
+    text-align: end;
     font-size: 12.5px;
     font-variant-numeric: tabular-nums;
     color: var(--text-secondary);

@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T17:53:04.023Z",
+  "task": "M16-22",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "profile360 de droite à gauche : 4 déclarations logiques, dir=auto sur titre, détail, période et champs, pastille Famille par graphème sans capitale arabe, e2e arabe (8 tests)",
+  "pr": "139",
+  "branch": "M16-22-profile360-rtl",
+  "checkout": "agent-a67f9a085c6d9de8c"
+}

@@ -30,6 +30,7 @@
         autocomplete="off"
         cdkFocusInitial
         formControlName="title"
+        dir="auto"
         [attr.maxlength]="titleMax"
         [attr.aria-invalid]="
           form.controls.title.invalid && (form.controls.title.touched || submitted())
@@ -55,6 +56,7 @@
       <textarea
         [id]="fieldId('detail')"
         formControlName="detail"
+        dir="auto"
         [attr.maxlength]="detailMax"
         [attr.aria-invalid]="form.controls.detail.invalid && form.controls.detail.touched"
         [attr.aria-describedby]="fieldId('detail') + '-error'"
@@ -83,6 +85,7 @@
             type="text"
             autocomplete="off"
             formControlName="periodLabel"
+            dir="auto"
             [attr.maxlength]="periodLabelMax"
             [attr.aria-invalid]="
               form.controls.periodLabel.invalid && form.controls.periodLabel.touched

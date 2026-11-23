@@ -36,10 +36,10 @@ describe('profile360.model', () => {
   });
 
   it('initialOf : première lettre du titre, en capitale, guillemets ignorés', () => {
-    expect(initialOf('Thomas, compagnon')).toBe('T');
-    expect(initialOf('« hélène », sa mère')).toBe('H');
-    expect(initialOf('élodie')).toBe('É');
-    expect(initialOf('…')).toBe('…');
+    expect(initialOf('Thomas, compagnon', 'fr')).toBe('T');
+    expect(initialOf('« hélène », sa mère', 'fr')).toBe('H');
+    expect(initialOf('élodie', 'fr')).toBe('É');
+    expect(initialOf('…', 'fr')).toBe('…');
   });
 
   it('countLabel : « 1 information », « 6 informations »', () => {
@@ -98,5 +98,53 @@ describe('profile360.model', () => {
         updateBody(family, { ...base, title: 'Thomas', category: 'history', periodYear: 2020 }),
       ).toEqual({ category: 'history', periodYear: 2020 });
     });
+  });
+});
+
+// M16-22 (docs/design/arabe.md §4, G Q73, Q76) : la lettre de la pastille de Famille est découpée
+// par graphème ; une lettre arabe n'est pas mise en capitale ; un titre latin rend la même lettre
+// qu'avant, dans les trois langues.
+describe('initialOf, version arabe (M16-22)', () => {
+  it('titre latin : la même lettre qu’avant, dans chaque locale de formatage', () => {
+    for (const locale of ['fr', 'en', 'ar', 'ar-u-ca-gregory-hc-h23-nu-latn']) {
+      expect(initialOf('Thomas, compagnon', locale)).toBe('T');
+      expect(initialOf('« hélène », sa mère', locale)).toBe('H');
+      expect(initialOf('élodie', locale)).toBe('É');
+      expect(initialOf('  ïsis', locale)).toBe('Ï');
+      expect(initialOf('2e enfant', locale)).toBe('2');
+      expect(initialOf('…', locale)).toBe('…');
+    }
+  });
+
+  it('titre qui commence par un émoji : la première lettre, comme avant ; un émoji seul reste entier', () => {
+    expect(initialOf('🙂 Thomas', 'fr')).toBe('T');
+    expect(initialOf('👨‍👩‍👧 Famille Martin', 'fr')).toBe('F');
+    // Avant : la moitié d'une paire de substitution (charAt). Le graphème entier, désormais.
+    expect(initialOf('👨‍👩‍👧', 'fr')).toBe('👨‍👩‍👧');
+    expect(initialOf('🇫🇷', 'ar')).toBe('🇫🇷');
+  });
+
+  it('lettre accentuée décomposée : la lettre garde son accent', () => {
+    expect(initialOf('élodie', 'fr')).toBe('É');
+  });
+
+  it('titre arabe : la première lettre arabe, avec ses marques, sans capitale, dans les trois langues', () => {
+    expect(initialOf('سلمى، أخته', 'ar')).toBe('س');
+    expect(initialOf('مُحَمَّد، والده', 'ar')).toBe('مُ');
+    expect(initialOf('« ليلى »، أمه', 'fr')).toBe('ل');
+    expect(initialOf('لا أحد', 'en')).toBe('ل');
+  });
+
+  it('sans Intl.Segmenter : le repli découpe aussi par graphème', () => {
+    const segmenter = Intl.Segmenter;
+    try {
+      Object.defineProperty(Intl, 'Segmenter', { value: undefined, configurable: true });
+      expect(initialOf('مُحَمَّد', 'ar')).toBe('مُ');
+      expect(initialOf('élodie', 'fr')).toBe('É');
+      expect(initialOf('👨‍👩‍👧', 'fr')).toBe('👨‍👩‍👧');
+      expect(initialOf('Thomas', 'fr')).toBe('T');
+    } finally {
+      Object.defineProperty(Intl, 'Segmenter', { value: segmenter, configurable: true });
+    }
   });
 });
