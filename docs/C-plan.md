@@ -613,3 +613,52 @@ Un visiteur sans compte choisit un créneau sur la page publique d'un praticien,
 | M14-13 | Pages par lien : vérification de l'e-mail et gestion du rendez-vous | web / `features/public` | K2.2 Q60 à Q63, K3.1 étapes 5 à 7, K3.3, K3.4, K5.1, K10 ; design 32 et sa maquette ; design 25 (modèle, à lire) | Routes `rendez-vous/confirmer/:token` et `rendez-vous/gerer/:token` (lazy, `noindex`) ; une vue par réponse de `verify`, `manage` et `manage/cancel` ; annulation avec le dialogue partagé puis relecture ; jeton lu dans le chemin, envoyé dans le corps, jamais stocké | Critères de la fiche 32 : parcours réels en mode manuel et automatique, rechargement sans second rendez-vous, une vue par erreur, quatre états de gestion et trois causes d'annulation, `slug` nul sans nom ni lien, jeton absent du stockage et des URL de requête, axe-core 0 violation | Vitest (états des deux pages), e2e `prise-de-rendez-vous/` avec Mailpit | M14-12 |
 | M14-14 | Agenda : demandes en ligne, confirmer, refuser | web / `features/agenda` | K2.2 Q65, K3.2 étapes 2 à 4, K5.2, K10 ; design 15 (section M14) et sa maquette ; `api-reference.md` | `listRequests()` et demandes dans le store (trois états, relecture après chaque écriture) ; entrée « Demandes » avec compteur et panneau « Demandes en ligne » ; mention « Demande en ligne » dans la grille, la liste et le mois ; détail : pastille, bloc Contact (e-mail et téléphone), « Refuser » et sa phrase sur l'e-mail, phrase sur les formulaires Annuler et Déplacer ; toasts | Critères (M14-14) de la fiche 15 : compteur égal à la réponse de l'API (2 avec le seed), demande hors fenêtre atteinte, confirmer et refuser relus par `GET`, rendez-vous posé par le praticien sans mention ni « Refuser », `409 APPOINTMENT_NOT_ACTIVE`, trois états du panneau, clavier, axe-core 0 violation | Vitest (store, détail, panneau), e2e `agenda/demandes-en-ligne` | M14-10, maquette de M14-09 |
 | M14-15 | Agenda : rattacher un invité à un patient (peut glisser après le jalon) | web / `features/agenda` | K3.2 étape 5, K3.4 ; J5 (« Rendez-vous invités dans l'agenda ») ; design 15 (section M14) ; `api-reference.md` (`attach-patient`) | Action « Rattacher à un patient » du détail d'un invité non purgé : sélecteur de patient du panneau 15b, case `includeSameGuest`, `attachPatient()`, relecture ; erreurs `409`, `422 PATIENT_ARCHIVED`, `403` / `404` ; phrase sur l'arrêt des e-mails automatiques | Rattachement visible dans le détail et dans les rendez-vous du patient ; case cochée : les autres rendez-vous du même invité suivent ; ni invité purgé ni rendez-vous de patient n'ont l'action ; patient archivé refusé ; axe-core 0 violation | Vitest (store, panneau), e2e agenda | M14-14 |
+
+## C14. Version arabe, jalon M16 (22 novembre 2026)
+
+PsyMate en arabe, de droite à gauche, sous `/ar/`. Périmètre et choix tranchés par l'utilisateur le 22 novembre 2026 : G Q71 (G14). Constats et mesures : `docs/Etude-traduction-arabe.md`. Plan détaillé, décisions proposées, règles communes, prompts et revue : `docs/M-plan-version-arabe.md` (M2 décisions, M4 tâches, M5 prompts API, M6 prompts web, M7 revue, M8 second temps).
+
+**Lancé le 23 novembre 2026**, en autonomie, à la demande de l'utilisateur (règles de lancement, de fusion et d'arrêt : M4.5). Le prompt de chaque tâche est dans M5 (API), M6 (web) et M8 (second temps). Le tableau à huit colonnes des tâches web, au format de C12, est ajouté ici par M16-07.
+
+Rappel des tâches API (le C de psymate-api fera foi, section inscrite par M16-01) :
+
+| ID | Titre | Couloir | Dépend de |
+| --- | --- | --- | --- |
+| M16-01 | Décisions Q96 à Q102 et documentation | docs | — |
+| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` | shared, identity | M16-01 |
+| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, administration | vocabulary, directory, linking, `V16` | M16-02, glossaire (M16-07) |
+| M16-04 | `messages_ar.properties`, test de parité | ressources | M16-02, glossaire (M16-07) |
+| M16-05 | E-mails en arabe, de droite à gauche | services d'envoi | M16-04 |
+| M16-06 | Seed, tag `contract-v0.16.0`, suivi | racine | M16-03, M16-05 |
+
+Rappel des tâches web :
+
+| ID | Titre | Couloir | Dépend de |
+| --- | --- | --- | --- |
+| M16-07 | Plan M sur `main` ; décisions Q72 à Q81, règles d'habillage arabe, glossaire clinique proposé | docs | — |
+| M16-08 | Socle de langue : bundle `/ar/`, locale de formatage, `Accept-Language`, raccourcis | `core`, `angular.json` | M16-07 |
+| M16-09 | Socle visuel : police, règles `:lang(ar)`, règle ESLint, composants partagés | `src/theme`, `shared/ui`, `tools/eslint` | M16-08 |
+| M16-10 | `auth` de droite à gauche | `features/auth` | M16-09 |
+| M16-11 | `public` de droite à gauche | `features/public` | M16-09 |
+| M16-12 | `account` de droite à gauche | `features/account` | M16-09 |
+| M16-13 | `admin` de droite à gauche | `features/admin` | M16-09 |
+| M16-14 | `patients` de droite à gauche | `features/patients` | M16-09 |
+| M16-15 | `patient-shell` de droite à gauche | `features/patient-shell` | M16-09 |
+| M16-16 | `overview` de droite à gauche, courbe laissée de gauche à droite | `features/overview` | M16-09 |
+| M16-17 | `timeline` de droite à gauche, vue décennie laissée de gauche à droite | `features/timeline` | M16-09 |
+| M16-18 | `graph` de droite à gauche, graphe lu vers la gauche | `features/graph` | M16-09 |
+| M16-19 | `entries` de droite à gauche | `features/entries` | M16-09 |
+| M16-20 | `capture` de droite à gauche, aucune date détectée en arabe | `features/capture` | M16-09 |
+| M16-21 | `search` de droite à gauche | `features/search` | M16-09 |
+| M16-22 | `profile360` de droite à gauche | `features/profile360` | M16-09 |
+| M16-23 | `agenda` de droite à gauche, calendrier en arabe | `features/agenda` | M16-09 |
+| M16-24 | `billing` de droite à gauche | `features/billing` | M16-09, M15-20 |
+| M16-25 | Contrat `0.16.0`, libellés arabes | `api` généré, `data/*.api.ts` | M16-06, M16-10 à M16-23 |
+| M16-26 | Traduction : pages publiques, connexion et inscription | `src/locale` | M16-08, glossaire (M16-07) |
+| M16-27 | Traduction : dossier patient | `src/locale` | M16-26 |
+| M16-28 | Traduction : compte, administration, agenda, socle | `src/locale` | M16-27 |
+| M16-29 | Ouverture : sélecteurs de langue, parcours e2e arabes | `core/preferences`, `shared/ui`, `e2e/arabe` | M16-09 à M16-28 |
+
+Second temps, à confirmer (M8) : M16-30 résumé « En bref » en arabe, M16-31 exports en arabe, M16-32 recherche plein texte en arabe (API) ; M16-33 dates dans la saisie libre en arabe (web).
+
+Hors M16 (M1) : dialecte, variante par pays, calendrier hégirien, chiffres arabo-indiens, traduction des données saisies, factures en arabe.
