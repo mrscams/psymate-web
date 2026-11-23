@@ -37,6 +37,13 @@
 .hint {
   margin: 8px 0 0;
   font-size: 12.5px;
+
+  // Touche de clavier en caractères latins, de gauche à droite (docs/design/arabe.md §5) : par le
+  // style plutôt que par dir="ltr", qui changerait le texte source de l'unité patientShell.noted.hint.
+  kbd {
+    direction: ltr;
+    unicode-bidi: isolate;
+  }
 }
 
 .faint {

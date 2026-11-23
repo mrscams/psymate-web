@@ -17,6 +17,7 @@ import {
   VueDensembleService,
 } from '../../../api';
 import { isApiProblem } from '../../../core/http';
+import { catalogLabel, toAppLocale } from '../../../core/i18n';
 // Graphe du paquet initial : shared/ui par chemin direct, pas par le barrel (voir app.component.ts).
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui/entry-icon/entry-icon.component';
 import {
@@ -52,7 +53,7 @@ export class PatientShellApi {
   private readonly links = inject(LiensService);
   private readonly overview = inject(VueDensembleService);
   private readonly vocabulary = inject(VocabulaireService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  private readonly locale = toAppLocale(inject(LOCALE_ID));
 
   /** GET /api/patients/{id} (403 PATIENT_FORBIDDEN, 404 PATIENT_NOT_FOUND pour l'écran). */
   async patient(id: string): Promise<ShellPatient> {
@@ -225,14 +226,19 @@ export class PatientShellApi {
     return toReminders(await firstValueFrom(this.overview.getPatientOverview(patientId, '90d')));
   }
 
-  /** GET /api/vocabulary/emotions : code → libellé dans la langue de l'interface. */
+  /**
+   * GET /api/vocabulary/emotions : code → libellé dans la langue de l'interface, sinon le français
+   * (Q78, catalogLabel), sinon le code.
+   */
   async emotionLabels(): Promise<Record<string, string>> {
     const list = await firstValueFrom(this.vocabulary.emotions());
     const labels: Record<string, string> = {};
     for (const emotion of list) {
       if (!emotion.code) continue;
-      labels[emotion.code] =
-        (this.english ? emotion.labelEn : null) || emotion.labelFr || emotion.code;
+      labels[emotion.code] = catalogLabel(
+        { labelFr: emotion.labelFr || emotion.code, labelEn: emotion.labelEn },
+        this.locale,
+      );
     }
     return labels;
   }
