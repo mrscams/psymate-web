@@ -89,9 +89,20 @@ interface Ink {
  * pas de curseur).
  */
 async function inkOf(page: Page, field: Locator): Promise<Ink> {
+  // Le texte doit tenir dans le champ : sinon le champ défile, se recale au début au blur() et la
+  // mesure ne dit plus rien de l'alignement (police à chasse fixe de repli plus large sous Linux).
+  const fit = await field.evaluate((el) => {
+    const style = getComputedStyle(el);
+    return {
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+      content: el.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight),
+    };
+  });
+  expect(fit.scrollWidth, 'le texte saisi déborde du champ').toBeLessThanOrEqual(fit.clientWidth);
   await field.blur();
   const png = await field.screenshot({ animations: 'disabled', caret: 'hide' });
-  return page.evaluate(async (base64) => {
+  const ink = await page.evaluate(async (base64) => {
     const image = new Image();
     image.src = `data:image/png;base64,${base64}`;
     await image.decode();
@@ -129,6 +140,12 @@ async function inkOf(page: Page, field: Locator): Promise<Ink> {
       tallMaxX: Math.max(...tall),
     };
   }, png.toString('base64'));
+  // Marge de 15 % : le texte occupe au plus 85 % de la zone de texte, pour qu'une police de repli
+  // plus large (CI sous Linux) ne le fasse pas déborder.
+  expect(ink.maxX - ink.minX, 'texte trop long pour une mesure stable').toBeLessThanOrEqual(
+    fit.content * 0.85,
+  );
+  return ink;
 }
 
 /** Le texte du champ est collé au bord droit (début de la page en arabe). */
@@ -158,8 +175,6 @@ async function expectLtrValueAtPageStart(page: Page, field: Locator, value = TYP
   if (value === TYPED_ORDER) expectTypingOrder(ink);
   await field.fill('');
 }
-
-test.describe.configure({ mode: 'serial' });
 
 for (const size of WIDTHS) {
   test.describe(`features/auth en /ar/, ${size.name}`, () => {
@@ -253,7 +268,7 @@ for (const size of WIDTHS) {
       await open(page, '/ar/reinitialiser/jeton-e2e-arabe');
       for (const id of ['#new-password', '#new-password-confirm']) {
         const field = page.locator(id);
-        await field.pressSequentially('Secret-Clinique-2026');
+        await field.pressSequentially('Secret-2026');
         expect(await field.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
         expectInkAtRight(await inkOf(page, field));
       }
@@ -306,7 +321,7 @@ for (const size of WIDTHS) {
       }
       await expectLtrValueAtPageStart(page, page.locator('input[type="email"]'));
       const temporary = page.locator('input[autocomplete="current-password"]');
-      await temporary.pressSequentially('Temporaire-2026');
+      await temporary.pressSequentially('Temp-2026');
       expectInkAtRight(await inkOf(page, temporary));
     });
   });
@@ -315,6 +330,7 @@ for (const size of WIDTHS) {
 // Double authentification : un compte jetable confirmé, 2FA activée par l'API (une inscription, une
 // session d'API), puis le bloc code de la connexion en /ar/ (réponse 202, sans connexion complète).
 test.describe('connexion en /ar/ : double authentification (API locale)', () => {
+  test.describe.configure({ mode: 'serial' });
   let api: APIRequestContext;
   let account: TestAccount;
 
@@ -332,30 +348,38 @@ test.describe('connexion en /ar/ : double authentification (API locale)', () => 
     await api?.dispose();
   });
 
-  for (const size of WIDTHS) {
-    test(`bloc code, ${size.name} : code saisi dans l'ordre de frappe`, async ({ page }) => {
+  test('bloc code, bureau puis téléphone : code saisi dans l’ordre de frappe', async ({ page }) => {
+    // Une seule connexion par l'interface : la largeur change entre les deux mesures.
+    await page.setViewportSize({ width: WIDTHS[0].width, height: WIDTHS[0].height });
+    await open(page, '/ar/connexion');
+    await page.locator('#login-email').fill(account.email);
+    await page.locator('#login-password').fill(account.password);
+    await page.locator('button[type="submit"]').click();
+    const code = page.locator('#login-otp');
+    await expect(code).toBeVisible();
+    await expect(page).toHaveURL(/\/ar\/connexion$/);
+
+    for (const size of WIDTHS) {
       await page.setViewportSize({ width: size.width, height: size.height });
-      await open(page, '/ar/connexion');
-      await page.locator('#login-email').fill(account.email);
-      await page.locator('#login-password').fill(account.password);
-      await page.locator('button[type="submit"]').click();
-      const code = page.locator('#login-otp');
       await expect(code).toBeVisible();
-      await expect(page).toHaveURL(/\/ar\/connexion$/);
       await expectRtlPage(page);
       await shoot(page, `arabe-auth-double-authentification-${size.name}`);
 
+      // Code de l'application, puis code de secours : même champ, même sens.
+      await code.fill('');
       await code.pressSequentially(TYPED_ORDER);
       expect(await code.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
       expectTypingOrder(await inkOf(page, code));
 
-      // Code de secours : même champ, même sens.
       await page.locator('.otp-row .link-button').click();
       await expect(code).toHaveValue('');
       await code.pressSequentially(TYPED_ORDER);
       expect(await code.evaluate((el) => getComputedStyle(el).direction)).toBe('ltr');
       // Champ centré (maquette 11) : seul l'ordre de frappe est mesuré.
       expectTypingOrder(await inkOf(page, code));
-    });
-  }
+      // Retour au code de l'application pour la largeur suivante.
+      await page.locator('.otp-row .link-button').click();
+      await expect(code).toHaveValue('');
+    }
+  });
 });
