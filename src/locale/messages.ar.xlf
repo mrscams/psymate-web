@@ -76,6 +76,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.n" datatype="html">
         <source>Nouvelle entrée</source>
+        <target state="translated">مُدخَل جديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">27</context>
@@ -88,6 +89,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.search" datatype="html">
         <source>Rechercher</source>
+        <target state="translated">بحث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">31</context>
@@ -96,6 +98,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.l" datatype="html">
         <source>Lier l&apos;entrée ouverte</source>
+        <target state="translated">ربط المُدخَل المفتوح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">36</context>
@@ -108,6 +111,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.1" datatype="html">
         <source>Vue d&apos;ensemble</source>
+        <target state="translated">نظرة عامة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">38</context>
@@ -116,6 +120,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.2" datatype="html">
         <source>Timeline</source>
+        <target state="translated">الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">39</context>
@@ -124,6 +129,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.3" datatype="html">
         <source>Graphe</source>
+        <target state="translated">شبكة الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">40</context>
@@ -132,6 +138,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.m" datatype="html">
         <source>Changer de mode</source>
+        <target state="translated">تغيير الوضع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">41</context>
@@ -140,6 +147,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.ctrlB" datatype="html">
         <source>Ouvrir ou fermer la navigation</source>
+        <target state="translated">فتح التنقّل أو إغلاقه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">46</context>
@@ -148,6 +156,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.escapeKey" datatype="html">
         <source>Échap</source>
+        <target state="translated">Esc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">50</context>
@@ -164,6 +173,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.escape" datatype="html">
         <source>Fermer le panneau, le brouillon est conservé</source>
+        <target state="translated">إغلاق اللوحة مع الاحتفاظ بالمسودّة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">51</context>
@@ -172,6 +182,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.help" datatype="html">
         <source>Afficher cette aide</source>
+        <target state="translated">عرض هذه المساعدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/shortcuts/shortcuts.service.ts</context>
           <context context-type="linenumber">56</context>
@@ -184,6 +195,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.help.title" datatype="html">
         <source>Raccourcis clavier</source>
+        <target state="translated">اختصارات لوحة المفاتيح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/demo/demo-panels.ts</context>
           <context context-type="linenumber">117</context>
@@ -562,6 +574,7 @@
       </trans-unit>
       <trans-unit id="state.error.retry" datatype="html">
         <source>Réessayer</source>
+        <target state="translated">إعادة المحاولة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/account/pages/data-export.page.ts</context>
           <context context-type="linenumber">116</context>
@@ -7059,6 +7072,7 @@
       </trans-unit>
       <trans-unit id="8073728300954759592" datatype="html">
         <source>{VAR_PLURAL, plural, =1 {Afficher l&apos;autre recours} other {Afficher les <x id="INTERPOLATION"/> autres recours}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {عرض التظلّمات الأخرى} one {عرض التظلّم الآخر} two {عرض التظلّمين الآخرين} few {عرض التظلّمات الأخرى (<x id="INTERPOLATION"/>)} many {عرض التظلّمات الأخرى (<x id="INTERPOLATION"/>)} other {عرض التظلّمات الأخرى (<x id="INTERPOLATION"/>)}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/practitioners.page.html</context>
           <context context-type="linenumber">294,296</context>
@@ -7579,6 +7593,7 @@
       </trans-unit>
       <trans-unit id="6033647478858359280" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {aucun profil publié} =1 {1 profil publié} other {<x id="INTERPOLATION"/> profils publiés}}</source>
+        <target state="translated">{VAR_PLURAL, plural, zero {لا ملفات منشورة} one {ملف منشور واحد} two {ملفان منشوران} few {<x id="INTERPOLATION"/> ملفات منشورة} many {<x id="INTERPOLATION"/> ملفًا منشورًا} other {<x id="INTERPOLATION"/> ملف منشور}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/pages/vocabulary.page.html</context>
           <context context-type="linenumber">114,116</context>
@@ -8343,6 +8358,7 @@
       </trans-unit>
       <trans-unit id="confirm.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/admin/ui/deactivate-dialog.component.ts</context>
           <context context-type="linenumber">147</context>
@@ -10749,6 +10765,8 @@
       <trans-unit id="appBar.skip" datatype="html">
         <source> Aller au contenu
 </source>
+        <target state="translated"> الانتقال إلى المحتوى
+</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.html</context>
           <context context-type="linenumber">7,11</context>
@@ -10769,6 +10787,7 @@
       </trans-unit>
       <trans-unit id="app.brand" datatype="html">
         <source>PsyMate</source>
+        <target state="translated">PsyMate</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/auth/pages/first-login.page.html</context>
           <context context-type="linenumber">11,13</context>
@@ -15477,6 +15496,7 @@
       </trans-unit>
       <trans-unit id="shortcuts.graph.l" datatype="html">
         <source>Lier l&apos;entrée sélectionnée</source>
+        <target state="translated">ربط المُدخَل المحدَّد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/pages/graph.page.ts</context>
           <context context-type="linenumber">514</context>
@@ -27013,6 +27033,7 @@
       </trans-unit>
       <trans-unit id="forms.error.required" datatype="html">
         <source>Ce champ est obligatoire.</source>
+        <target state="translated">هذا الحقل مطلوب.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">53</context>
@@ -27021,6 +27042,7 @@
       </trans-unit>
       <trans-unit id="forms.error.email" datatype="html">
         <source>Adresse e-mail invalide.</source>
+        <target state="translated">عنوان البريد الإلكتروني غير صالح.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">56</context>
@@ -27029,6 +27051,7 @@
       </trans-unit>
       <trans-unit id="forms.error.minlength" datatype="html">
         <source>Au moins <x id="n" equiv-text="n"/> caractères.</source>
+        <target state="translated">الحدّ الأدنى لعدد الأحرف: <x id="n" equiv-text="n"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -27037,6 +27060,7 @@
       </trans-unit>
       <trans-unit id="forms.error.maxlength" datatype="html">
         <source>Au plus <x id="n" equiv-text="n"/> caractères.</source>
+        <target state="translated">الحدّ الأقصى لعدد الأحرف: <x id="n" equiv-text="n"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">64</context>
@@ -27045,6 +27069,7 @@
       </trans-unit>
       <trans-unit id="forms.error.futureDate" datatype="html">
         <source>La date ne peut pas être dans le futur.</source>
+        <target state="translated">لا يمكن أن يكون التاريخ في المستقبل.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -27053,6 +27078,7 @@
       </trans-unit>
       <trans-unit id="forms.error.date" datatype="html">
         <source>Date invalide.</source>
+        <target state="translated">تاريخ غير صالح.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">70</context>
@@ -27061,6 +27087,7 @@
       </trans-unit>
       <trans-unit id="forms.error.pattern" datatype="html">
         <source>Format invalide.</source>
+        <target state="translated">صيغة غير صالحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -27069,6 +27096,7 @@
       </trans-unit>
       <trans-unit id="forms.error.invalid" datatype="html">
         <source>Valeur invalide.</source>
+        <target state="translated">قيمة غير صالحة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/forms/field-errors.component.ts</context>
           <context context-type="linenumber">75</context>
@@ -27232,6 +27260,7 @@
       </trans-unit>
       <trans-unit id="appBar.avatar.menu" datatype="html">
         <source>· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>, menu du compte</source>
+        <target state="translated">· <x id="INTERPOLATION" equiv-text="{{ me.displayName }}"/>، قائمة الحساب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">49,51</context>
@@ -27244,6 +27273,7 @@
       </trans-unit>
       <trans-unit id="appBar.menu.logout" datatype="html">
         <source> Déconnexion </source>
+        <target state="translated"> تسجيل الخروج </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/admin-bar/admin-bar.component.html</context>
           <context context-type="linenumber">60,65</context>
@@ -27256,6 +27286,7 @@
       </trans-unit>
       <trans-unit id="appBar.navigation.open" datatype="html">
         <source>Ouvrir la navigation</source>
+        <target state="translated">فتح التنقّل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
           <context context-type="linenumber">9,10</context>
@@ -27264,6 +27295,7 @@
       </trans-unit>
       <trans-unit id="appBar.search.label" datatype="html">
         <source>Rechercher</source>
+        <target state="translated">بحث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
           <context context-type="linenumber">46,48</context>
@@ -27272,6 +27304,7 @@
       </trans-unit>
       <trans-unit id="app.localeNav.label" datatype="html">
         <source>Langue</source>
+        <target state="translated">اللغة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
           <context context-type="linenumber">68</context>
@@ -27284,6 +27317,7 @@
       </trans-unit>
       <trans-unit id="app.localeSwitch" datatype="html">
         <source>English</source>
+        <target state="translated">English</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
           <context context-type="linenumber">76,81</context>
@@ -27296,6 +27330,7 @@
       </trans-unit>
       <trans-unit id="appBar.menu.account" datatype="html">
         <source>Mon compte</source>
+        <target state="translated">حسابي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.html</context>
           <context context-type="linenumber">92,96</context>
@@ -27304,6 +27339,7 @@
       </trans-unit>
       <trans-unit id="appBar.search.placeholder" datatype="html">
         <source>Rechercher</source>
+        <target state="translated">بحث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/app-bar/app-bar.component.ts</context>
           <context context-type="linenumber">87</context>
@@ -27312,6 +27348,7 @@
       </trans-unit>
       <trans-unit id="confirm.confirm" datatype="html">
         <source>Confirmer</source>
+        <target state="translated">تأكيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -27320,6 +27357,7 @@
       </trans-unit>
       <trans-unit id="confirm.word.label" datatype="html">
         <source>Tapez « <x id="word" equiv-text="this.options.confirmWord ?? &apos;&apos;"/> » pour confirmer</source>
+        <target state="translated">يُرجى كتابة « <x id="word" equiv-text="this.options.confirmWord ?? &apos;&apos;"/> » للتأكيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/confirm-dialog/confirm-dialog.component.ts</context>
           <context context-type="linenumber">52</context>
@@ -27328,6 +27366,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.calendar" datatype="html">
         <source>Calendrier</source>
+        <target state="translated">التقويم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">67</context>
@@ -27336,6 +27375,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.open" datatype="html">
         <source>Ouvrir le calendrier</source>
+        <target state="translated">فتح التقويم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">68</context>
@@ -27344,6 +27384,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.close" datatype="html">
         <source>Fermer le calendrier</source>
+        <target state="translated">إغلاق التقويم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">69</context>
@@ -27352,6 +27393,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.prevMonth" datatype="html">
         <source>Mois précédent</source>
+        <target state="translated">الشهر السابق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">70</context>
@@ -27360,6 +27402,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.nextMonth" datatype="html">
         <source>Mois suivant</source>
+        <target state="translated">الشهر التالي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">71</context>
@@ -27368,6 +27411,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.prevYear" datatype="html">
         <source>Année précédente</source>
+        <target state="translated">السنة السابقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">72</context>
@@ -27376,6 +27420,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.nextYear" datatype="html">
         <source>Année suivante</source>
+        <target state="translated">السنة التالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">73</context>
@@ -27384,6 +27429,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.prevYears" datatype="html">
         <source>24 années précédentes</source>
+        <target state="translated">السنوات الـ24 السابقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">74</context>
@@ -27392,6 +27438,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.nextYears" datatype="html">
         <source>24 années suivantes</source>
+        <target state="translated">السنوات الـ24 التالية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">75</context>
@@ -27400,6 +27447,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.toMonthView" datatype="html">
         <source>Choisir la date</source>
+        <target state="translated">اختيار التاريخ</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">76</context>
@@ -27408,6 +27456,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.toYearView" datatype="html">
         <source>Choisir le mois et l&apos;année</source>
+        <target state="translated">اختيار الشهر والسنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-adapter.ts</context>
           <context context-type="linenumber">77</context>
@@ -27416,6 +27465,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.placeholder.day" datatype="html">
         <source>jj/mm/aaaa</source>
+        <target state="translated">يوم/شهر/سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
           <context context-type="linenumber">169</context>
@@ -27424,6 +27474,7 @@
       </trans-unit>
       <trans-unit id="shared.dateField.placeholder.month" datatype="html">
         <source>mm/aaaa</source>
+        <target state="translated">شهر/سنة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/date-field/date-field.component.ts</context>
           <context context-type="linenumber">193</context>
@@ -27504,6 +27555,7 @@
       </trans-unit>
       <trans-unit id="forms.summary.titleOne" datatype="html">
         <source>1 champ à corriger.</source>
+        <target state="translated">حقل واحد يحتاج إلى تصحيح.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/form-errors/form-errors.component.ts</context>
           <context context-type="linenumber">95</context>
@@ -27512,6 +27564,7 @@
       </trans-unit>
       <trans-unit id="forms.summary.titleMany" datatype="html">
         <source><x id="count" equiv-text="count"/> champs à corriger.</source>
+        <target state="translated">حقول تحتاج إلى تصحيح: <x id="count" equiv-text="count"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/form-errors/form-errors.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -27520,6 +27573,7 @@
       </trans-unit>
       <trans-unit id="navRail.label" datatype="html">
         <source>Navigation</source>
+        <target state="translated">التنقّل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-drawer.service.ts</context>
           <context context-type="linenumber">39</context>
@@ -27532,6 +27586,7 @@
       </trans-unit>
       <trans-unit id="navRail.patients" datatype="html">
         <source>Patients</source>
+        <target state="translated">المرضى</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
           <context context-type="linenumber">48</context>
@@ -27540,6 +27595,7 @@
       </trans-unit>
       <trans-unit id="navRail.agenda" datatype="html">
         <source>Agenda</source>
+        <target state="translated">المواعيد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
           <context context-type="linenumber">54</context>
@@ -27548,6 +27604,7 @@
       </trans-unit>
       <trans-unit id="navRail.invoice" datatype="html">
         <source>Facture</source>
+        <target state="translated">الفواتير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -27556,6 +27613,7 @@
       </trans-unit>
       <trans-unit id="navRail.close" datatype="html">
         <source>Fermer la navigation</source>
+        <target state="translated">إغلاق التنقّل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
           <context context-type="linenumber">107</context>
@@ -27564,6 +27622,7 @@
       </trans-unit>
       <trans-unit id="navRail.later" datatype="html">
         <source>à réaliser</source>
+        <target state="translated">قريبًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
           <context context-type="linenumber">108</context>
@@ -27959,6 +28018,7 @@
       </trans-unit>
       <trans-unit id="sidePanel.close" datatype="html">
         <source>Fermer le panneau</source>
+        <target state="translated">إغلاق اللوحة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/side-panel/side-panel.component.ts</context>
           <context context-type="linenumber">66</context>
@@ -27967,6 +28027,7 @@
       </trans-unit>
       <trans-unit id="state.error.title" datatype="html">
         <source>Impossible de charger ce bloc</source>
+        <target state="translated">تعذّر تحميل هذا القسم</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -27975,6 +28036,7 @@
       </trans-unit>
       <trans-unit id="state.empty.title" datatype="html">
         <source>Rien à afficher pour le moment</source>
+        <target state="translated">لا شيء لعرضه حاليًا</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -27983,6 +28045,7 @@
       </trans-unit>
       <trans-unit id="state.error.message" datatype="html">
         <source>Le serveur n&apos;a pas répondu. Rien n&apos;a été modifié.</source>
+        <target state="translated">لم يستجب الخادم. لم يتغيّر شيء.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -27991,6 +28054,7 @@
       </trans-unit>
       <trans-unit id="state.loading" datatype="html">
         <source>Chargement…</source>
+        <target state="translated">جارٍ التحميل…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
           <context context-type="linenumber">77</context>
@@ -27999,6 +28063,7 @@
       </trans-unit>
       <trans-unit id="state.error.details" datatype="html">
         <source>Détail technique</source>
+        <target state="translated">التفاصيل التقنية</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/state/state.component.ts</context>
           <context context-type="linenumber">78</context>
@@ -28007,6 +28072,7 @@
       </trans-unit>
       <trans-unit id="banner.offline.message" datatype="html">
         <source>Connexion perdue · vos brouillons sont conservés sur cet appareil et seront renvoyés automatiquement.</source>
+        <target state="translated">انقطع الاتصال · مسودّاتك محفوظة على هذا الجهاز وسيُعاد إرسالها تلقائيًا.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/network-banner.component.ts</context>
           <context context-type="linenumber">28</context>
@@ -28015,6 +28081,7 @@
       </trans-unit>
       <trans-unit id="banner.offline.retry" datatype="html">
         <source>Réessayer maintenant</source>
+        <target state="translated">إعادة المحاولة الآن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/network-banner.component.ts</context>
           <context context-type="linenumber">29</context>
@@ -28023,6 +28090,7 @@
       </trans-unit>
       <trans-unit id="banner.level.success" datatype="html">
         <source>Succès</source>
+        <target state="translated">نجاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -28031,6 +28099,7 @@
       </trans-unit>
       <trans-unit id="banner.level.info" datatype="html">
         <source>Information</source>
+        <target state="translated">معلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -28039,6 +28108,7 @@
       </trans-unit>
       <trans-unit id="banner.level.warning" datatype="html">
         <source>Avertissement</source>
+        <target state="translated">تنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/status-banner.component.ts</context>
           <context context-type="linenumber">61</context>
@@ -28047,6 +28117,7 @@
       </trans-unit>
       <trans-unit id="banner.verification.docsPending" datatype="html">
         <source>Votre dossier professionnel est incomplet. Déposez vos justificatifs pour être vérifié·e.</source>
+        <target state="translated">ملفك المهني غير مكتمل. يُرجى إيداع مستندات الإثبات لإتمام التحقّق.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
           <context context-type="linenumber">22</context>
@@ -28055,6 +28126,7 @@
       </trans-unit>
       <trans-unit id="banner.verification.underReview" datatype="html">
         <source>Votre dossier professionnel est en cours de vérification. Vous pouvez utiliser l&apos;application pour vos patients ; l&apos;annuaire public sera disponible après validation.</source>
+        <target state="translated">ملفك المهني قيد التحقّق. يمكن استخدام التطبيق لمتابعة مرضاك؛ ويُتاح دليل الممارسين بعد قبول الملف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
           <context context-type="linenumber">27</context>
@@ -28063,6 +28135,7 @@
       </trans-unit>
       <trans-unit id="banner.verification.needsMore" datatype="html">
         <source>Dossier professionnel : un complément vous est demandé.</source>
+        <target state="translated">الملف المهني: مطلوب استكمال.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
           <context context-type="linenumber">32</context>
@@ -28071,6 +28144,7 @@
       </trans-unit>
       <trans-unit id="banner.verification.action" datatype="html">
         <source>Voir le dossier</source>
+        <target state="translated">عرض الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/status-banner/verification-banner.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -28079,6 +28153,7 @@
       </trans-unit>
       <trans-unit id="toast.close" datatype="html">
         <source>Fermer</source>
+        <target state="translated">إغلاق</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -28087,6 +28162,7 @@
       </trans-unit>
       <trans-unit id="toast.level.success" datatype="html">
         <source>Succès</source>
+        <target state="translated">نجاح</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">40</context>
@@ -28095,6 +28171,7 @@
       </trans-unit>
       <trans-unit id="toast.level.info" datatype="html">
         <source>Information</source>
+        <target state="translated">معلومة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">42</context>
@@ -28103,6 +28180,7 @@
       </trans-unit>
       <trans-unit id="toast.level.warning" datatype="html">
         <source>Avertissement</source>
+        <target state="translated">تنبيه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">44</context>
@@ -28111,6 +28189,7 @@
       </trans-unit>
       <trans-unit id="toast.rateLimited.noDelay" datatype="html">
         <source>Trop de requêtes, réessayez dans un instant. Votre saisie est conservée.</source>
+        <target state="translated">طلبات كثيرة جدًا، يُرجى إعادة المحاولة بعد لحظات. ما أُدخِل محفوظ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -28119,6 +28198,7 @@
       </trans-unit>
       <trans-unit id="toast.rateLimited" datatype="html">
         <source>Trop de requêtes, réessayez dans <x id="delay" equiv-text="delay"/>. Votre saisie est conservée.</source>
+        <target state="translated">طلبات كثيرة جدًا، يُرجى إعادة المحاولة بعد <x id="delay" equiv-text="delay"/>. ما أُدخِل محفوظ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">61</context>
@@ -28127,6 +28207,7 @@
       </trans-unit>
       <trans-unit id="toast.reconnected.none" datatype="html">
         <source>Connexion rétablie.</source>
+        <target state="translated">عاد الاتصال.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -28135,6 +28216,7 @@
       </trans-unit>
       <trans-unit id="toast.reconnected.one" datatype="html">
         <source>Connexion rétablie · 1 brouillon renvoyé.</source>
+        <target state="translated">عاد الاتصال · أُعيد إرسال مسودّة واحدة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -28143,6 +28225,7 @@
       </trans-unit>
       <trans-unit id="toast.reconnected.many" datatype="html">
         <source>Connexion rétablie · <x id="count" equiv-text="n"/> brouillons renvoyés.</source>
+        <target state="translated">عاد الاتصال · المسودّات المُعاد إرسالها: <x id="count" equiv-text="n"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/toast/toast-outlet.component.ts</context>
           <context context-type="linenumber">70</context>
