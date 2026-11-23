@@ -183,7 +183,7 @@ export class AdministrationVocabulaireDeLannuaireService extends BaseService imp
 
     /**
      * Modifie les libellés, le rang ou l\&#39;activation d\&#39;une entrée du vocabulaire
-     * Admin avec double authentification active. Modification partielle : un champ absent reste inchangé, labelEn vide efface le libellé anglais. Une entrée désactivée disparaît de GET /api/vocabulary/directory et ne peut plus être choisie ni publiée ; on ne peut la désactiver que si aucune fiche publiée ne l\&#39;utilise. Le code et le type ne changent pas.
+     * Admin avec double authentification active. Modification partielle : un champ absent reste inchangé, labelEn vide efface le libellé anglais et labelAr vide le libellé arabe. Une entrée désactivée disparaît de GET /api/vocabulary/directory et ne peut plus être choisie ni publiée ; on ne peut la désactiver que si aucune fiche publiée ne l\&#39;utilise. Le code et le type ne changent pas.
      * @endpoint patch /api/admin/vocabulary/directory/{kind}/{code}
      * @param kind Type de l\&#39;entrée : specialty (spécialité) ou audience (public).
      * @param code Code de l\&#39;entrée à modifier.

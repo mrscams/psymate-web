@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.15.0). 107 chemins, 191 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.16.0). 107 chemins, 191 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 
@@ -202,14 +202,14 @@ Corps (`application/json`) : [CreateRequest](#schema-createrequest)
 | 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. ADMIN_ROLE_REQUIRED : compte sans rôle admin ; TWO_FACTOR_REQUIRED : double authentification non activée sur le compte admin. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VOCABULARY_EXISTS : ce code existe déjà pour ce type. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} ; codes de champ : INVALID_VALUE (kind absent ou autre que specialty ou audience), REQUIRED (code, labelFr), INVALID_FORMAT (code hors du format minuscule, chiffres et underscores, 2 à 40 caractères, commençant par une lettre), TOO_LONG (labelFr, labelEn au-delà de 120 caractères), OUT_OF_RANGE (sortOrder hors de 0 à 32767). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} ; codes de champ : INVALID_VALUE (kind absent ou autre que specialty ou audience), REQUIRED (code, labelFr), INVALID_FORMAT (code hors du format minuscule, chiffres et underscores, 2 à 40 caractères, commençant par une lettre), TOO_LONG (labelFr, labelEn, labelAr au-delà de 120 caractères), OUT_OF_RANGE (sortOrder hors de 0 à 32767). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ### `PATCH /api/admin/vocabulary/directory/{kind}/{code}`
 
 **Modifie les libellés, le rang ou l'activation d'une entrée du vocabulaire**
 
-Admin avec double authentification active. Modification partielle : un champ absent reste inchangé, labelEn vide efface le libellé anglais. Une entrée désactivée disparaît de GET /api/vocabulary/directory et ne peut plus être choisie ni publiée ; on ne peut la désactiver que si aucune fiche publiée ne l'utilise. Le code et le type ne changent pas.
+Admin avec double authentification active. Modification partielle : un champ absent reste inchangé, labelEn vide efface le libellé anglais et labelAr vide le libellé arabe. Une entrée désactivée disparaît de GET /api/vocabulary/directory et ne peut plus être choisie ni publiée ; on ne peut la désactiver que si aucune fiche publiée ne l'utilise. Le code et le type ne changent pas.
 
 operationId : `updateAdminDirectoryVocabulary`
 
@@ -228,7 +228,7 @@ Corps (`application/json`) : [PatchRequest](#schema-patchrequest)
 | 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. ADMIN_ROLE_REQUIRED : compte sans rôle admin ; TWO_FACTOR_REQUIRED : double authentification non activée sur le compte admin. |
 | 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VOCABULARY_NOT_FOUND : type inconnu ou code inexistant pour ce type. |
 | 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VOCABULARY_IN_USE : désactivation refusée, au moins une fiche publiée utilise ce code ; le champ usedByPublishedProfiles donne leur nombre. |
-| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} ; codes de champ : REQUIRED (labelFr vide), TOO_LONG (labelFr, labelEn au-delà de 120 caractères), OUT_OF_RANGE (sortOrder hors de 0 à 32767). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] {field, code, message} ; codes de champ : REQUIRED (labelFr vide), TOO_LONG (labelFr, labelEn, labelAr au-delà de 120 caractères), OUT_OF_RANGE (sortOrder hors de 0 à 32767). |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ## <a id="tag-administration-verifications"></a>Administration : vérifications
@@ -1030,7 +1030,7 @@ Corps (`application/json`) : [CreateEntryRequest](#schema-createentryrequest)
 
 **Lance l'export asynchrone de tous les patients du compte**
 
-Public pour la chaîne de sécurité, contrôle fait par la route : compte approuvé connecté (session praticien, corps ignoré), ou compte refusé ou suspendu sans session, qui fournit {email, password, otp?} dans le corps. Un seul export en cours par compte. Réponse 202 asynchrone : jobId et statusUrl à interroger (GET /api/me/export/{jobId}), ou otpRequired sans création de job si la double authentification est active et que otp manque. Le zip (patients.md, puis un .md et un .pdf par patient) est conservé chiffré et téléchargeable 7 jours. Verrouillage de 15 minutes après 5 échecs d'authentification (423 Retry-After).
+Public pour la chaîne de sécurité, contrôle fait par la route : compte approuvé connecté (session praticien, corps ignoré), ou compte refusé ou suspendu sans session, qui fournit {email, password, otp?} dans le corps. Un seul export en cours par compte. Réponse 202 asynchrone : jobId et statusUrl à interroger (GET /api/me/export/{jobId}), ou otpRequired sans création de job si la double authentification est active et que otp manque. Le zip (patients.md, puis un .md et un .pdf par patient) est conservé chiffré et téléchargeable 7 jours. Ses documents sont en français quelle que soit la langue demandée : quand Accept-Language demande l'arabe (ar), ils sont rendus en français (G Q102) ; le passage à l'arabe est proposé pour un second temps. Verrouillage de 15 minutes après 5 échecs d'authentification (423 Retry-After).
 
 operationId : `requestAccountExport`
 
@@ -1089,7 +1089,7 @@ operationId : `downloadAccountExport`
 
 **Exporte le dossier du patient en Markdown ou en PDF**
 
-Session praticien, propriétaire du patient. Le fichier est généré à la volée et renvoyé en pièce jointe (Content-Disposition attachment, nom export-nom-AAAAMMJJ.md ou .pdf). Il contient les séances et les entrées en ordre chronologique, avec le texte de leur version courante. Les entrées privées et archivées n'en sortent jamais, et un lien vers une entrée non exportée est omis. Langue du document : Accept-Language (français par défaut). Le PDF est au thème clair. Aucune pagination.
+Session praticien, propriétaire du patient. Le fichier est généré à la volée et renvoyé en pièce jointe (Content-Disposition attachment, nom export-nom-AAAAMMJJ.md ou .pdf). Il contient les séances et les entrées en ordre chronologique, avec le texte de leur version courante. Les entrées privées et archivées n'en sortent jamais, et un lien vers une entrée non exportée est omis. Langue du document : Accept-Language (français par défaut). Quand Accept-Language demande l'arabe (ar), le document est rendu en français (G Q102) ; le passage à l'arabe est proposé pour un second temps. Le PDF est au thème clair. Aucune pagination.
 
 operationId : `exportPatient`
 
@@ -1835,7 +1835,7 @@ Corps (`application/json`) : [Preferences](#schema-preferences)
 
 **Recherche des entrées dans le dossier d'un patient**
 
-Session praticien propriétaire du patient. Recherche plein texte en français, sans accents ni casse, classée par pertinence avec un boost x1,5 pour les entrées de moins de 90 jours ; sans texte, liste par date décroissante. Avec un texte (sans exclusion -mot) et moins de 3 résultats exacts, la page 1 est complétée par des résultats approchés (tolérance aux fautes, approximate=true). Extraits échappés en HTML avec <mark>. Syntaxe de q, filtres et facettes (chacune ignore son propre filtre) : voir les paramètres ; plusieurs valeurs d'un même filtre se combinent en « ou », les filtres entre eux en « et ». Les entrées privées d'un autre praticien ne sont jamais renvoyées. Pagination par numéro de page (exception au curseur) : 20 résultats par page, 500 pages au plus ; approchés sur la page 1 seulement.
+Session praticien propriétaire du patient. Recherche plein texte en français, sans accents ni casse, classée par pertinence avec un boost x1,5 pour les entrées de moins de 90 jours ; sans texte, liste par date décroissante. Avec un texte (sans exclusion -mot) et moins de 3 résultats exacts, la page 1 est complétée par des résultats approchés (tolérance aux fautes, approximate=true). Extraits échappés en HTML avec <mark>. Syntaxe de q, filtres et facettes (chacune ignore son propre filtre) : voir les paramètres ; plusieurs valeurs d'un même filtre se combinent en « ou », les filtres entre eux en « et ». Les entrées privées d'un autre praticien ne sont jamais renvoyées. Pagination par numéro de page (exception au curseur) : 20 résultats par page, 500 pages au plus ; approchés sur la page 1 seulement. Quel que soit Accept-Language, un texte cherché en arabe est comparé mot à mot (les résultats approchés passent par des trigrammes), sans traitement propre à l'arabe (formes de l'alif, ta marbuta, article collé, racines) (G Q102) ; ce traitement est proposé pour un second temps.
 
 operationId : `searchPatientEntries`
 
@@ -2383,7 +2383,7 @@ operationId : `get_1`
 
 **Synthèse clinique d'un patient sur une fenêtre de temps**
 
-Session praticien propriétaire du patient (fonctionne aussi pour un patient archivé). Une seule réponse porte tout : faits clés, situations actives, tendance d'intensité (moyenne glissante sur 7 jours, 90 points au plus, repères de séances et de médicaments), émotions dominantes comparées à la fenêtre précédente, ressentis réels, brouillons, entrées depuis la dernière séance, 5 séances récentes et résumé « En bref » rédigé par règles, sans IA, dans la langue d'Accept-Language (français par défaut). La fenêtre window borne la tendance, les émotions et les ressentis. Les données viennent d'une projection recalculée à la volée si elle est en retard sur le dossier : la réponse n'est jamais obsolète ; recentActivity est lu en direct. Entrées archivées exclues, entrées privées du praticien incluses.
+Session praticien propriétaire du patient (fonctionne aussi pour un patient archivé). Une seule réponse porte tout : faits clés, situations actives, tendance d'intensité (moyenne glissante sur 7 jours, 90 points au plus, repères de séances et de médicaments), émotions dominantes comparées à la fenêtre précédente, ressentis réels, brouillons, entrées depuis la dernière séance, 5 séances récentes et résumé « En bref » rédigé par règles, sans IA, dans la langue d'Accept-Language (français par défaut). Quand Accept-Language demande l'arabe (ar), ce résumé est rendu en français (G Q102) ; le passage à l'arabe est proposé pour un second temps. La fenêtre window borne la tendance, les émotions et les ressentis. Les données viennent d'une projection recalculée à la volée si elle est en retard sur le dossier : la réponse n'est jamais obsolète ; recentActivity est lu en direct. Entrées archivées exclues, entrées privées du praticien incluses.
 
 operationId : `getPatientOverview`
 
@@ -3163,7 +3163,7 @@ Demande de rendez-vous en ligne (G Q72). Aucun champ libre : ni motif, ni messag
 | `firstName` | string | oui | Prénom, 100 caractères au plus. Obligatoire. |
 | `formShownAt` | string (date-time) | oui | Instant d'affichage du formulaire, ISO 8601 UTC. Obligatoire. Une demande envoyée moins de 3 secondes après cet instant, ou dont l'instant est plus de 5 minutes dans le futur, est ignorée en silence (202 sans ligne ni e-mail). Jusqu'à 5 minutes dans le futur (horloge du client en avance), la demande est acceptée. |
 | `lastName` | string | oui | Nom, 100 caractères au plus. Obligatoire. |
-| `locale` | `fr` \| `en` | non | Langue des e-mails envoyés au demandeur. Défaut : fr. |
+| `locale` | `fr` \| `en` \| `ar` | non | Langue des e-mails envoyés au demandeur. Défaut : fr. |
 | `modality` | `in_person` \| `video` \| `phone` | oui | Modalité, parmi celles que le praticien offre (409 SLOT_NOT_AVAILABLE sinon). Obligatoire. |
 | `phone` | string | non | Téléphone, facultatif, 30 caractères au plus : chiffres, espaces, +, point, tiret, parenthèses, au moins un chiffre (INVALID_FORMAT sinon) ; chaîne vide : aucun téléphone. |
 | `startsAt` | string (date-time) | oui | Début du créneau choisi, instant UTC ISO 8601 : exactement le startsAt d'un créneau offert (GET …/slots). Obligatoire. |
@@ -3246,6 +3246,7 @@ Nouvelle entrée du vocabulaire de l'annuaire (spécialité ou public).
 | --- | --- | --- | --- |
 | `code` | string | oui | Code stable de l'entrée, unique pour le type : commence par une lettre minuscule, puis minuscules, chiffres et underscores, 2 à 40 caractères. Ne change plus ensuite. |
 | `kind` | `specialty` \| `audience` | oui | Type de l'entrée : specialty (spécialité) ou audience (public). |
+| `labelAr` | string | non | Libellé arabe, 120 caractères au plus ; vide ou absent : pas de libellé arabe. |
 | `labelEn` | string | non | Libellé anglais, 120 caractères au plus ; vide ou absent : pas de libellé anglais. |
 | `labelFr` | string | oui | Libellé français, 120 caractères au plus. |
 | `sortOrder` | integer (int32) | non | Rang d'affichage dans le type, de 0 à 32767 ; absent : après le dernier du type. |
@@ -3382,6 +3383,7 @@ Demande de renvoi de l'e-mail de confirmation.
 | `code` | string | non | Code stable de l'émotion : mot anglais en minuscules pour une globale (anxiety, joy…), « c_ » suivi de 8 caractères hexadécimaux pour une personnalisée. |
 | `family` | `joy` \| `trust` \| `fear` \| `surprise` \| `sadness` \| `disgust` \| `anger` \| `anticipation` | non | Famille de la roue de Plutchik à laquelle l'émotion est rattachée. |
 | `intensityLevel` | integer (int32) | non | Niveau d'intensité lexicale Plutchik : 1 faible, 2 moyen, 3 fort. Null pour les ajouts cliniques (anxiety, guilt, shame, emptiness, calm) et pour les émotions personnalisées. |
+| `labelAr` | string | non | Libellé arabe ; null pour une émotion personnalisée (un seul libellé, celui saisi par le praticien) ou pour une globale sans libellé arabe : afficher alors labelFr. |
 | `labelEn` | string | non | Libellé anglais ; null pour une émotion personnalisée (saisie en français seulement). |
 | `labelFr` | string | non | Libellé français affiché. |
 | `scope` | `global` \| `custom` | non | Portée : global = catalogue du produit, custom = créée par le praticien. |
@@ -3630,6 +3632,7 @@ Type d'entrée clinique du catalogue (six types en V1 : note, event, situation, 
 | `code` | `note` \| `event` \| `situation` \| `feeling` \| `session` \| `medication` | non | Code stable du type d'entrée. |
 | `detailTable` | string | non | Nom de la table de détail propre au type (entry_feeling, entry_session, entry_medication) ; null pour les types sans détail (note, event, situation). |
 | `hasDuration` | boolean | non | true si le type porte une durée (situation, session, medication), false sinon. |
+| `labelAr` | string | non | Libellé arabe ; null s'il n'y en a pas : afficher alors labelFr. |
 | `labelEn` | string | non | Libellé anglais. |
 | `labelFr` | string | non | Libellé français affiché. |
 | `sortOrder` | integer (int32) | non | Rang d'affichage, croissant ; la liste est déjà triée dans cet ordre. |
@@ -3857,11 +3860,12 @@ Invité : personne qui n'a pas encore de fiche patient (G Q60). Nom obligatoire,
 
 ### <a id="schema-item"></a>Item
 
-Entrée d'une liste fermée de l'annuaire, avec ses libellés fr et en.
+Entrée d'une liste fermée de l'annuaire, avec ses libellés fr, en et ar.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `code` | string | non | Code stable à envoyer dans le profil ou dans les filtres de recherche (minuscules et underscores, ou code de langue ISO 639-1). |
+| `labelAr` | string | non | Libellé en arabe ; peut être null pour une entrée ajoutée sans : afficher alors labelFr. |
 | `labelEn` | string | non | Libellé en anglais ; peut être null pour une entrée ajoutée sans. |
 | `labelFr` | string | non | Libellé en français. |
 
@@ -3874,6 +3878,7 @@ Entrée du vocabulaire de l'annuaire, active ou non.
 | `active` | boolean | non | true si l'entrée est proposée dans l'annuaire ; false si désactivée (invisible dans GET /api/vocabulary/directory et refusée dans les profils). |
 | `code` | string | non | Code stable de l'entrée, unique pour le type. |
 | `kind` | `specialty` \| `audience` | non | Type de l'entrée : specialty (spécialité) ou audience (public). |
+| `labelAr` | string | non | Libellé arabe ; null s'il n'y en a pas. |
 | `labelEn` | string | non | Libellé anglais ; null s'il n'y en a pas. |
 | `labelFr` | string | non | Libellé français. |
 | `sortOrder` | integer (int32) | non | Rang d'affichage dans le type, de 0 à 32767. |
@@ -3943,8 +3948,10 @@ Type de lien entre deux entrées (huit types), avec la matrice des types d'entr�
 | `allowedTargetTypes` | string[] | non | Codes des types d'entrée admis comme cible du lien. |
 | `code` | `triggers` \| `caused_by` \| `worsens` \| `relieves` \| `co_occurs` \| `follows` \| `part_of` \| `treats` | non | Code stable du type de lien. |
 | `directed` | boolean | non | true si le lien a un sens (source vers cible) ; false si symétrique (co_occurs). |
+| `inverseLabelAr` | string | non | Libellé arabe vu depuis l'entrée cible ; null si non orienté ou s'il n'y en a pas : afficher alors inverseLabelFr. |
 | `inverseLabelEn` | string | non | Libellé anglais vu depuis l'entrée cible ; null si non orienté. |
 | `inverseLabelFr` | string | non | Libellé français vu depuis l'entrée cible ; null si le lien n'est pas orienté. |
+| `labelAr` | string | non | Libellé arabe vu depuis l'entrée source ; null s'il n'y en a pas : afficher alors labelFr. |
 | `labelEn` | string | non | Libellé anglais vu depuis l'entrée source. |
 | `labelFr` | string | non | Libellé français vu depuis l'entrée source. |
 | `lineStyle` | `solid` \| `long_dash` \| `short_dash` \| `dotted` \| `thin` \| `double` | non | Style de trait conseillé pour le graphe. |
@@ -4026,7 +4033,7 @@ Fusion d'une émotion personnalisée dans une autre, annulable pendant 30 jours.
 
 ### <a id="schema-narrativedto"></a>NarrativeDto
 
-Résumé rédigé par règles (jusqu'à 5 phrases, chacune omise si ses données manquent, sans IA), dans la langue de la requête (Accept-Language : français par défaut, anglais si demandé).
+Résumé rédigé par règles (jusqu'à 5 phrases, chacune omise si ses données manquent, sans IA), dans la langue de la requête (Accept-Language : français par défaut, anglais si demandé). Quand Accept-Language demande l'arabe (ar), ce texte est rendu en français (G Q102) ; le passage à l'arabe est proposé pour un second temps.
 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
@@ -4070,7 +4077,7 @@ Synthèse clinique d'un patient pour une fenêtre (30d, 90d ou 12m) : faits clé
 | `emotions` | object | non | Émotions dominantes de la fenêtre. |
 | `facts` | object | non | Faits clés du dossier, indépendants de la fenêtre. |
 | `feelings` | object | non | Ressentis réels de la fenêtre : un point par ressenti, une série par émotion. |
-| `narrative` | object | non | Résumé « En bref » rédigé par règles (sans IA), dans la langue d'Accept-Language. |
+| `narrative` | object | non | Résumé « En bref » rédigé par règles (sans IA), dans la langue d'Accept-Language. Quand Accept-Language demande l'arabe (ar), ce texte est rendu en français (G Q102) ; le passage à l'arabe est proposé pour un second temps. |
 | `recentActivity` | [RecentActivityItemDto](#schema-recentactivityitemdto)[] | non | 10 dernières entrées non archivées saisies ou corrigées, de la plus récente à la plus ancienne, lues en direct (hors projection) ; entrées privées incluses. |
 | `recentSessions` | [RecentSessionDto](#schema-recentsessiondto)[] | non | 5 dernières séances non archivées, de la plus récente à la plus ancienne ; la plus récente porte son compte rendu entier. |
 | `sinceLastSession` | object | non | Entrées saisies depuis la dernière séance clôturée. |
@@ -4152,6 +4159,7 @@ Modification partielle d'une entrée : un champ absent reste inchangé. Le code 
 | Champ | Type | Requis | Description |
 | --- | --- | --- | --- |
 | `active` | boolean | non | false pour désactiver l'entrée (409 VOCABULARY_IN_USE si une fiche publiée l'utilise), true pour la réactiver. |
+| `labelAr` | string | non | Nouveau libellé arabe, 120 caractères au plus ; chaîne vide : efface le libellé arabe. |
 | `labelEn` | string | non | Nouveau libellé anglais, 120 caractères au plus ; chaîne vide : efface le libellé anglais. |
 | `labelFr` | string | non | Nouveau libellé français, non vide, 120 caractères au plus. |
 | `sortOrder` | integer (int32) | non | Nouveau rang d'affichage dans le type, de 0 à 32767. |
@@ -4241,7 +4249,7 @@ Préférences à plat du compte : 21 clés connues, aux noms pointés (par exemp
 | `booking.windows` | [BookingWindow](#schema-bookingwindow)[] | non | Plages hebdomadaires ouvertes à la prise de rendez-vous en ligne, 21 au plus, renvoyées triées par jour puis par début. Deux plages du même jour ne se chevauchent pas (09:00–12:00 puis 12:00–14:00 sont contiguës, donc admises). Plus de 21 plages : 422 OUT_OF_RANGE ; plage mal formée, champ manquant ou inconnu, chevauchement ou autre type : 422 INVALID_VALUE. Liste vide admise. Défaut : []. |
 | `entries.defaultVisibility` | `clinical` \| `private` | non | Visibilité proposée par défaut pour une nouvelle entrée : clinical = clinique, private = privée. Défaut : clinical. |
 | `entryTypes.medicationVisible` | boolean | non | true si le type d'entrée « médication » est proposé à la saisie. Défaut : true pour un psychiatre, false sinon. |
-| `locale` | `fr` \| `en` | non | Langue de l'interface : fr (français) ou en (anglais). Défaut : fr. |
+| `locale` | `fr` \| `en` \| `ar` | non | Langue de l'interface : fr (français), en (anglais) ou ar (arabe). Défaut : fr. |
 | `overview.view` | `simple` \| `complete` | non | Vue d'ensemble du dossier : simple = version condensée, complete = version détaillée. Défaut : simple. |
 | `overview.window` | `30d` \| `90d` \| `12m` | non | Fenêtre de temps de la vue d'ensemble : 30d = 30 jours, 90d = 90 jours, 12m = 12 mois. Défaut : 90d. |
 | `sessions.defaultDurationMin` | integer (int32) | non | Durée proposée par défaut pour une séance, en minutes (entier de 15 à 180). Défaut : 60. |
@@ -4651,6 +4659,7 @@ Nombre de résultats pour une spécialité de la liste fermée.
 | --- | --- | --- | --- |
 | `code` | string | non | Code de la spécialité, à renvoyer dans le filtre specialties. |
 | `count` | integer (int64) | non | Nombre de fiches qui auraient ce code seul, tous les autres filtres appliqués sauf specialties. Exact jusqu'à 500 fiches examinées ; au-delà, il porte sur les 500 premières dans l'ordre du tri (G Q48). |
+| `labelAr` | string | non | Libellé en arabe ; peut être null pour une entrée ajoutée sans : afficher alors labelFr. |
 | `labelEn` | string | non | Libellé en anglais ; peut être null pour une entrée ajoutée sans. |
 | `labelFr` | string | non | Libellé en français. |
 

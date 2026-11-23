@@ -56,7 +56,8 @@ export interface CreateBookingRequest {
 }
 export enum CreateBookingRequestLocaleEnum {
     Fr = 'fr',
-    En = 'en'
+    En = 'en',
+    Ar = 'ar'
 };
 export enum CreateBookingRequestModalityEnum {
     InPerson = 'in_person',

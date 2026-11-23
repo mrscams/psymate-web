@@ -71,7 +71,7 @@ export interface Preferences {
      */
     'entryTypes.medicationVisible'?: boolean;
     /**
-     * Langue de l\'interface : fr (français) ou en (anglais). Défaut : fr.
+     * Langue de l\'interface : fr (français), en (anglais) ou ar (arabe). Défaut : fr.
      */
     locale?: PreferencesLocaleEnum;
     /**
@@ -120,7 +120,8 @@ export enum PreferencesEntriesDefaultVisibilityEnum {
 };
 export enum PreferencesLocaleEnum {
     Fr = 'fr',
-    En = 'en'
+    En = 'en',
+    Ar = 'ar'
 };
 export enum PreferencesOverviewViewEnum {
     Simple = 'simple',

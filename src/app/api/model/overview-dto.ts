@@ -48,7 +48,7 @@ export interface OverviewDto {
      */
     feelings?: FeelingsDto;
     /**
-     * Résumé « En bref » rédigé par règles (sans IA), dans la langue d\'Accept-Language.
+     * Résumé « En bref » rédigé par règles (sans IA), dans la langue d\'Accept-Language. Quand Accept-Language demande l\'arabe (ar), ce texte est rendu en français (G Q102) ; le passage à l\'arabe est proposé pour un second temps.
      */
     narrative?: NarrativeDto;
     /**

@@ -18,6 +18,10 @@ export interface PatchRequest {
      */
     active?: boolean;
     /**
+     * Nouveau libellé arabe, 120 caractères au plus ; chaîne vide : efface le libellé arabe.
+     */
+    labelAr?: string;
+    /**
      * Nouveau libellé anglais, 120 caractères au plus ; chaîne vide : efface le libellé anglais.
      */
     labelEn?: string;

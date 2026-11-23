@@ -30,6 +30,10 @@ export interface LinkTypeView {
      */
     directed?: boolean;
     /**
+     * Libellé arabe vu depuis l\'entrée cible ; null si non orienté ou s\'il n\'y en a pas : afficher alors inverseLabelFr.
+     */
+    inverseLabelAr?: string;
+    /**
      * Libellé anglais vu depuis l\'entrée cible ; null si non orienté.
      */
     inverseLabelEn?: string;
@@ -37,6 +41,10 @@ export interface LinkTypeView {
      * Libellé français vu depuis l\'entrée cible ; null si le lien n\'est pas orienté.
      */
     inverseLabelFr?: string;
+    /**
+     * Libellé arabe vu depuis l\'entrée source ; null s\'il n\'y en a pas : afficher alors labelFr.
+     */
+    labelAr?: string;
     /**
      * Libellé anglais vu depuis l\'entrée source.
      */
