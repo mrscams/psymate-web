@@ -6,7 +6,7 @@ import { AppLocale, formatLocale } from '../../../core/i18n';
 import { DirectoryVocabulary, PractitionerCard } from '../data/directory.models';
 import { practitionerPath } from '../public-paths';
 import { plainText } from './bio';
-import { vocabularyLabel, VocabularyKind } from './labels';
+import { joinLabels, vocabularyLabel, VocabularyKind } from './labels';
 import {
   AvailabilityComponent,
   PractitionerAvatarComponent,
@@ -60,13 +60,13 @@ export class PractitionerCardComponent {
     this.labels('specialties', this.card().specialties.slice(0, CARD_SPECIALTIES_MAX)),
   );
   protected readonly audiences = computed(() =>
-    this.labels('audiences', this.card().audiences).join(', '),
+    joinLabels(this.labels('audiences', this.card().audiences), this.locale()),
   );
   protected readonly modalities = computed(() =>
-    this.labels('modalities', this.card().modalities).join(', '),
+    joinLabels(this.labels('modalities', this.card().modalities), this.locale()),
   );
   protected readonly languages = computed(() =>
-    this.labels('languages', this.card().languages).join(', '),
+    joinLabels(this.labels('languages', this.card().languages), this.locale()),
   );
 
   private labels(kind: VocabularyKind, codes: string[]): string[] {

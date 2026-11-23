@@ -24086,7 +24086,7 @@
       </trans-unit>
       <trans-unit id="public.booking.slots.rateLimited" datatype="html">
         <source>Trop de requêtes depuis votre connexion. Réessayez dans <x id="minutes" equiv-text="retryMinutes(problem.retryAfterSeconds)"/> min.</source>
-        <target state="translated">طلبات كثيرة جدًا من اتصالك. يُرجى إعادة المحاولة بعد انقضاء المهلة (بالدقائق: <x id="minutes" equiv-text="retryMinutes(problem.retryAfterSeconds)"/>).</target>
+        <target state="translated">طلبات كثيرة جدًا من اتصالك. يُرجى إعادة المحاولة لاحقًا. المهلة بالدقائق: <x id="minutes" equiv-text="retryMinutes(problem.retryAfterSeconds)"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/booking-slots.component.ts</context>
           <context context-type="linenumber">64</context>
@@ -29399,7 +29399,7 @@
       </trans-unit>
       <trans-unit id="public.bookingLink.detail.duration" datatype="html">
         <source><x id="minutes" equiv-text="appointment.durationMin"/> min</source>
-        <target state="translated"><x id="minutes" equiv-text="appointment.durationMin"/> (بالدقائق)</target>
+        <target state="translated"><x id="minutes" equiv-text="appointment.durationMin"/> د</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/booking-link-format.ts</context>
           <context context-type="linenumber">47</context>
@@ -29417,7 +29417,7 @@
       </trans-unit>
       <trans-unit id="public.bookingLink.rateLimited" datatype="html">
         <source>Trop de tentatives depuis votre connexion. Réessayez dans <x id="minutes" equiv-text="minutes"/> min.</source>
-        <target state="translated">محاولات كثيرة جدًا من اتصالك. يُرجى إعادة المحاولة بعد انقضاء المهلة (بالدقائق: <x id="minutes" equiv-text="minutes"/>).</target>
+        <target state="translated">محاولات كثيرة جدًا من اتصالك. يُرجى إعادة المحاولة لاحقًا. المهلة بالدقائق: <x id="minutes" equiv-text="minutes"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
           <context context-type="linenumber">64</context>
@@ -29741,7 +29741,7 @@
       </trans-unit>
       <trans-unit id="public.bookingLink.manage.cancelRateLimited" datatype="html">
         <source>L&apos;annulation n&apos;a pas pu être enregistrée. Trop de tentatives depuis votre connexion : réessayez dans <x id="minutes" equiv-text="minutes"/> min.</source>
-        <target state="translated">تعذّر تسجيل الإلغاء. محاولات كثيرة جدًا من اتصالك: يُرجى إعادة المحاولة بعد انقضاء المهلة (بالدقائق: <x id="minutes" equiv-text="minutes"/>).</target>
+        <target state="translated">تعذّر تسجيل الإلغاء. محاولات كثيرة جدًا من اتصالك: يُرجى إعادة المحاولة لاحقًا. المهلة بالدقائق: <x id="minutes" equiv-text="minutes"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/public/ui/booking-link-views.ts</context>
           <context context-type="linenumber">390</context>

@@ -78,6 +78,16 @@ export function vocabularyLabel(
 }
 
 /**
+ * Libellés d'une liste (langues, publics, modalités) sur une ligne : « a, b, c » en français et en
+ * anglais (inchangé) ; en arabe, Intl.ListFormat de la locale de formatage, avec la virgule arabe
+ * et la conjonction (« الفرنسية، والإنجليزية، والعربية »).
+ */
+export function joinLabels(labels: string[], locale: AppLocale): string {
+  if (locale !== 'ar') return labels.join(', ');
+  return new Intl.ListFormat(formatLocale(locale), { type: 'unit', style: 'short' }).format(labels);
+}
+
+/**
  * Nom d'une langue de consultation par Intl.DisplayNames, avec la locale de formatage (Q73). Capitale
  * initiale en français et en anglais (« Allemand ») ; aucune en arabe, qui n'a pas de capitales
  * (docs/design/arabe.md §4).

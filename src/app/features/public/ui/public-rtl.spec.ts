@@ -11,7 +11,7 @@ import { PrivacyPage } from '../pages/privacy.page';
 import { PUBLIC_FACTS } from '../public-facts';
 import { dayLabel, groupByDay, modalitiesSentence, slotRecap, timeLabel } from './booking-format';
 import { ContactFormComponent } from './contact-form.component';
-import { vocabularyLabel } from './labels';
+import { joinLabels, vocabularyLabel } from './labels';
 import { PractitionerCardComponent } from './practitioner-card.component';
 
 // M16-11, features/public de droite à gauche (G Q71, Q73, Q77, Q78 ; docs/design/arabe.md §4, §5,
@@ -61,6 +61,20 @@ describe('formats de la prise de rendez-vous (Q73)', () => {
       'en visio',
     ]);
     expect(sentence).toBe(expected);
+  });
+});
+
+describe('listes de libellés', () => {
+  it('français et anglais : « a, b, c » inchangé ; arabe : Intl.ListFormat de la locale de formatage', () => {
+    const labels = ['Français', 'Anglais', 'Arabe'];
+    expect(joinLabels(labels, 'fr')).toBe('Français, Anglais, Arabe');
+    expect(joinLabels(['French', 'English'], 'en')).toBe('French, English');
+    const arabic = ['الفرنسية', 'الإنجليزية', 'العربية'];
+    expect(joinLabels(arabic, 'ar')).toBe(
+      new Intl.ListFormat(ARABIC_FORMAT_LOCALE, { type: 'unit', style: 'short' }).format(arabic),
+    );
+    expect(joinLabels(arabic, 'ar')).toContain('،');
+    expect(joinLabels([], 'ar')).toBe('');
   });
 });
 
@@ -125,8 +139,9 @@ describe('contenu saisi (Q77)', () => {
     fixture.componentRef.setInput('status', 'rate-limited');
     fixture.componentRef.setInput('retryAt', Date.now() + 3 * 60_000 - 1_000);
     await fixture.whenStable();
-    expect(text((fixture.nativeElement as HTMLElement).querySelector('.notice'))).toBe(
-      'Trop de messages envoyés depuis votre connexion. Réessayez dans 3 min.',
+    // Texte exact, espaces compris (source extraite : une espace avant et après).
+    expect((fixture.nativeElement as HTMLElement).querySelector('.notice')?.textContent).toBe(
+      ' Trop de messages envoyés depuis votre connexion. Réessayez dans 3 min. ',
     );
   });
 });
@@ -144,8 +159,9 @@ describe('nombres au pluriel ICU : rendu français inchangé', () => {
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
     const f = PUBLIC_FACTS;
-    expect(text(el.querySelector('.sub'))).toBe(
-      `La vérification prend au plus ${f.verificationBusinessDays} jours ouvrés. Elle ne bloque pas l'usage de l'outil de suivi.`,
+    // Texte exact, espaces compris.
+    expect(el.querySelector('.sub')?.textContent).toBe(
+      ` La vérification prend au plus ${f.verificationBusinessDays} jours ouvrés. Elle ne bloque pas l'usage de l'outil de suivi. `,
     );
     const steps = [...el.querySelectorAll('.steps ol > li p')].map(text);
     expect(steps[1]).toBe(

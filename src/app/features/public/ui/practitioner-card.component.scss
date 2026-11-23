@@ -110,12 +110,12 @@ $meta-separator: 18px;
   margin-block: 0;
   margin-inline: (-$meta-separator) 0;
   clip-path: inset(0 0 0 $meta-separator);
+  color: var(--text-secondary);
+  font: 13px/1.5 var(--font-ui);
 
   &:dir(rtl) {
     clip-path: inset(0 $meta-separator 0 0);
   }
-  color: var(--text-secondary);
-  font: 13px/1.5 var(--font-ui);
 
   div {
     display: inline-flex;
