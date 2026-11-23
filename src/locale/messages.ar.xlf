@@ -14796,6 +14796,7 @@
       </trans-unit>
       <trans-unit id="links.problem.editType" datatype="html">
         <source> Modifier le type </source>
+        <target state="translated"> تعديل النوع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">12,18</context>
@@ -14804,6 +14805,7 @@
       </trans-unit>
       <trans-unit id="links.from.label" datatype="html">
         <source> Depuis </source>
+        <target state="translated"> من </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">23,25</context>
@@ -14812,6 +14814,7 @@
       </trans-unit>
       <trans-unit id="links.from.change" datatype="html">
         <source> Changer </source>
+        <target state="translated"> تغيير </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">55,58</context>
@@ -14820,6 +14823,7 @@
       </trans-unit>
       <trans-unit id="links.from.searchLabel" datatype="html">
         <source>Rechercher la nouvelle source</source>
+        <target state="translated">البحث عن المصدر الجديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">64,67</context>
@@ -14828,6 +14832,7 @@
       </trans-unit>
       <trans-unit id="links.from.searchPlaceholder" datatype="html">
         <source>Rechercher la nouvelle source…</source>
+        <target state="translated">البحث عن المصدر الجديد…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">73,76</context>
@@ -14836,6 +14841,7 @@
       </trans-unit>
       <trans-unit id="links.relation.label" datatype="html">
         <source> Relation </source>
+        <target state="translated"> العلاقة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">132,135</context>
@@ -14844,6 +14850,7 @@
       </trans-unit>
       <trans-unit id="links.relation.invert" datatype="html">
         <source>Inverser le sens</source>
+        <target state="translated">عكس الاتجاه</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">145,149</context>
@@ -14852,6 +14859,7 @@
       </trans-unit>
       <trans-unit id="links.to.label" datatype="html">
         <source> Vers </source>
+        <target state="translated"> إلى </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">174,177</context>
@@ -14860,6 +14868,7 @@
       </trans-unit>
       <trans-unit id="links.search.label" datatype="html">
         <source>Rechercher une entrée du dossier</source>
+        <target state="translated">البحث عن مُدخَل في الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">181,183</context>
@@ -14868,6 +14877,7 @@
       </trans-unit>
       <trans-unit id="links.search.placeholder" datatype="html">
         <source>Rechercher une entrée…</source>
+        <target state="translated">البحث عن مُدخَل…</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">191,195</context>
@@ -14876,6 +14886,7 @@
       </trans-unit>
       <trans-unit id="links.search.typeLabel" datatype="html">
         <source>Type d&apos;entrée cherché</source>
+        <target state="translated">نوع المُدخَل المطلوب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">197,199</context>
@@ -14884,6 +14895,7 @@
       </trans-unit>
       <trans-unit id="links.search.allTypes" datatype="html">
         <source> Tous les types </source>
+        <target state="translated"> كل الأنواع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">201,203</context>
@@ -14892,6 +14904,7 @@
       </trans-unit>
       <trans-unit id="links.targets.legend" datatype="html">
         <source> Entrée à lier </source>
+        <target state="translated"> المُدخَل المراد ربطه </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">228,230</context>
@@ -14900,6 +14913,7 @@
       </trans-unit>
       <trans-unit id="links.rationale.title" datatype="html">
         <source>Pourquoi</source>
+        <target state="translated">السبب</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">269,272</context>
@@ -14908,6 +14922,7 @@
       </trans-unit>
       <trans-unit id="links.rationale.optional" datatype="html">
         <source>(facultatif)</source>
+        <target state="translated">(اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">273,277</context>
@@ -14916,6 +14931,7 @@
       </trans-unit>
       <trans-unit id="links.sentence.label" datatype="html">
         <source> Le lien se lira </source>
+        <target state="translated"> سيُقرأ الرابط هكذا </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">328,330</context>
@@ -14924,6 +14940,7 @@
       </trans-unit>
       <trans-unit id="links.save" datatype="html">
         <source>Enregistrer le lien</source>
+        <target state="translated">حفظ الرابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">350,352</context>
@@ -14932,6 +14949,7 @@
       </trans-unit>
       <trans-unit id="links.saveAnother" datatype="html">
         <source> Enregistrer et lier une autre </source>
+        <target state="translated"> حفظ وربط مُدخَل آخر </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">360,362</context>
@@ -14940,6 +14958,7 @@
       </trans-unit>
       <trans-unit id="links.cancel" datatype="html">
         <source>Annuler</source>
+        <target state="translated">إلغاء</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.html</context>
           <context context-type="linenumber">363,364</context>
@@ -14948,6 +14967,7 @@
       </trans-unit>
       <trans-unit id="links.editor.title" datatype="html">
         <source>Lier deux entrées</source>
+        <target state="translated">ربط مُدخَلين</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">113</context>
@@ -14956,6 +14976,7 @@
       </trans-unit>
       <trans-unit id="links.editor.subtitle" datatype="html">
         <source><x id="patient" equiv-text="this.data.patientName"/> · le lien est visible dans le graphe et la timeline</source>
+        <target state="translated"><x id="patient" equiv-text="this.data.patientName"/> · يظهر الرابط في شبكة الروابط وفي الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">119</context>
@@ -14964,6 +14985,7 @@
       </trans-unit>
       <trans-unit id="links.editor.subtitleScope" datatype="html">
         <source>Le lien est visible dans le graphe et la timeline</source>
+        <target state="translated">يظهر الرابط في شبكة الروابط وفي الخط الزمني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">120</context>
@@ -14972,6 +14994,7 @@
       </trans-unit>
       <trans-unit id="links.editor.relation" datatype="html">
         <source>Relation</source>
+        <target state="translated">العلاقة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">121</context>
@@ -14980,6 +15003,7 @@
       </trans-unit>
       <trans-unit id="links.from.listLabel" datatype="html">
         <source>Entrées du dossier</source>
+        <target state="translated">مُدخَلات الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">122</context>
@@ -14988,6 +15012,7 @@
       </trans-unit>
       <trans-unit id="links.source.error" datatype="html">
         <source>Impossible de charger cette entrée</source>
+        <target state="translated">تعذّر تحميل هذا المُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">172</context>
@@ -14996,6 +15021,7 @@
       </trans-unit>
       <trans-unit id="links.catalog.error" datatype="html">
         <source>Impossible de charger les types de liens</source>
+        <target state="translated">تعذّر تحميل أنواع الروابط</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">179</context>
@@ -15004,6 +15030,7 @@
       </trans-unit>
       <trans-unit id="links.targets.error" datatype="html">
         <source>Impossible de chercher dans le dossier</source>
+        <target state="translated">تعذّر البحث في الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">195</context>
@@ -15012,6 +15039,7 @@
       </trans-unit>
       <trans-unit id="links.targets.empty" datatype="html">
         <source>Aucune autre entrée trouvée</source>
+        <target state="translated">لم يُعثر على أي مُدخَل آخر</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">196</context>
@@ -15020,6 +15048,7 @@
       </trans-unit>
       <trans-unit id="links.targets.emptyMessage" datatype="html">
         <source>Modifiez la recherche ou le type.</source>
+        <target state="translated">يمكن تعديل البحث أو النوع.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">197</context>
@@ -15028,6 +15057,7 @@
       </trans-unit>
       <trans-unit id="links.placed.error" datatype="html">
         <source>Impossible de charger les liens de cette entrée</source>
+        <target state="translated">تعذّر تحميل روابط هذا المُدخَل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">208</context>
@@ -15036,6 +15066,7 @@
       </trans-unit>
       <trans-unit id="links.placed.empty" datatype="html">
         <source>Aucun lien sur cette entrée pour le moment</source>
+        <target state="translated">لا روابط على هذا المُدخَل حتى الآن</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">209</context>
@@ -15044,6 +15075,7 @@
       </trans-unit>
       <trans-unit id="links.placed.title" datatype="html">
         <source>Liens déjà posés sur cette entrée · <x id="count" equiv-text="count"/></source>
+        <target state="translated">الروابط الموجودة على هذا المُدخَل · <x id="count" equiv-text="count"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">213</context>
@@ -15052,6 +15084,7 @@
       </trans-unit>
       <trans-unit id="links.targets.found" datatype="html">
         <source>Résultats de la recherche</source>
+        <target state="translated">نتائج البحث</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">235</context>
@@ -15060,6 +15093,7 @@
       </trans-unit>
       <trans-unit id="links.targets.recent" datatype="html">
         <source>Entrées récentes du dossier</source>
+        <target state="translated">أحدث مُدخَلات الملف</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">236</context>
@@ -15068,6 +15102,7 @@
       </trans-unit>
       <trans-unit id="links.targets.linked" datatype="html">
         <source>déjà lié (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</source>
+        <target state="translated">مرتبط مسبقًا (<x id="labels" equiv-text="labels.join(&apos;, &apos;)"/>)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">255</context>
@@ -15076,6 +15111,7 @@
       </trans-unit>
       <trans-unit id="links.leave.title" datatype="html">
         <source>Abandonner ce lien ?</source>
+        <target state="translated">تجاهل هذا الرابط؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">469</context>
@@ -15084,6 +15120,7 @@
       </trans-unit>
       <trans-unit id="links.leave.description" datatype="html">
         <source>La cible et le type choisis ne seront pas enregistrés.</source>
+        <target state="translated">لن يُحفظ الهدف ولا النوع المختاران.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">470</context>
@@ -15092,6 +15129,7 @@
       </trans-unit>
       <trans-unit id="links.leave.confirm" datatype="html">
         <source>Abandonner</source>
+        <target state="translated">تجاهل</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">471</context>
@@ -15100,6 +15138,7 @@
       </trans-unit>
       <trans-unit id="links.leave.cancel" datatype="html">
         <source>Continuer</source>
+        <target state="translated">متابعة التحرير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">472</context>
@@ -15108,6 +15147,7 @@
       </trans-unit>
       <trans-unit id="links.editor.incomplete" datatype="html">
         <source>Choisissez une cible et un type de lien permis.</source>
+        <target state="translated">يُرجى اختيار هدف ونوع رابط مسموح به.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">514</context>
@@ -15116,6 +15156,7 @@
       </trans-unit>
       <trans-unit id="links.saved" datatype="html">
         <source>Lien enregistré.</source>
+        <target state="translated">تم حفظ الرابط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">532</context>
@@ -15124,6 +15165,7 @@
       </trans-unit>
       <trans-unit id="links.saved.undo" datatype="html">
         <source>Annuler</source>
+        <target state="translated">تراجع</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">535</context>
@@ -15132,6 +15174,7 @@
       </trans-unit>
       <trans-unit id="links.changed" datatype="html">
         <source>Type du lien modifié.</source>
+        <target state="translated">تم تعديل نوع الرابط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">606</context>
@@ -15140,6 +15183,7 @@
       </trans-unit>
       <trans-unit id="links.removed" datatype="html">
         <source>Lien retiré.</source>
+        <target state="translated">تمت إزالة الرابط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">614</context>
@@ -15148,6 +15192,7 @@
       </trans-unit>
       <trans-unit id="links.undone" datatype="html">
         <source>Lien annulé.</source>
+        <target state="translated">تم التراجع عن الرابط.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/panels/link-editor.panel.ts</context>
           <context context-type="linenumber">634</context>
@@ -15966,6 +16011,7 @@
       </trans-unit>
       <trans-unit id="links.refusal.both" datatype="html">
         <source>« <x id="label" equiv-text="label"/> » : seulement de <x id="sources" equiv-text="sources"/> vers <x id="targets" equiv-text="targets"/>.</source>
+        <target state="translated">« <x id="label" equiv-text="label"/> »: فقط من <x id="sources" equiv-text="sources"/> إلى <x id="targets" equiv-text="targets"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">21</context>
@@ -15974,6 +16020,7 @@
       </trans-unit>
       <trans-unit id="links.refusal.source" datatype="html">
         <source>« <x id="label" equiv-text="label"/> » : seulement depuis <x id="sources" equiv-text="sources"/>.</source>
+        <target state="translated">« <x id="label" equiv-text="label"/> »: فقط من <x id="sources" equiv-text="sources"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">23</context>
@@ -15982,6 +16029,7 @@
       </trans-unit>
       <trans-unit id="links.refusal.target" datatype="html">
         <source>« <x id="label" equiv-text="label"/> » : seulement vers <x id="targets" equiv-text="targets"/>.</source>
+        <target state="translated">« <x id="label" equiv-text="label"/> »: فقط إلى <x id="targets" equiv-text="targets"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">25</context>
@@ -15990,6 +16038,7 @@
       </trans-unit>
       <trans-unit id="links.refusal.reversible" datatype="html">
         <source>Possible en inversant le sens.</source>
+        <target state="translated">ممكن بعكس الاتجاه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">30</context>
@@ -15998,6 +16047,7 @@
       </trans-unit>
       <trans-unit id="links.shape.symmetric" datatype="html">
         <source>Dans le graphe : trait pointillé, sans flèche (le lien vaut dans les deux sens).</source>
+        <target state="translated">في الشبكة: خط منقّط دون سهم (الرابط صالح في الاتجاهين).</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">38</context>
@@ -16006,6 +16056,7 @@
       </trans-unit>
       <trans-unit id="links.shape.longDash" datatype="html">
         <source>Dans le graphe : tirets longs et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: شرطات طويلة وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">42</context>
@@ -16014,6 +16065,7 @@
       </trans-unit>
       <trans-unit id="links.shape.shortDash" datatype="html">
         <source>Dans le graphe : tirets courts et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: شرطات قصيرة وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">44</context>
@@ -16022,6 +16074,7 @@
       </trans-unit>
       <trans-unit id="links.shape.dotted" datatype="html">
         <source>Dans le graphe : pointillé et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: خط منقّط وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">46</context>
@@ -16030,6 +16083,7 @@
       </trans-unit>
       <trans-unit id="links.shape.thin" datatype="html">
         <source>Dans le graphe : trait fin et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: خط رفيع وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">48</context>
@@ -16038,6 +16092,7 @@
       </trans-unit>
       <trans-unit id="links.shape.double" datatype="html">
         <source>Dans le graphe : trait double et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: خط مزدوج وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">50</context>
@@ -16046,6 +16101,7 @@
       </trans-unit>
       <trans-unit id="links.shape.solid" datatype="html">
         <source>Dans le graphe : trait plein et flèche vers la cible.</source>
+        <target state="translated">في الشبكة: خط متّصل وسهم نحو الهدف.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">52</context>
@@ -16054,6 +16110,7 @@
       </trans-unit>
       <trans-unit id="links.problem.exists" datatype="html">
         <source>Ce lien existe déjà · Modifier le type ?</source>
+        <target state="translated">هذا الرابط موجود مسبقًا · تعديل النوع؟</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">60</context>
@@ -16062,6 +16119,7 @@
       </trans-unit>
       <trans-unit id="links.problem.archived" datatype="html">
         <source>Une des deux entrées est archivée : elle ne peut plus être liée.</source>
+        <target state="translated">أحد المُدخَلين مؤرشف: لم يعد ممكنًا ربطه.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">62</context>
@@ -16074,6 +16132,7 @@
       </trans-unit>
       <trans-unit id="links.problem.notFound" datatype="html">
         <source>Cette entrée n&apos;existe plus. Choisissez une autre cible.</source>
+        <target state="translated">هذا المُدخَل لم يعد موجودًا. يُرجى اختيار هدف آخر.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">64</context>
@@ -16082,6 +16141,7 @@
       </trans-unit>
       <trans-unit id="links.problem.forbidden" datatype="html">
         <source>Ces entrées ne font pas partie de vos dossiers.</source>
+        <target state="translated">هذه المُدخَلات ليست من ملفاتك.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">66</context>
@@ -16090,6 +16150,7 @@
       </trans-unit>
       <trans-unit id="links.problem.network" datatype="html">
         <source>Le lien n&apos;a pas été enregistré : le serveur n&apos;a pas répondu. Votre choix est conservé.</source>
+        <target state="translated">لم يُحفظ الرابط: لم يستجب الخادم. اختيارك محفوظ.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">69</context>
@@ -16098,6 +16159,7 @@
       </trans-unit>
       <trans-unit id="links.problem.other" datatype="html">
         <source>Le lien n&apos;a pas été enregistré. Vérifiez votre choix et réessayez.</source>
+        <target state="translated">لم يُحفظ الرابط. يُرجى التحقّق من الاختيار وإعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">70</context>
@@ -16106,6 +16168,7 @@
       </trans-unit>
       <trans-unit id="links.action.exists" datatype="html">
         <source>Un lien de ce type existe déjà entre ces deux entrées.</source>
+        <target state="translated">يوجد رابط من هذا النوع بين هذين المُدخَلين.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">78</context>
@@ -16114,6 +16177,7 @@
       </trans-unit>
       <trans-unit id="links.action.inactive" datatype="html">
         <source>Ce lien a déjà été modifié ou retiré.</source>
+        <target state="translated">سبق تعديل هذا الرابط أو إزالته.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">80</context>
@@ -16122,6 +16186,7 @@
       </trans-unit>
       <trans-unit id="links.action.invalid" datatype="html">
         <source>Ce type n&apos;est pas permis pour ces deux entrées.</source>
+        <target state="translated">هذا النوع غير مسموح به لهذين المُدخَلين.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">86</context>
@@ -16130,6 +16195,7 @@
       </trans-unit>
       <trans-unit id="links.action.failed" datatype="html">
         <source>L&apos;action n&apos;a pas abouti : le serveur n&apos;a pas répondu. Réessayez.</source>
+        <target state="translated">لم يكتمل الإجراء: لم يستجب الخادم. يُرجى إعادة المحاولة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/link-labels.ts</context>
           <context context-type="linenumber">89</context>
@@ -16138,6 +16204,7 @@
       </trans-unit>
       <trans-unit id="links.placed.removedBadge" datatype="html">
         <source>retiré</source>
+        <target state="translated">مُزال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">25,28</context>
@@ -16146,6 +16213,7 @@
       </trans-unit>
       <trans-unit id="links.placed.edit" datatype="html">
         <source> Modifier le type </source>
+        <target state="translated"> تعديل النوع </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">45,48</context>
@@ -16154,6 +16222,7 @@
       </trans-unit>
       <trans-unit id="links.placed.remove" datatype="html">
         <source> Retirer </source>
+        <target state="translated"> إزالة </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">55,58</context>
@@ -16162,6 +16231,7 @@
       </trans-unit>
       <trans-unit id="links.placed.typesError" datatype="html">
         <source>Impossible de lire les types possibles.</source>
+        <target state="translated">تعذّرت قراءة الأنواع الممكنة.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">71,74</context>
@@ -16170,6 +16240,7 @@
       </trans-unit>
       <trans-unit id="links.placed.loadingTypes" datatype="html">
         <source> Lecture des types possibles… </source>
+        <target state="translated"> جارٍ قراءة الأنواع الممكنة… </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">88,91</context>
@@ -16178,6 +16249,7 @@
       </trans-unit>
       <trans-unit id="links.placed.editGroup" datatype="html">
         <source>Nouveau type</source>
+        <target state="translated">النوع الجديد</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/features/graph/ui/placed-links.component.ts</context>
           <context context-type="linenumber">197</context>
