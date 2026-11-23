@@ -33,7 +33,7 @@ jobs:
         run: pnpm check:tokens
       - name: Tests unitaires et de composants (Vitest)
         run: pnpm test
-      - name: Build (FR et EN)
+      - name: Build (FR, EN et AR)
         run: pnpm build
       - uses: actions/upload-artifact@v7
         with:

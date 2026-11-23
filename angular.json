@@ -28,6 +28,10 @@
           "en": {
             "translation": "src/locale/messages.en.xlf",
             "subPath": "en"
+          },
+          "ar": {
+            "translation": "src/locale/messages.ar.xlf",
+            "subPath": "ar"
           }
         }
       },
@@ -76,6 +80,9 @@
             },
             "en": {
               "localize": ["en"]
+            },
+            "ar": {
+              "localize": ["ar"]
             }
           },
           "defaultConfiguration": "production"
@@ -94,6 +101,9 @@
             },
             "en": {
               "buildTarget": "psymate-web:build:development,en"
+            },
+            "ar": {
+              "buildTarget": "psymate-web:build:development,ar"
             }
           },
           "defaultConfiguration": "development"

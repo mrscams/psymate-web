@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../core/http';
-import { toAppLocale } from '../../../core/i18n';
+import { toAppLocale, toOfferedLocale } from '../../../core/i18n';
 import { StateComponent } from '../../../shared/ui';
 import { BookingModality, BookingSlot } from '../data/booking.models';
 import { BookingStore } from '../data/booking.store';
@@ -248,7 +248,7 @@ export class BookingPage {
       lastName: value.lastName,
       email: value.email,
       phone: value.phone,
-      locale: this.locale,
+      locale: toOfferedLocale(this.locale),
       consent: value.consent,
       website: value.website,
       formShownAt: shownAt,

@@ -8,7 +8,7 @@ import { API, WEB } from './e2e/support/env';
  * Deux serveurs avant les tests :
  * - psymate-api sur :8080, lancée à part (../psymate-api : make up && make run, puis
  *   make seed SIZE=small ; en CI, le job e2e). Playwright attend /actuator/health.
- * - l'application construite (pnpm build), servie avec ses deux langues sous /fr/ et /en/
+ * - l'application construite (pnpm build), servie avec ses trois langues sous /fr/, /en/ et /ar/
  *   et le proxy /api → :8080 par tools/serve-dist.mjs. pnpm e2e reconstruit avant de lancer.
  * Adresses : E2E_API_URL, E2E_MAILPIT_URL, E2E_WEB_URL (e2e/support/env.ts).
  */

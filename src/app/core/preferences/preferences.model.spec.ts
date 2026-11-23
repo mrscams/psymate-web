@@ -201,3 +201,13 @@ describe('preferences.model · clés booking.*', () => {
     expect(read['booking.horizonDays']).toBe(14);
   });
 });
+
+/** Langue du compte (M16-08, Q80) : fr ou en, jamais ar avant le contrat 0.16.0 (M16-25). */
+describe('preferences.model · locale', () => {
+  it('admet fr et en, refuse ar (le contrat 0.15.0 le refuserait)', () => {
+    expect(isValidPreference('locale', 'fr')).toBe(true);
+    expect(isValidPreference('locale', 'en')).toBe(true);
+    expect(isValidPreference('locale', 'ar')).toBe(false);
+    expect(completePreferences({ locale: 'ar' }).locale).toBe('fr');
+  });
+});

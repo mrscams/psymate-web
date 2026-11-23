@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { AppLocale, localeSwitchHref, toAppLocale } from '../i18n';
 
 /**
- * Passage d'une langue à l'autre : les deux langues sont deux bundles (/fr/, /en/), donc une
+ * Passage d'une langue à l'autre : chaque langue est un bundle (/fr/, /en/, /ar/), donc une
  * navigation complète vers la même route dans l'autre bundle (core/i18n localeSwitchHref). Isolé
- * dans un service pour que les tests le remplacent.
+ * dans un service pour que les tests le remplacent. Sait mener vers l'arabe ; aucun sélecteur ne
+ * le propose avant l'ouverture (Q80, M16-29).
  */
 @Injectable({ providedIn: 'root' })
 export class LocaleNavigator {

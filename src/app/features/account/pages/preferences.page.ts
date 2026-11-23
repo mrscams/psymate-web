@@ -14,7 +14,7 @@ import { RouterLink } from '@angular/router';
 
 import { Profession, SessionStore } from '../../../core/auth';
 import { ApiProblem } from '../../../core/http';
-import { AppLocale, formatDateTime, SubjectLabelPipe } from '../../../core/i18n';
+import { formatDateTime, OfferedLocale, SubjectLabelPipe } from '../../../core/i18n';
 import {
   BOOKING_MODALITIES,
   BookingModality,
@@ -214,7 +214,7 @@ export class PreferencesPage {
     void this.apply('theme', value);
   }
   protected setLocale(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value as AppLocale;
+    const value = (event.target as HTMLSelectElement).value as OfferedLocale;
     void this.apply('locale', value);
   }
   protected setSubject(value: Preferences['vocabulary.subjectLabel']): void {

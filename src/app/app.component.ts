@@ -23,7 +23,7 @@ import {
 import { filter, map } from 'rxjs';
 
 import { AUTH_PATHS, SessionStore } from './core/auth';
-import { localeSwitchHref, otherLocale, toAppLocale } from './core/i18n';
+import { localeSwitchHref, switchLocales, toAppLocale } from './core/i18n';
 import { ShortcutsHelpComponent } from './features/patient-shell';
 import { DossierSearchBar } from './features/search';
 import { ThemeService } from './core/theme';
@@ -134,7 +134,13 @@ export class AppComponent {
   private readonly baseHref = inject(PlatformLocation).getBaseHrefFromDOM();
 
   protected readonly locale = toAppLocale(inject(LOCALE_ID));
-  protected readonly other = otherLocale(this.locale);
+  /**
+   * Langue du lien « autre langue » : la dernière des langues proposées autres que la courante
+   * (core/i18n switchLocales), donc l'anglais en français, le français en anglais. En arabe, bundle
+   * construit mais pas encore proposé (Q80), l'anglais : c'est la langue que nomme le libellé
+   * source « English », tant que l'arabe n'est pas traduit (M16-28) ni ouvert (M16-29).
+   */
+  protected readonly other = switchLocales(this.locale).at(-1) ?? 'fr';
 
   private readonly navigation = toSignal(
     this.router.events.pipe(

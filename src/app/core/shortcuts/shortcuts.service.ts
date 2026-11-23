@@ -124,12 +124,13 @@ export class ShortcutService {
   handle(event: KeyboardEvent): void {
     if (!this.enabled() || event.defaultPrevented || event.repeat) return;
     if (event.altKey) return;
+    const pressed = shortcutKey(event);
     if (event.ctrlKey || event.metaKey) {
-      if (event.shiftKey || event.key.length !== 1) return;
-      this.dispatch(`ctrl+${event.key.toLowerCase()}`, event);
+      if (event.shiftKey || pressed.length !== 1) return;
+      this.dispatch(`ctrl+${pressed.toLowerCase()}`, event);
       return;
     }
-    const key = normalize(event.key);
+    const key = normalize(pressed);
     if (key !== 'Escape' && isEditableTarget(event.target)) return;
     this.dispatch(key, event);
   }
@@ -140,6 +141,31 @@ export class ShortcutService {
     event.preventDefault();
     registration.handler(event);
   }
+}
+
+/**
+ * Caractère d'une écriture non latine (« ى », « لا », « ١ », « ؟ » sur un clavier arabe ; cyrillique,
+ * grec, hébreu…). Les caractères latins, accentués ou non, et les symboles communs (« é », « & », « ² »
+ * d'un clavier AZERTY) n'en sont pas.
+ */
+const NON_LATIN =
+  /[^\p{Script=Latin}\p{Script=Common}\p{Script=Inherited}]|\p{Script_Extensions=Arabic}/u;
+
+/**
+ * Touche lue pour un raccourci (Q81) : le caractère produit (`event.key`) quand il est latin, ce qui
+ * garde AZERTY et QWERTY tels quels (sur AZERTY, la touche physique KeyM écrit « , » et « ? ») ;
+ * sinon la touche physique (`event.code`) pour les lettres, les chiffres et la barre oblique, comme
+ * sur un clavier arabe, où la touche N écrit « ى » et Maj + / écrit « ؟ ».
+ */
+function shortcutKey(event: KeyboardEvent): string {
+  const { key, code } = event;
+  if (!code || !NON_LATIN.test(key)) return key;
+  const letter = /^Key([A-Z])$/.exec(code);
+  if (letter) return letter[1].toLowerCase();
+  const digit = /^(?:Digit|Numpad)([0-9])$/.exec(code);
+  if (digit) return digit[1];
+  if (code === 'Slash') return event.shiftKey ? '?' : '/';
+  return key;
 }
 
 function normalize(key: string): string {
