@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-23T17:53:42.488Z",
+  "task": "M16-20",
+  "agent": "frontend-feature-dev",
+  "status": "review",
+  "summary": "Bloc de saisie de droite à gauche : propriétés logiques, dir=auto et isolement des valeurs saisies, locale de formatage, catalogLabel, échelle d'intensité dans le sens de lecture ; analyseur sans date en arabe (Q81)",
+  "pr": "https://github.com/mrscams/psymate-web/pull/140",
+  "branch": "M16-20-capture-rtl",
+  "checkout": "agent-a1a24227a8cf45a97"
+}
