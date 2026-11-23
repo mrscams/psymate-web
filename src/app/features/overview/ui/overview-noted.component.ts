@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { EntryIconComponent, entryTypeLabel } from '../../../shared/ui';
 import { Loadable, StateKind } from '../../../shared/util';
 import { ENTRY_QUERY_PARAM } from '../../entries';
@@ -75,7 +76,7 @@ const SCALE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
                 <span class="icon"><pm-entry-icon [type]="entry.type" [size]="14" /></span>
                 <span class="t">
                   @if (entry.feeling; as feeling) {
-                    <span class="name">{{ feeling.label }}</span
+                    <span class="name" dir="auto">{{ feeling.label }}</span
                     >&ngsp;
                     <span class="scale" aria-hidden="true">
                       @for (cell of scale; track cell) {
@@ -84,10 +85,10 @@ const SCALE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
                     </span>
                     <span class="value">{{ feeling.intensity }}/10</span>
                     @if (entry.title) {
-                      &ngsp;<span class="text">{{ entry.title }}</span>
+                      &ngsp;<span class="text" dir="auto">{{ entry.title }}</span>
                     }
                   } @else {
-                    <span class="name">{{ entry.title ?? typeLabel(entry.type) }}</span>
+                    <span class="name" dir="auto">{{ entry.title ?? typeLabel(entry.type) }}</span>
                   }
                   @if (entry.draft) {
                     &ngsp;<span
@@ -213,9 +214,11 @@ const SCALE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
       background: var(--surface-sunken);
       color: var(--text-secondary);
     }
+    /* « 12 nov. 09:20 », un nom de mois : --font-mono-text (police d'interface en arabe, Q76). */
     .when {
       color: var(--text-secondary);
-      font-family: var(--font-mono);
+      font-family: var(--font-mono-text);
+      font-variant-numeric: tabular-nums;
       font-size: 12px;
       white-space: nowrap;
     }
@@ -252,7 +255,8 @@ export class OverviewNotedComponent {
   readonly refreshing = input(false);
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly scale = SCALE;
   protected readonly typeLabel = entryTypeLabel;

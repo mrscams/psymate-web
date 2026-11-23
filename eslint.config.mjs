@@ -50,6 +50,7 @@ const LOGICAL_DIRECTION_ZONES = [
   'src/app/shared',
   'src/app/app.component',
   'src/app/features/account',
+  'src/app/features/overview',
   'src/app/features/patients',
   'src/app/features/timeline',
   'src/theme',

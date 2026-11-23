@@ -16,6 +16,7 @@ import {
   TrendMarkerDto,
   VueDensembleService,
 } from '../../../api';
+import { AppLocale, catalogLabel, toAppLocale } from '../../../core/i18n';
 import { ENTRY_TYPES, EntryType } from '../../../shared/ui';
 import {
   ActiveSituation,
@@ -45,7 +46,8 @@ import {
 export class OverviewApi {
   private readonly api = inject(VueDensembleService);
   private readonly entries = inject(EntreesService);
-  private readonly english = inject(LOCALE_ID).startsWith('en');
+  /** Langue du bundle : libellés d'émotion par catalogLabel (Q78). */
+  private readonly locale = toAppLocale(inject(LOCALE_ID));
 
   async overview(patientId: string, window: OverviewWindow): Promise<OverviewView> {
     const dto = await firstValueFrom(this.api.getPatientOverview(patientId, window));
@@ -54,7 +56,7 @@ export class OverviewApi {
         firstValueFrom(this.entries.getEntry(entryId)),
       ),
       window,
-      this.english,
+      this.locale,
     );
   }
 }
@@ -100,7 +102,11 @@ export async function withoutIntakeOpenSession(
   return { ...dto, drafts: { ...dto.drafts, openSession: undefined } };
 }
 
-export function toView(dto: OverviewDto, requested: OverviewWindow, english = false): OverviewView {
+export function toView(
+  dto: OverviewDto,
+  requested: OverviewWindow,
+  locale: AppLocale = 'fr',
+): OverviewView {
   const facts = dto.facts ?? {};
   return {
     window: oneOf(dto.window, OVERVIEW_WINDOWS) ?? requested,
@@ -130,13 +136,13 @@ export function toView(dto: OverviewDto, requested: OverviewWindow, english = fa
       points: (dto.feelings?.points ?? []).filter((p) => !!p.entryId && !!p.date).map(toPoint),
       series: (dto.feelings?.series ?? [])
         .filter((s) => !!s.emotionCode)
-        .map((s) => toSeries(s, english)),
+        .map((s) => toSeries(s, locale)),
       markers: toMarkers(dto.feelings?.markers),
       ticks: dto.feelings?.ticks ?? [],
     },
     emotions: (dto.emotions?.top ?? [])
       .filter((e) => !!e.code)
-      .map((e) => toEmotion(e, english ? englishLabels(dto.feelings?.series) : null)),
+      .map((e) => toEmotion(e, seriesByCode(dto.feelings?.series), locale)),
     drafts: {
       count: dto.drafts?.count ?? 0,
       // La séance d'accueil (kind intake, jamais clôturée) ne compte pas comme séance ouverte
@@ -227,28 +233,46 @@ function toPoint(dto: FeelingPointDto): FeelingPoint {
   };
 }
 
-function toSeries(dto: FeelingSeriesDto, english: boolean): FeelingSeries {
+/**
+ * Libellé d'une émotion dans la langue du bundle (Q78) : catalogLabel sur le français servi
+ * (`label`) et la traduction des séries ; le code si rien n'est servi. Le contrat 0.15.0 n'a pas
+ * encore de libellé arabe (labelAr : M16-25) : en arabe, le français.
+ */
+function emotionLabel(
+  code: string,
+  labelFr: string | undefined,
+  series: FeelingSeriesDto | undefined,
+  locale: AppLocale,
+): string {
+  return catalogLabel({ labelFr: labelFr ?? '', labelEn: series?.labelEn }, locale) || code;
+}
+
+function toSeries(dto: FeelingSeriesDto, locale: AppLocale): FeelingSeries {
   return {
     emotionCode: dto.emotionCode!,
     family: family(dto.family),
-    label: (english ? dto.labelEn : null) || dto.label || dto.emotionCode!,
+    label: emotionLabel(dto.emotionCode!, dto.label, dto, locale),
     count: dto.count ?? 0,
   };
 }
 
-/** Code → libellé anglais, tiré des séries de ressentis (TopEmotionDto n'a que le français). */
-function englishLabels(series: FeelingSeriesDto[] | undefined): Map<string, string> {
-  const labels = new Map<string, string>();
+/** Code → série de ressentis : ses traductions (TopEmotionDto n'a que le français). */
+function seriesByCode(series: FeelingSeriesDto[] | undefined): Map<string, FeelingSeriesDto> {
+  const byCode = new Map<string, FeelingSeriesDto>();
   for (const item of series ?? []) {
-    if (item.emotionCode && item.labelEn) labels.set(item.emotionCode, item.labelEn);
+    if (item.emotionCode) byCode.set(item.emotionCode, item);
   }
-  return labels;
+  return byCode;
 }
 
-function toEmotion(dto: TopEmotionDto, english: Map<string, string> | null): TopEmotion {
+function toEmotion(
+  dto: TopEmotionDto,
+  series: Map<string, FeelingSeriesDto>,
+  locale: AppLocale,
+): TopEmotion {
   return {
     code: dto.code!,
-    label: english?.get(dto.code!) || dto.label || dto.code!,
+    label: emotionLabel(dto.code!, dto.label, series.get(dto.code!), locale),
     count: dto.count ?? 0,
     previousCount: dto.previousCount ?? 0,
     delta: dto.delta ?? 0,

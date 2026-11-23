@@ -8,6 +8,7 @@ import {
   output,
 } from '@angular/core';
 
+import { formatLocale } from '../../../core/i18n';
 import { StateAction, StateComponent } from '../../../shared/ui';
 import { Loadable, uniqueId } from '../../../shared/util';
 import { OverviewView, sinceFacts } from '../data/overview.model';
@@ -34,7 +35,8 @@ import { emphasize, formatIntensity } from './overview-labels';
         <div class="text">
           <h3 [id]="headingId">{{ heading() }}</h3>
           @if (brief().length) {
-            <p class="brief">
+            <!-- Récit du serveur, en français tant que M16-30 n'est pas faite : dans son sens (Q77). -->
+            <p class="brief" dir="auto">
               @for (sentence of brief(); track $index) {
                 <span class="sentence">
                   @for (part of sentence; track $index) {
@@ -52,8 +54,7 @@ import { emphasize, formatIntensity } from './overview-labels';
             <p class="attention">
               <b i18n="Libellé du point d'attention@@overview.simple.attention.label"
                 >Point d'attention :</b
-              >
-              {{ attention }}
+              >&ngsp;<bdi>{{ attention }}</bdi>
             </p>
           }
         </div>
@@ -170,7 +171,7 @@ import { emphasize, formatIntensity } from './overview-labels';
       color: var(--success);
     }
     .fact b .arrow {
-      margin-left: 2px;
+      margin-inline-start: 2px;
       font-size: 15px;
       color: inherit;
     }
@@ -199,7 +200,8 @@ export class OverviewSinceComponent {
   readonly refreshing = input(false);
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly headingId = uniqueId('overview-since');
   protected readonly view = computed(() => this.overview().data);

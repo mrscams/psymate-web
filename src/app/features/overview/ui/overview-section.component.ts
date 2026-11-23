@@ -82,7 +82,7 @@ import { StateKind, uniqueId } from '../../../shared/util';
       display: none;
     }
     .link {
-      margin-left: auto;
+      margin-inline-start: auto;
       font-size: 13px;
     }
     .link:empty {

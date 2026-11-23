@@ -53,7 +53,7 @@ describe('OverviewApi · toView', () => {
       recentSessions: [{ entryId: 'r', kind: 'contact', modality: 'phone', entryCount: 1 }],
       recentActivity: [{ entryId: 'a', type: 'medication', status: 'draft', version: 2 }],
     };
-    const view = toView(dto as unknown as OverviewDto, '90d', true);
+    const view = toView(dto as unknown as OverviewDto, '90d', 'en');
     expect(view.window).toBe('12m');
     expect(view.facts.flags).toEqual([
       { kind: 'watch', reason: 'Sommeil', setAt: '2026-10-03T09:00:00Z' },
