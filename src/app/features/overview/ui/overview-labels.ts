@@ -1,6 +1,8 @@
 // Libellés et formats de features/overview ($localize, français d'abord ; dates par Intl dans la
-// locale de l'interface, UTC en transit). Les codes viennent du contrat.
+// locale de formatage de core/i18n, Q73 : chiffres latins et calendrier grégorien en arabe ; UTC en
+// transit). Les codes viennent du contrat.
 import { ApiProblem } from '../../../core/http';
+import { formatLocale, toAppLocale } from '../../../core/i18n';
 import {
   FlagKind,
   OverviewFeelings,
@@ -59,7 +61,7 @@ export function sessionKindLabel(kind: SessionKind): string {
 
 /** « 4,5 » : une décimale, séparateur de la locale. */
 export function formatIntensity(value: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
+  return new Intl.NumberFormat(formatLocale(locale), {
     maximumFractionDigits: 1,
     minimumFractionDigits: 1,
   }).format(value);
@@ -69,7 +71,7 @@ export function formatIntensity(value: number, locale: string): string {
 export function formatDay(value: string, locale: string): string {
   const date = new Date(value.length === 10 ? `${value}T00:00:00Z` : value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -84,7 +86,7 @@ export function formatDay(value: string, locale: string): string {
 export function formatLongDay(value: string, locale: string, now: Date = new Date()): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
@@ -106,7 +108,12 @@ export function sessionLine(
   const parts: string[] = [];
   if (session.occurredFrom) {
     const day = formatLongDay(session.occurredFrom, locale, now);
-    parts.push(day.charAt(0).toLocaleUpperCase(locale) + day.slice(1));
+    // Capitale initiale (« Jeudi ») : sans objet pour un texte arabe (docs/design/arabe.md §4).
+    parts.push(
+      toAppLocale(locale) === 'ar'
+        ? day
+        : day.charAt(0).toLocaleUpperCase(formatLocale(locale)) + day.slice(1),
+    );
   } else {
     parts.push('—');
   }
@@ -126,7 +133,7 @@ export function formatShortDay(value: string, locale: string, now: Date = new Da
   const date = new Date(dateOnly ? `${value}T00:00:00Z` : value);
   if (Number.isNaN(date.getTime())) return value;
   const year = dateOnly ? date.getUTCFullYear() : date.getFullYear();
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     day: 'numeric',
     month: 'short',
     year: year === now.getFullYear() ? undefined : 'numeric',
@@ -138,7 +145,10 @@ export function formatShortDay(value: string, locale: string, now: Date = new Da
 export function formatShortDateTime(value: string, locale: string, now: Date = new Date()): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
-  const time = new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+  const time = new Intl.DateTimeFormat(formatLocale(locale), {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(date);
   return `${formatShortDay(value, locale, now)} ${time}`;
 }
 
@@ -153,7 +163,7 @@ export function formatMonth(
   const date = new Date(dateOnly ? `${value}T00:00:00Z` : value);
   if (Number.isNaN(date.getTime())) return value;
   const year = dateOnly ? date.getUTCFullYear() : date.getFullYear();
-  return new Intl.DateTimeFormat(locale, {
+  return new Intl.DateTimeFormat(formatLocale(locale), {
     month: 'short',
     year: short && year === now.getFullYear() ? undefined : 'numeric',
     timeZone: dateOnly ? 'UTC' : undefined,
@@ -165,7 +175,10 @@ export function formatComputedAt(value: string, locale: string, now: Date = new 
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   if (date.toDateString() === now.toDateString()) {
-    return new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date);
+    return new Intl.DateTimeFormat(formatLocale(locale), {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
   }
   return formatShortDateTime(value, locale, now);
 }

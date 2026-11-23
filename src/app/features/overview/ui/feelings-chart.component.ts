@@ -22,7 +22,15 @@ import {
     @if (failed()) {
       <pm-state kind="error" compact [title]="failedTitle" [message]="failedMessage" />
     }
-    <div class="figure" role="img" [attr.aria-label]="summary()" [class.hidden]="failed()">
+    <!-- Graphique temporel : le passé à gauche dans les trois langues (G Q71 point 4, Q75). Le dir
+      d'un élément HTML porte la propriété direction, dont le SVG d'ECharts hérite. -->
+    <div
+      class="figure"
+      dir="ltr"
+      role="img"
+      [attr.aria-label]="summary()"
+      [class.hidden]="failed()"
+    >
       <div #container class="chart" aria-hidden="true"></div>
     </div>
   `,

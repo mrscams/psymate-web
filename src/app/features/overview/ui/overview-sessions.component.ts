@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatLocale } from '../../../core/i18n';
 import { sessionModalityLabel } from '../../../shared/ui';
 import { Loadable, StateKind } from '../../../shared/util';
 import {
@@ -80,7 +81,7 @@ import { OverviewSectionComponent } from './overview-section.component';
               }</span
             >
             @if (session.summary ?? session.summaryFirstLine; as summary) {
-              <p class="s">{{ summary }}</p>
+              <p class="s" dir="auto">{{ summary }}</p>
             }
           </div>
         }
@@ -162,7 +163,8 @@ export class OverviewSessionsComponent {
   readonly refreshing = input(false);
   readonly retry = output<void>();
 
-  private readonly locale = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et calendrier grégorien en arabe. */
+  private readonly locale = formatLocale(inject(LOCALE_ID));
 
   protected readonly view = computed(() => this.overview().data);
   protected readonly state = computed<StateKind | null>(() =>
