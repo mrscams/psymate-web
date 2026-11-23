@@ -26388,6 +26388,7 @@
       </trans-unit>
       <trans-unit id="accountNav.badge.pending" datatype="html">
         <source>en attente</source>
+        <target state="translated">قيد الانتظار</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -26396,6 +26397,7 @@
       </trans-unit>
       <trans-unit id="accountNav.badge.needsMore" datatype="html">
         <source>complément demandé</source>
+        <target state="translated">مطلوب استكمال</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -26404,6 +26406,7 @@
       </trans-unit>
       <trans-unit id="accountNav.badge.approved" datatype="html">
         <source>approuvé</source>
+        <target state="translated">مقبول</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">31</context>
@@ -26412,6 +26415,7 @@
       </trans-unit>
       <trans-unit id="accountNav.label" datatype="html">
         <source>Mon compte</source>
+        <target state="translated">حسابي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">50,51</context>
@@ -26420,6 +26424,7 @@
       </trans-unit>
       <trans-unit id="accountNav.profile" datatype="html">
         <source>Profil public</source>
+        <target state="translated">الملف العام</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">86</context>
@@ -26428,6 +26433,7 @@
       </trans-unit>
       <trans-unit id="accountNav.badge.published" datatype="html">
         <source>publié</source>
+        <target state="translated">منشور</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">89</context>
@@ -26436,6 +26442,7 @@
       </trans-unit>
       <trans-unit id="accountNav.preferences" datatype="html">
         <source>Préférences</source>
+        <target state="translated">التفضيلات</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">96</context>
@@ -26444,6 +26451,7 @@
       </trans-unit>
       <trans-unit id="accountNav.emotions" datatype="html">
         <source>Émotions personnalisées</source>
+        <target state="translated">المشاعر المخصّصة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">100</context>
@@ -26452,6 +26460,7 @@
       </trans-unit>
       <trans-unit id="accountNav.verification" datatype="html">
         <source>Dossier professionnel</source>
+        <target state="translated">الملف المهني</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">104</context>
@@ -26460,6 +26469,7 @@
       </trans-unit>
       <trans-unit id="accountNav.security" datatype="html">
         <source>Compte et sécurité</source>
+        <target state="translated">الحساب والأمان</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">109</context>
@@ -26468,6 +26478,7 @@
       </trans-unit>
       <trans-unit id="accountNav.data" datatype="html">
         <source>Données et export</source>
+        <target state="translated">البيانات والتصدير</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/account-nav/account-nav.component.ts</context>
           <context context-type="linenumber">113</context>
