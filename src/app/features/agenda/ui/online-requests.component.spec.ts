@@ -88,6 +88,18 @@ describe('OnlineRequestsComponent (fiche 15, demandes en ligne)', () => {
     expect(text(el.querySelector('.count-line'))).toBe('1 demande attend votre réponse.');
   });
 
+  it('pluriel ICU et ligne de la demande : texte rendu identique, caractère pour caractère', async () => {
+    const { el } = await render(loaded([sara, hugo]));
+    expect(el.querySelector('.count-line')!.textContent).toBe(
+      '2 demandes attendent votre réponse.',
+    );
+    const first = el.querySelector('ul.req-list button')!;
+    expect(first.querySelector('.who')!.textContent).toBe('Sara Benali · Cabinet');
+    // Nom saisi par le demandeur dans son propre sens ; plage horaire de gauche à droite.
+    expect(first.querySelector('.who [dir="auto"]')!.textContent).toBe('Sara Benali');
+    expect(first.querySelector('.mono')!.getAttribute('dir')).toBe('ltr');
+  });
+
   it('vide : pas de phrase de compteur, état vide de shared/ui/state', async () => {
     const { el } = await render(loaded([]));
     expect(el.querySelector('.count-line')).toBeNull();

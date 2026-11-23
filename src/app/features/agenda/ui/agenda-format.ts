@@ -1,3 +1,4 @@
+import { formatLocale, textDirection, toAppLocale } from '../../../core/i18n';
 import { sessionModalityLabel } from '../../../shared/ui';
 import {
   AgendaRange,
@@ -18,14 +19,42 @@ export interface DateSegment {
   sup?: boolean;
 }
 
-function capitalize(text: string): string {
-  return text.charAt(0).toLocaleUpperCase() + text.slice(1);
+/**
+ * Toutes les mises en forme de l'agenda passent par la locale de formatage (Q73) : chiffres
+ * latins, calendrier grégorien et heures sur 24 h en arabe ; LOCALE_ID inchangé ailleurs.
+ */
+function dateFormat(locale: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  return new Intl.DateTimeFormat(formatLocale(locale), options);
+}
+
+/** Capitale initiale (« Samedi 31 octobre ») ; jamais en arabe, qui n'a pas de capitales. */
+function capitalize(text: string, locale: string): string {
+  if (toAppLocale(locale) === 'ar') return text;
+  return text.charAt(0).toLocaleUpperCase(formatLocale(locale)) + text.slice(1);
+}
+
+/** Une lettre d'une écriture de droite à gauche (hébreu, arabe, syriaque, thaana, formes A et B). */
+const RTL_LETTER = /[֐-ࣿיִ-﷿ﹰ-﻿]/;
+
+/**
+ * Valeur insérée dans une phrase assemblée en TypeScript (toast, aide, nom accessible), où un
+ * `<bdi>` est impossible (Q77) : isolée par les caractères de contrôle Unicode, U+2068 … U+2069
+ * (sens de la valeur) ou U+2066 … U+2069 (de gauche à droite : plage horaire « 14:00–15:00 »,
+ * heure de début à gauche du tiret). En arabe, toujours ; en français et en anglais, seulement un
+ * nom écrit de droite à gauche : un nom en lettres latines y reste inchangé, caractère pour
+ * caractère.
+ */
+export function isolate(value: string, locale: string, direction: 'auto' | 'ltr' = 'auto'): string {
+  if (textDirection(locale) !== 'rtl' && (direction === 'ltr' || !RTL_LETTER.test(value))) {
+    return value;
+  }
+  return `${direction === 'ltr' ? '⁦' : '⁨'}${value}⁩`;
 }
 
 /** « 09:00 » : heure sur 24 h, deux chiffres (JetBrains Mono dans la grille). */
 export function formatTime(value: string | Date, locale: string): string {
   const date = value instanceof Date ? value : new Date(value);
-  return new Intl.DateTimeFormat(locale, {
+  return dateFormat(locale, {
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
@@ -47,14 +76,15 @@ export function formatSpacedTimeRange(startsAt: string, endsAt: string, locale: 
  * avec l'année si demandée.
  */
 export function dateSegments(date: Date, locale: string, withYear: boolean): DateSegment[] {
-  const parts = new Intl.DateTimeFormat(locale, {
+  const french = toAppLocale(locale) === 'fr';
+  const parts = dateFormat(locale, {
     day: 'numeric',
     month: 'long',
     year: withYear ? 'numeric' : undefined,
   }).formatToParts(date);
   const segments: DateSegment[] = [];
   for (const part of parts) {
-    if (part.type === 'day' && part.value === '1' && locale.startsWith('fr')) {
+    if (part.type === 'day' && part.value === '1' && french) {
       segments.push({ text: '1' }, { text: 'er', sup: true });
     } else {
       segments.push({ text: part.value });
@@ -65,38 +95,37 @@ export function dateSegments(date: Date, locale: string, withYear: boolean): Dat
 
 /** « Samedi 31 octobre », « samedi 7 novembre » : jour de la semaine en toutes lettres. */
 export function formatWeekdayDate(date: Date, locale: string, capital = true): string {
-  const text = new Intl.DateTimeFormat(locale, {
+  const text = dateFormat(locale, {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   }).format(date);
-  return capital ? capitalize(text) : text;
+  return capital ? capitalize(text, locale) : text;
 }
 
 /** « 31 oct. », « 19 déc. » : date courte sans année. */
 export function formatDayMonth(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(date);
+  return dateFormat(locale, { day: 'numeric', month: 'short' }).format(date);
 }
 
 /** « Octobre 2026 » (mini-mois, vue mois). */
 export function formatMonthTitle(date: Date, locale: string): string {
-  return capitalize(
-    new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date),
-  );
+  return capitalize(dateFormat(locale, { month: 'long', year: 'numeric' }).format(date), locale);
 }
 
 /** « lun. » : jour de la semaine abrégé (en-têtes de colonnes). */
 export function formatWeekdayShort(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(date);
+  return dateFormat(locale, { weekday: 'short' }).format(date);
 }
 
 /** « L M M J V S D » : initiales des jours, du lundi au dimanche (mini-mois). */
 export function weekdayInitials(locale: string): string[] {
   const monday = new Date(2024, 0, 1);
+  const format = dateFormat(locale, { weekday: 'narrow' });
   return Array.from({ length: 7 }, (_, index) => {
     const day = new Date(monday);
     day.setDate(monday.getDate() + index);
-    return new Intl.DateTimeFormat(locale, { weekday: 'narrow' }).format(day);
+    return format.format(day);
   });
 }
 
@@ -115,12 +144,13 @@ export function rangeSegments(view: AgendaView, range: AgendaRange, locale: stri
       return [
         {
           text: capitalize(
-            new Intl.DateTimeFormat(locale, {
+            dateFormat(locale, {
               weekday: 'long',
               day: 'numeric',
               month: 'long',
               year: 'numeric',
             }).format(from),
+            locale,
           ),
         },
       ];
@@ -128,8 +158,8 @@ export function rangeSegments(view: AgendaView, range: AgendaRange, locale: stri
       // La plage du mois commence au lundi de sa première semaine : le milieu est dans le mois.
       return [{ text: formatMonthTitle(new Date((from.getTime() + last.getTime()) / 2), locale) }];
     default: {
-      if (!locale.startsWith('fr')) {
-        const format = new Intl.DateTimeFormat(locale, {
+      if (toAppLocale(locale) !== 'fr') {
+        const format = dateFormat(locale, {
           day: 'numeric',
           month: 'long',
           year: 'numeric',
@@ -156,17 +186,6 @@ export function periodLabel(view: AgendaView, range: AgendaRange): string | null
     default:
       return null;
   }
-}
-
-/** « 14 séances », « 1 séance », « aucune séance » : compte de la plage affichée. */
-export function sessionCountLabel(count: number): string {
-  if (count === 0) {
-    return $localize`:Aucune séance dans la plage affichée@@agenda.toolbar.sessions.none:aucune séance`;
-  }
-  if (count === 1) {
-    return $localize`:Une séance dans la plage affichée@@agenda.toolbar.sessions.one:1 séance`;
-  }
-  return $localize`:Nombre de séances de la plage affichée@@agenda.toolbar.sessions.many:${count}:count: séances`;
 }
 
 /**
@@ -224,7 +243,7 @@ export function onlineMention(): string {
 
 /** « jeu. 26 nov. » : jour abrégé, quantième et mois court (liste des demandes en ligne). */
 export function formatShortWeekdayDate(date: Date, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
+  return dateFormat(locale, {
     weekday: 'short',
     day: 'numeric',
     month: 'short',
@@ -252,6 +271,7 @@ export function busyName(
 ): string {
   const from = formatTime(startsAt, locale);
   const to = formatTime(endsAt, locale);
+  calendar = isolate(calendar, locale);
   return $localize`:Nom accessible d'un bloc occupé externe@@agenda.busy.name:Indisponible de ${from}:from: à ${to}:to:, agenda ${calendar}:calendar:`;
 }
 
@@ -262,7 +282,7 @@ export function busyName(
 export function conflictMessage(conflicts: readonly Conflict[], locale: string): string | null {
   const first = conflicts[0];
   if (!first) return null;
-  const name = first.patientDisplayName;
+  const name = isolate(first.patientDisplayName, locale);
   const at = formatTime(first.startsAt, locale);
   const others = conflicts.length - 1;
   return others > 0

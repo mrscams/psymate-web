@@ -103,7 +103,8 @@
   .fc-timegrid-slot-label-cushion {
     position: relative;
     top: -7px;
-    padding: 0 8px 0 0;
+    padding-block: 0;
+    padding-inline: 0 8px;
     font: 11px/1 var(--font-mono);
     color: var(--text-secondary);
   }
@@ -176,13 +177,14 @@
   // Semaine et jour : fond teinte + barre gauche 3 px, rayon 6 ; « à confirmer » pointillé ;
   // sélectionné en fond plein, texte blanc, halo.
   .fc-timegrid-event-harness {
-    margin: 0 4px 0 1px;
+    margin-block: 0;
+    margin-inline: 1px 4px;
   }
 
   .fc-timegrid-event,
   .fc-daygrid-event {
     border: 0;
-    border-left: 3px solid var(--tone);
+    border-inline-start: 3px solid var(--tone);
     background: var(--tint);
     box-shadow: none;
     color: var(--text-primary);
@@ -194,14 +196,14 @@
 
     &.tentative {
       border: 1px dashed var(--tone);
-      border-left-width: 3px;
-      border-left-style: solid;
+      border-inline-start-width: 3px;
+      border-inline-start-style: solid;
       background: var(--surface-raised);
     }
 
     // Fond plein de la modalité, assombri de 30 % pour le texte blanc (≥ 5:1 ; la maquette est à 3,9:1).
     &.selected {
-      border-left-color: color-mix(in srgb, var(--tone) 50%, var(--text-primary));
+      border-inline-start-color: color-mix(in srgb, var(--tone) 50%, var(--text-primary));
       background: color-mix(in srgb, var(--tone) 70%, var(--text-primary));
       box-shadow: 0 0 0 3px var(--tint);
       color: var(--surface-raised);

@@ -637,3 +637,83 @@ describe('AgendaPage', () => {
     });
   });
 });
+
+describe('AgendaPage, textes au pluriel et messages entiers (M16-23)', () => {
+  afterEach(() => {
+    document.querySelectorAll('pm-host').forEach((node) => node.remove());
+  });
+
+  const reset = () => {
+    TestBed.resetTestingModule();
+    document.querySelectorAll('pm-host').forEach((node) => node.remove());
+  };
+
+  it('compte des séances au pluriel ICU : texte rendu identique, caractère pour caractère', async () => {
+    const week = await render('/agenda?view=week&date=2026-10-26');
+    expect(week.el.querySelector('.meta')!.textContent).toBe('· semaine 44 · 14 séances');
+    reset();
+
+    const one = await render('/agenda?view=week&date=2026-10-26', {
+      api: {
+        load: vi.fn((range: AgendaRange) => {
+          const data = weekAgenda(range);
+          return Promise.resolve({ ...data, appointments: data.appointments.slice(0, 1) });
+        }),
+      },
+    });
+    expect(one.el.querySelector('.meta')!.textContent).toBe('· semaine 44 · 1 séance');
+    reset();
+
+    const none = await render('/agenda?view=month&date=2026-10-26', {
+      api: {
+        load: vi.fn((range: AgendaRange) =>
+          Promise.resolve({ ...weekAgenda(range), appointments: [] }),
+        ),
+      },
+    });
+    expect(none.el.querySelector('.meta')!.textContent).toBe('· aucune séance');
+  });
+
+  it('toast de création : un message entier par cas de chevauchement', async () => {
+    const at = (day: number) => new Date(2026, 9, day, 9).toISOString();
+    const conflict = (appointmentId: string) => ({
+      appointmentId,
+      patientDisplayName: 'Théo B.',
+      startsAt: at(27),
+      endsAt: at(27),
+      occurrenceStartsAt: at(27),
+    });
+    const series = (count: number) =>
+      Array.from({ length: count }, (_, index) =>
+        appointmentOf({ id: `n-${index + 1}`, seriesId: 's', startsAt: at(27 + index) }),
+      );
+    const cases: [CreatedAppointments, string][] = [
+      [
+        {
+          appointments: [appointmentOf({ id: 'n-1', startsAt: at(27) })],
+          conflicts: [conflict('n-1')],
+        },
+        'Rendez-vous planifié, 1 chevauchement',
+      ],
+      [
+        { appointments: series(2), conflicts: [conflict('n-2')] },
+        '2 rendez-vous planifiés, 1 chevauchement',
+      ],
+      [
+        { appointments: series(3), conflicts: [conflict('n-1'), conflict('n-3'), conflict('n-3')] },
+        '3 rendez-vous planifiés, 2 chevauchements',
+      ],
+      [{ appointments: series(2), conflicts: [] }, '2 rendez-vous planifiés'],
+    ];
+    for (const [created, message] of cases) {
+      const { fixture, el, toasts } = await render('/agenda?view=week&date=2026-10-26', {
+        api: { get: vi.fn().mockResolvedValue(created.appointments[0]) },
+        panelResult: { created },
+      });
+      el.querySelector<HTMLButtonElement>('.toolbar .tb-btn.primary')!.click();
+      await settle(fixture);
+      expect(toasts.toasts()[0].message).toBe(message);
+      reset();
+    }
+  });
+});

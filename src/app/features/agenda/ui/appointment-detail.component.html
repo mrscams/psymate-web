@@ -27,9 +27,11 @@
       }
       <div class="identity">
         @if (item.patient) {
-          <a class="name" [id]="ids.patientLink" [routerLink]="patientLink()">{{ name() }}</a>
+          <a class="name" dir="auto" [id]="ids.patientLink" [routerLink]="patientLink()">{{
+            name()
+          }}</a>
         } @else {
-          <span class="name">{{ name() }}</span>
+          <span class="name" dir="auto">{{ name() }}</span>
         }
         @if (patientMeta(); as meta) {
           <span class="meta">{{ meta }}</span>
@@ -37,7 +39,7 @@
       </div>
     </div>
     <div class="when">
-      {{ dateLabel() }} · <span class="mono">{{ timeLabel() }}</span>
+      {{ dateLabel() }} · <span class="mono" dir="ltr">{{ timeLabel() }}</span>
     </div>
     <div class="facts">
       @for (fact of facts(); track $index) {
@@ -52,7 +54,7 @@
             E-mail
           </dt>
           <dd>
-            <a [href]="'mailto:' + email">{{ email }}</a>
+            <a dir="ltr" [href]="'mailto:' + email">{{ email }}</a>
           </dd>
         }
         @if (contact.phone; as phone) {
@@ -60,13 +62,15 @@
             Téléphone
           </dt>
           <dd>
-            <a [href]="contact.phoneHref">{{ phone }}</a>
+            <a dir="ltr" [href]="contact.phoneHref">{{ phone }}</a>
           </dd>
         }
       </dl>
     }
+    <!-- « Annulé le 12 nov. à 09:14 (motif) » : le motif, saisi, isolé dans un <bdi>. -->
     @if (cancelledLabel(); as cancelled) {
-      <p class="cancelled">{{ cancelled }}</p>
+      <!-- prettier-ignore -->
+      <p class="cancelled">@if (cancelled.reason; as reason) {<ng-container i18n="Rendez-vous annulé, date et motif@@agenda.detail.cancelledReason">{{ cancelled.base }} (<bdi>{{ reason }}</bdi>)</ng-container>} @else {{{ cancelled.base }}}</p>
     }
   </div>
 
@@ -175,6 +179,7 @@
             [id]="ids.reason"
             rows="2"
             formControlName="reason"
+            dir="auto"
             [attr.maxlength]="reasonMax"
             [attr.aria-describedby]="cancelTexts().hint ? ids.reasonHint : null"
           ></textarea>
@@ -327,6 +332,7 @@
         [id]="ids.note"
         rows="2"
         [value]="noteDraft()"
+        dir="auto"
         [readOnly]="!active()"
         [attr.maxlength]="noteMax"
         [attr.aria-describedby]="ids.noteStatus"

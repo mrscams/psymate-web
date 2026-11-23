@@ -417,7 +417,10 @@ export class AppointmentDetailComponent {
     return facts;
   });
 
-  /** « Annulé le 12 nov. à 09:14 · motif : empêchement » pour un rendez-vous annulé. */
+  /**
+   * « Annulé le 12 nov. à 09:14 », suivi du motif entre parenthèses s'il y en a un (le gabarit
+   * l'isole dans un `<bdi>` : texte saisi) ; null si le rendez-vous n'est pas annulé.
+   */
   protected readonly cancelledLabel = computed(() => {
     const item = this.appointment();
     if (item?.status !== 'cancelled') return null;
@@ -425,10 +428,7 @@ export class AppointmentDetailComponent {
     const date = formatDayMonth(new Date(at), this.locale);
     const time = formatTime(at, this.locale);
     const base = $localize`:Rendez-vous annulé, date@@agenda.detail.cancelledAt:Annulé le ${date}:date: à ${time}:time:`;
-    const reason = item.cancelReason?.trim();
-    return reason
-      ? $localize`:Rendez-vous annulé, date et motif@@agenda.detail.cancelledReason:${base}:base: (${reason}:reason:)`
-      : base;
+    return { base, reason: item.cancelReason?.trim() || null };
   });
 
   /** Bloc « Préparer » : en lecture, rempli, ou absent (erreur : seulement les liens). */

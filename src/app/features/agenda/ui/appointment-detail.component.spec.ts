@@ -140,6 +140,33 @@ describe('AppointmentDetailComponent (fiche 15 §5)', () => {
     expect(el.querySelector<HTMLTextAreaElement>('textarea')!.readOnly).toBe(true);
   });
 
+  it('textes saisis isolés : motif en <bdi>, nom et note en dir="auto", heures de gauche à droite', async () => {
+    const { el } = await render({
+      ...base,
+      status: 'cancelled',
+      cancelledAt: new Date(2026, 9, 30, 9, 15).toISOString(),
+      cancelReason: 'empêchement',
+    });
+    const cancelled = el.querySelector('.cancelled')!;
+    // Texte rendu identique au message d'avant, caractère pour caractère (aucune espace perdue).
+    expect(cancelled.textContent).toBe('Annulé le 30 oct. à 09:15 (empêchement)');
+    expect(cancelled.querySelector('bdi')!.textContent).toBe('empêchement');
+    expect(el.querySelector('.identity .name')!.getAttribute('dir')).toBe('auto');
+    expect(el.querySelector('.when .mono')!.getAttribute('dir')).toBe('ltr');
+    expect(el.querySelector('textarea')!.getAttribute('dir')).toBe('auto');
+  });
+
+  it('annulé sans motif : la date seule, sans <bdi>', async () => {
+    const { el } = await render({
+      ...base,
+      status: 'cancelled',
+      cancelledAt: new Date(2026, 9, 30, 9, 15).toISOString(),
+      cancelReason: '  ',
+    });
+    expect(el.querySelector('.cancelled')!.textContent).toBe('Annulé le 30 oct. à 09:15');
+    expect(el.querySelector('.cancelled bdi')).toBeNull();
+  });
+
   it('Annuler : confirmation sur place, motif facultatif → POST cancel, toast, détail fermé', async () => {
     const { fixture, el, button, store, toasts, closed } = await render(base);
     button('Annuler')!.click();

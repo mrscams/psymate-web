@@ -56,7 +56,8 @@
 .close {
   width: 28px;
   height: 28px;
-  margin: -6px -6px 0 0;
+  margin-block: -6px 0;
+  margin-inline: 0 -6px;
   padding: 0;
   border: 0;
   border-radius: 6px;
@@ -272,7 +273,7 @@ textarea {
 }
 
 .saved {
-  margin-left: 6px;
+  margin-inline-start: 6px;
 }
 
 // Formulaires sur place (Déplacer, Annuler, Rattacher) : champs empilés, boutons à droite.

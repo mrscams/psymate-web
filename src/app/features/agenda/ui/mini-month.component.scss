@@ -80,11 +80,13 @@
     font-weight: 500;
 
     &.range-start {
-      border-radius: 6px 0 0 6px;
+      border-start-start-radius: 6px;
+      border-end-start-radius: 6px;
     }
 
     &.range-end {
-      border-radius: 0 6px 6px 0;
+      border-start-end-radius: 6px;
+      border-end-end-radius: 6px;
     }
 
     &.range-start.range-end {
