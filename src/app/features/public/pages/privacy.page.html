@@ -42,7 +42,8 @@
       </li>
       <li i18n="Point visiteurs : formulaire de contact@@public.privacy.visitors.contact">
         Un message envoyé par le formulaire de contact est transmis au praticien ; il n'est rattaché
-        à aucun dossier et il est effacé après {{ facts.contactRetentionDays }} jours.
+        à aucun dossier et il est effacé après
+        {facts.contactRetentionDays, plural, other {{{ facts.contactRetentionDays }} jours}}.
       </li>
     </ul>
   </section>
@@ -61,7 +62,8 @@
       </li>
       <li i18n="Point praticiens : justificatifs@@public.privacy.practitioners.documents">
         Les scans de diplômes et de pièces d'identité sont supprimés
-        {{ facts.documentsPurgeDays }} jours après la décision.
+        {facts.documentsPurgeDays, plural, other {{{ facts.documentsPurgeDays }} jours}} après la
+        décision.
       </li>
       <li i18n="Point praticiens : export@@public.privacy.practitioners.export">
         Le praticien peut à tout moment exporter ses données depuis son compte, puis supprimer son

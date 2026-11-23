@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 
-import { formatDate, toAppLocale } from '../../../core/i18n';
+import { formatDate, formatLocale, toAppLocale } from '../../../core/i18n';
 import { StateAction, StateComponent, ToastService } from '../../../shared/ui';
 import { stateKind } from '../../../shared/util';
 import { paramsFromQuery } from '../data/directory-query';
@@ -32,7 +32,13 @@ import { VocabularyStore } from '../data/vocabulary.store';
 import { bookingPath, PUBLIC_FEATURE_PATHS } from '../public-paths';
 import { parseBio } from '../ui/bio';
 import { ContactFormComponent } from '../ui/contact-form.component';
-import { professionLabel, professionPlural, vocabularyLabel, VocabularyKind } from '../ui/labels';
+import {
+  joinLabels,
+  professionLabel,
+  professionPlural,
+  vocabularyLabel,
+  VocabularyKind,
+} from '../ui/labels';
 import {
   AvailabilityComponent,
   PractitionerAvatarComponent,
@@ -94,7 +100,9 @@ export class PractitionerPage {
   // Libellés de la fiche (liste fermée, langue de l'interface).
   protected readonly specialties = computed(() => this.labels('specialties', 'specialties'));
   protected readonly audiences = computed(() => this.labels('audiences', 'audiences'));
-  protected readonly languages = computed(() => this.labels('languages', 'languages').join(', '));
+  protected readonly languages = computed(() =>
+    joinLabels(this.labels('languages', 'languages'), this.locale),
+  );
   /** Les trois modalités, proposées ou non (fiche 09) ; rien si le praticien n'en a déclaré aucune. */
   protected readonly modalities = computed(() => {
     const profile = this.profile();
@@ -106,10 +114,12 @@ export class PractitionerPage {
     }));
   });
   protected readonly offeredModalities = computed(() =>
-    this.modalities()
-      .filter((modality) => modality.offered)
-      .map((modality) => modality.label.toLocaleLowerCase(this.locale))
-      .join(', '),
+    joinLabels(
+      this.modalities()
+        .filter((modality) => modality.offered)
+        .map((modality) => modality.label.toLocaleLowerCase(formatLocale(this.locale))),
+      this.locale,
+    ),
   );
   protected readonly bio = computed(() => parseBio(this.profile()?.bio ?? null));
   protected readonly professionLabel = computed(() =>

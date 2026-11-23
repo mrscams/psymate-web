@@ -1,5 +1,5 @@
-import { AppLocale } from '../../../core/i18n';
-import { Availability, DirectoryVocabulary, VocabularyItem } from '../data/directory.models';
+import { AppLocale, catalogLabel, formatLocale } from '../../../core/i18n';
+import { Availability, DirectoryVocabulary } from '../data/directory.models';
 
 /** Libellé d'une profession (fiche 09 : « Coach », jamais « personal coach »). */
 export function professionLabel(code: string): string {
@@ -61,8 +61,8 @@ export type VocabularyKind = keyof DirectoryVocabulary;
 
 /**
  * Libellé d'un code de liste fermée dans la langue de l'interface : libellé du vocabulaire
- * (l'anglais retombe sur le français s'il manque), sinon un secours (modalités : texte de
- * l'interface ; langues : Intl.DisplayNames ; autres : le code).
+ * (catalogLabel, Q78 : l'anglais ou l'arabe retombe sur le français s'il manque), sinon un secours
+ * (modalités : texte de l'interface ; langues : Intl.DisplayNames ; autres : le code).
  */
 export function vocabularyLabel(
   vocabulary: DirectoryVocabulary | null,
@@ -71,20 +71,33 @@ export function vocabularyLabel(
   locale: AppLocale,
 ): string {
   const item = vocabulary?.[kind].find((candidate) => candidate.code === code);
-  if (item) return itemLabel(item, locale);
+  if (item) return catalogLabel(item, locale);
   if (kind === 'modalities') return modalityFallback(code);
   if (kind === 'languages') return languageName(code, locale);
   return code;
 }
 
-export function itemLabel(item: VocabularyItem, locale: AppLocale): string {
-  return locale === 'en' && item.labelEn ? item.labelEn : item.labelFr;
+/**
+ * Libellés d'une liste (langues, publics, modalités) sur une ligne : « a, b, c » en français et en
+ * anglais (inchangé) ; en arabe, Intl.ListFormat de la locale de formatage, avec la virgule arabe
+ * et la conjonction (« الفرنسية، والإنجليزية، والعربية »).
+ */
+export function joinLabels(labels: string[], locale: AppLocale): string {
+  if (locale !== 'ar') return labels.join(', ');
+  return new Intl.ListFormat(formatLocale(locale), { type: 'unit', style: 'short' }).format(labels);
 }
 
+/**
+ * Nom d'une langue de consultation par Intl.DisplayNames, avec la locale de formatage (Q73). Capitale
+ * initiale en français et en anglais (« Allemand ») ; aucune en arabe, qui n'a pas de capitales
+ * (docs/design/arabe.md §4).
+ */
 function languageName(code: string, locale: AppLocale): string {
   try {
-    const name = new Intl.DisplayNames([locale], { type: 'language' }).of(code);
-    return name ? name.charAt(0).toLocaleUpperCase(locale) + name.slice(1) : code;
+    const tag = formatLocale(locale);
+    const name = new Intl.DisplayNames([tag], { type: 'language' }).of(code);
+    if (!name) return code;
+    return locale === 'ar' ? name : name.charAt(0).toLocaleUpperCase(tag) + name.slice(1);
   } catch {
     return code;
   }

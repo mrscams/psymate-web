@@ -19,7 +19,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, RouterLink } from '@angular/router';
 
 import { ApiProblem } from '../../../core/http';
-import { toAppLocale, toOfferedLocale } from '../../../core/i18n';
+import { formatLocale, toAppLocale, toOfferedLocale } from '../../../core/i18n';
 import { StateComponent } from '../../../shared/ui';
 import { BookingModality, BookingSlot } from '../data/booking.models';
 import { BookingStore } from '../data/booking.store';
@@ -88,6 +88,8 @@ export class BookingPage {
   private readonly destroyRef = inject(DestroyRef);
   private readonly browser = isPlatformBrowser(inject(PLATFORM_ID));
   private readonly localeId = inject(LOCALE_ID);
+  /** Locale de formatage (Q73) : chiffres latins et 24 h en arabe. */
+  private readonly formatTag = formatLocale(this.localeId);
   private readonly locale = toAppLocale(this.localeId);
 
   protected readonly titles = TITLES;
@@ -132,7 +134,7 @@ export class BookingPage {
     if (!settings) return [];
     return [
       $localize`:Durée d'un créneau@@public.booking.duration:Créneaux de ${settings.slotDurationMin}:minutes: min`,
-      modalitiesSentence(settings.modalities, this.localeId),
+      modalitiesSentence(settings.modalities, this.formatTag),
     ].filter(Boolean);
   });
   protected readonly mode = computed(() => {
@@ -156,13 +158,13 @@ export class BookingPage {
     const slot = this.step() === 'sent' ? this.sent()?.slot : this.chosen();
     if (!settings || !slot) return null;
     return {
-      ...slotRecap(slot, settings.timezone, this.localeId),
-      zone: zoneLabel(settings.timezone, this.localeId, new Date(slot.startsAt)),
+      ...slotRecap(slot, settings.timezone, this.formatTag),
+      zone: zoneLabel(settings.timezone, this.formatTag, new Date(slot.startsAt)),
     };
   });
   protected readonly sentModality = computed(() => {
     const modality = this.sent()?.modality;
-    return modality ? modalityInline(modality, this.localeId) : '';
+    return modality ? modalityInline(modality, this.formatTag) : '';
   });
 
   constructor() {
