@@ -210,7 +210,7 @@ test('vocabulaire : émotions, journal des fusions et tags', async ({ page, requ
       localStorage.setItem(`vocabulary.emotionMerges.${owner}`, JSON.stringify([entry])),
     [me.id, { merge, sourceLabel: 'حزن عابر', targetLabel: 'Morosité' }] as const,
   );
-  await created(request.post(`${API}/api/tags`, { data: { label: 'قلق' } }));
+  await created(request.post(`${API}/api/tags`, { data: { label: 'أرق' } }));
   await created(request.post(`${API}/api/tags`, { data: { label: 'Travail' } }));
 
   await openArabic(page, 'emotions');
@@ -239,7 +239,7 @@ test('vocabulaire : émotions, journal des fusions et tags', async ({ page, requ
   const tags = page.locator('table .name');
   await expect(tags).toHaveCount(2);
   for (const tag of await tags.all()) await expect(tag).toHaveAttribute('dir', 'auto');
-  expect(await direction(tags.filter({ hasText: 'قلق' }))).toBe('rtl');
+  expect(await direction(tags.filter({ hasText: 'أرق' }))).toBe('rtl');
   expect(await page.locator('table td.mono').first().textContent()).not.toMatch(ARABIC_INDIC);
   await checkAndShoot(page, 'tags');
 });

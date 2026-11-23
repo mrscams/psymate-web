@@ -92,8 +92,8 @@ const SPECIALTIES_SHOWN = 3;
 
       @if (fields().fees.trim(); as fees) {
         <p class="line">
-          <span class="key" i18n="Tarif dans l'aperçu@@profile.preview.fees">Tarif :</span>
-          <bdi>{{ fees }}</bdi>
+          <span class="key" i18n="Tarif dans l'aperçu@@profile.preview.fees">Tarif :</span
+          >&ngsp;<bdi>{{ fees }}</bdi>
         </p>
       }
 
@@ -112,8 +112,8 @@ const SPECIALTIES_SHOWN = 3;
 
       @if (fields().websiteUrl.trim(); as website) {
         <p class="line">
-          <span class="key" i18n="Site web dans l'aperçu@@profile.preview.website">Site web :</span>
-          <bdi dir="ltr">{{ website }}</bdi>
+          <span class="key" i18n="Site web dans l'aperçu@@profile.preview.website">Site web :</span
+          >&ngsp;<bdi dir="ltr">{{ website }}</bdi>
         </p>
       }
 
