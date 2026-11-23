@@ -1,0 +1,45 @@
+// expect: none
+// Permis : propriétés logiques, sens vertical, raccourcis symétriques, sélecteurs qui ressemblent à
+// des déclarations (a:hover, .left:hover). Un commentaire qui cite margin-left: 8px ne compte pas.
+/* Idem pour right: 0 dans un commentaire de bloc. */
+.item {
+  margin-inline-start: 8px;
+  padding-inline: 10px 8px;
+  border-inline-end: 1px solid var(--border-subtle);
+  inset-inline-end: 16px;
+  inset-inline: 0;
+  top: 0;
+  bottom: 0;
+  margin-top: 4px;
+  margin: 0 auto;
+  padding: 12px 24px 0;
+  padding: 4px 8px 4px 8px;
+  inset: 0;
+  text-align: start;
+  float: inline-end;
+  clear: both;
+  border-radius: 6px 6px 0 0;
+  border-start-end-radius: 6px;
+  border-width: 0 1px;
+  letter-spacing: normal;
+  transition:
+    width 120ms ease-out,
+    padding 120ms ease-out;
+
+  &:dir(rtl) {
+    box-shadow: -8px 0 32px var(--scrim);
+  }
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+.left:hover,
+.right:focus {
+  color: var(--primary);
+}
+
+$map: (
+  primary: var(--primary),
+);

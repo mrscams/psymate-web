@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : marge physique (margin-inline-start attendu).
+.item {
+  margin-left: 8px;
+}

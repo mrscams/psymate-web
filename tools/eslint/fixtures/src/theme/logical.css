@@ -1,0 +1,11 @@
+/* expect: none */
+/* Permis : feuille du thème en propriétés logiques ; les couleurs y sont permises. */
+:lang(ar) {
+  --font-ui: 'IBM Plex Sans Arabic', Inter, sans-serif;
+}
+
+.sr-only {
+  position: absolute;
+  inset-inline-start: 0;
+  color: #1e2633;
+}

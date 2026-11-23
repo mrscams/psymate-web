@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : couleur d'une bordure physique (border-inline-start-color attendu).
+.toast.success {
+  border-left-color: var(--success);
+}

@@ -39,6 +39,26 @@ const elements = [
 
 const featureIndex = { type: 'feature', fileInternalPath: 'index.ts' };
 
+/**
+ * Zones converties aux propriétés logiques (G Q74, docs/design/arabe.md §2) : la règle
+ * psymate/no-physical-direction y est active. Une ligne par zone, dossier ou fichier sans extension
+ * (ses .ts, .html, .scss et .css). Chaque tâche de feature M16-10 à M16-24 ajoute la sienne ; M16-29
+ * remplace la liste par tout src.
+ */
+const LOGICAL_DIRECTION_ZONES = [
+  'src/app/shared',
+  'src/app/app.component',
+  'src/theme',
+  'src/styles',
+];
+
+/** Fichiers d'une zone, et leurs homologues dans les fixtures (tools/eslint/fixtures/src/…). */
+const zoneFiles = (zone) =>
+  [zone, `tools/eslint/fixtures/${zone}`].flatMap((path) => [
+    `${path}/**/*.{ts,html,scss,css}`,
+    `${path}.{ts,html,scss,css}`,
+  ]);
+
 const boundaryPolicies = [
   // Racine (app.config.ts, app.routes.ts, app.component.ts) : core, shared, l'index public des features.
   {
@@ -147,14 +167,22 @@ export default defineConfig([
     },
   },
 
-  // Aucune couleur en dur dans src/app (src/theme/ en est la seule source).
+  // Feuilles de style lues comme du texte par les règles psymate (ESLint ne sait pas lire le SCSS).
   {
-    files: ['src/app/**/*.scss', 'tools/eslint/fixtures/src/app/**/*.scss'],
+    files: ['src/**/*.{scss,css}', 'tools/eslint/fixtures/src/**/*.{scss,css}'],
     languageOptions: { parser: scssTextParser },
   },
+  // Aucune couleur en dur dans src/app (src/theme/ en est la seule source).
   {
     files: ['src/app/**/*.{ts,html,scss}', 'tools/eslint/fixtures/src/app/**/*.{ts,html,scss}'],
     plugins: { psymate },
     rules: { 'psymate/no-hardcoded-color': 'error' },
+  },
+
+  // Propriétés logiques seulement dans les zones converties (G Q74, M16-09).
+  {
+    files: LOGICAL_DIRECTION_ZONES.flatMap(zoneFiles),
+    plugins: { psymate },
+    rules: { 'psymate/no-physical-direction': 'error' },
   },
 ]);

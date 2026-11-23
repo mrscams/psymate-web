@@ -1,0 +1,6 @@
+// expect: psymate/no-physical-direction
+// Violation : alignement physique, même avec !important et sur une ligne de plusieurs déclarations.
+.error {
+  display: flex;
+  text-align: right !important;
+}

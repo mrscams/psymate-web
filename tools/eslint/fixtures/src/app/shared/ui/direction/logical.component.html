@@ -1,0 +1,6 @@
+<!-- expect: none -->
+<!-- Permis : styles logiques ou symétriques dans un gabarit ; « left » hors d'un style ne compte pas. -->
+<p style="margin: 0 auto; text-align: start" class="left" [style.margin-inline-start.px]="indent">
+  left: 0
+</p>
+<div [style.width.px]="width" [style.top.px]="top" [attr.data-side]="'left'">Texte</div>

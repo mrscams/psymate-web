@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : clear physique (clear: inline-start attendu).
+.after {
+  clear: left;
+}

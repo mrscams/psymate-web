@@ -1,0 +1,5 @@
+// expect: psymate/no-physical-direction
+// Violation : rayon d'un coin physique (border-start-end-radius attendu).
+.tab {
+  border-top-right-radius: 6px;
+}
