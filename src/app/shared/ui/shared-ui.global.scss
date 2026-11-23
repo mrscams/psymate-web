@@ -121,12 +121,14 @@ input:is([type='checkbox'], [type='radio']):not([class*='mdc-']) {
   &:dir(rtl) {
     box-shadow: 8px 0 32px var(--scrim);
   }
+}
 
-  .cdk-dialog-container {
-    display: block;
-    height: 100%;
-    outline: none;
-  }
+// Conteneur du dialogue CDK dans les deux panes (panneau latéral, tiroir de navigation) : une seule
+// règle pour les deux (M16-09B, octets du bundle initial).
+:is(.pm-side-panel-pane, .pm-nav-drawer-pane) .cdk-dialog-container {
+  display: block;
+  height: 100%;
+  outline: none;
 }
 
 @media (max-width: 600px) {
@@ -149,12 +151,6 @@ input:is([type='checkbox'], [type='radio']):not([class*='mdc-']) {
 
   &:dir(rtl) {
     box-shadow: -8px 0 32px color-mix(in srgb, var(--scrim) 40%, transparent);
-  }
-
-  .cdk-dialog-container {
-    display: block;
-    height: 100%;
-    outline: none;
   }
 }
 
