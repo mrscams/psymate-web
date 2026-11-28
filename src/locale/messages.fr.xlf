@@ -11929,6 +11929,126 @@
         </context-group>
         <note priority="1" from="description">Recours déjà ouvert</note>
       </trans-unit>
+      <trans-unit id="billing.pageTitle.new" datatype="html">
+        <source>Nouvelle facture · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/billing.routes.ts</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de l&apos;éditeur d&apos;une nouvelle facture</note>
+      </trans-unit>
+      <trans-unit id="billing.pageTitle.invoices" datatype="html">
+        <source>Facturation · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/billing.routes.ts</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet du module Facturation (liste des factures)</note>
+      </trans-unit>
+      <trans-unit id="billing.pageTitle.billable" datatype="html">
+        <source>À facturer · Facturation · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/billing.routes.ts</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet de « À facturer » (module Facturation)</note>
+      </trans-unit>
+      <trans-unit id="billing.pageTitle.payments" datatype="html">
+        <source>Paiements · Facturation · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/billing.routes.ts</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des paiements (module Facturation)</note>
+      </trans-unit>
+      <trans-unit id="billing.pageTitle.settings" datatype="html">
+        <source>Réglages · Facturation · PsyMate</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/billing.routes.ts</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+        <note priority="1" from="description">Titre d&apos;onglet des réglages de facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.shortcut.new" datatype="html">
+        <source>Nouvelle facture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/pages/billing.page.ts</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <note priority="1" from="description">Aide des raccourcis (module Facturation)</note>
+      </trans-unit>
+      <trans-unit id="billing.editor.title" datatype="html">
+        <source>Nouvelle facture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/pages/new-invoice.page.html</context>
+          <context context-type="linenumber">7,10</context>
+        </context-group>
+        <note priority="1" from="description">Titre de l&apos;éditeur d&apos;une nouvelle facture</note>
+      </trans-unit>
+      <trans-unit id="billing.editor.back" datatype="html">
+        <source>Retour aux factures</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/pages/new-invoice.page.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de retour de l&apos;éditeur de facture vers la liste</note>
+      </trans-unit>
+      <trans-unit id="billing.header.title" datatype="html">
+        <source> Facturation </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.html</context>
+          <context context-type="linenumber">4,8</context>
+        </context-group>
+        <note priority="1" from="description">Titre du module Facturation (G Q67 : le carreau dit Facture)</note>
+      </trans-unit>
+      <trans-unit id="billing.header.new" datatype="html">
+        <source>Nouvelle facture</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.html</context>
+          <context context-type="linenumber">13,17</context>
+        </context-group>
+        <note priority="1" from="description">Bouton de l&apos;en-tête du module Facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.header.tabs" datatype="html">
+        <source>Facturation</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.html</context>
+          <context context-type="linenumber">22,23</context>
+        </context-group>
+        <note priority="1" from="description">Étiquette des onglets du module Facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.tab.invoices" datatype="html">
+        <source>Factures</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.ts</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <note priority="1" from="description">Onglet Factures du module Facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.tab.billable" datatype="html">
+        <source>À facturer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.ts</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <note priority="1" from="description">Onglet À facturer du module Facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.tab.payments" datatype="html">
+        <source>Paiements</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.ts</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+        <note priority="1" from="description">Onglet Paiements du module Facturation</note>
+      </trans-unit>
+      <trans-unit id="billing.tab.settings" datatype="html">
+        <source>Réglages</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/features/billing/ui/billing-header.component.ts</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <note priority="1" from="description">Onglet Réglages du module Facturation</note>
+      </trans-unit>
       <trans-unit id="capture.types.label" datatype="html">
         <source>Type d&apos;entrée</source>
         <context-group purpose="location">
@@ -25234,9 +25354,9 @@
         <source>Facture</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/ui/nav-rail/nav-rail.component.ts</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">62</context>
         </context-group>
-        <note priority="1" from="description">Carreau Facture du rail de navigation, à réaliser</note>
+        <note priority="1" from="description">Carreau Facture du rail de navigation, ouvre le module Facturation</note>
       </trans-unit>
       <trans-unit id="navRail.close" datatype="html">
         <source>Fermer la navigation</source>

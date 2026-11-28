@@ -7,7 +7,10 @@ import tseslint from 'typescript-eslint';
 
 import psymate, { scssTextParser } from './tools/eslint/psymate-plugin.mjs';
 
-/** Features du dossier patient : features/admin n'en importe jamais rien (handbook §5, C6). */
+/**
+ * Features du dossier patient : features/admin n'en importe jamais rien (handbook §5, C6). billing
+ * (facturation, G Q68) en fait partie : elle porte des données de patients.
+ */
 const PATIENT_FEATURES = [
   'patients',
   'patient-shell',
@@ -18,6 +21,7 @@ const PATIENT_FEATURES = [
   'search',
   'capture',
   'profile360',
+  'billing',
 ];
 
 /** Seul fichier autorisé à importer le client généré : data/<x>.api.ts (une couche « service de données »). */

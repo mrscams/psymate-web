@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-28T19:37:30.198Z",
+  "task": "M15-14",
+  "agent": "frontend-feature-dev",
+  "status": "done",
+  "summary": "Contrat 0.17.0 tiré, carreau Facture relié à /facturation, feature billing (en-tête de module, quatre onglets, pages minimales), billing dans PATIENT_FEATURES ; fiches 33 à 39 complétées par L5.6 de l'API",
+  "next": "M15-15 réglages",
+  "pr": "https://github.com/mrscams/psymate-web/pull/148",
+  "branch": "claude/m15-14-contrat-socle",
+  "checkout": "m15-13-facturation-fiches-maquettes-651414"
+}

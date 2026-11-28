@@ -4,6 +4,7 @@ import { provideRouter, Router } from '@angular/router';
 
 import { NavDrawerService } from './nav-drawer.service';
 import { NavRailComponent, navRailEntries } from './nav-rail.component';
+import type { NavRailEntry } from './nav-rail.component';
 
 @Component({ selector: 'pm-blank', template: '' })
 class Blank {}
@@ -32,6 +33,8 @@ async function render(url = '/patients') {
         { path: 'patients', component: Blank },
         { path: 'patients/:id', component: Blank },
         { path: 'mon-compte', component: Blank },
+        { path: 'facturation', component: Blank },
+        { path: 'facturation/:tab', component: Blank },
       ]),
     ],
   });
@@ -62,34 +65,50 @@ describe('NavRailComponent (rail)', () => {
     document.querySelectorAll('pm-nav-rail').forEach((n) => n.remove());
   });
 
-  it('trois entrées : Patients et Agenda liés, Facture à réaliser, sans lien ni route', async () => {
-    expect(navRailEntries().map((entry) => [entry.key, entry.route])).toEqual([
-      ['patients', '/patients'],
-      ['agenda', '/agenda'],
-      ['invoice', null],
+  it('trois entrées liées : Patients, Agenda et Facture (M15-14), libellé « Facture » inchangé', async () => {
+    expect(navRailEntries().map((entry) => [entry.key, entry.label, entry.route])).toEqual([
+      ['patients', 'Patients', '/patients'],
+      ['agenda', 'Agenda', '/agenda'],
+      ['invoice', 'Facture', '/facturation'],
     ]);
     const { el, rail } = await render();
     expect(rail.getAttribute('aria-label')).toBe('Navigation');
-    const items = [...el.querySelectorAll<HTMLElement>('.item')];
-    expect(items).toHaveLength(3);
+    expect(el.querySelectorAll('.item')).toHaveLength(3);
     expect([...el.querySelectorAll('a[href]')].map((a) => a.getAttribute('href'))).toEqual([
       '/patients',
       '/agenda',
+      '/facturation',
     ]);
-    const later = el.querySelectorAll<HTMLElement>('.item.later');
-    expect(later).toHaveLength(1);
-    for (const item of later) {
-      expect(item.tagName).toBe('SPAN');
-      expect(item.getAttribute('aria-disabled')).toBe('true');
-      expect(item.getAttribute('role')).toBe('link');
-      expect(item.hasAttribute('href')).toBe(false);
-      expect(item.hasAttribute('tabindex')).toBe(false);
-    }
-    expect([...later].map((item) => item.getAttribute('aria-label'))).toEqual([
-      'Facture, à réaliser',
-    ]);
-    expect(later[0].querySelector('small')?.textContent).toBe('à réaliser');
+    expect(el.querySelectorAll('.item.later')).toHaveLength(0);
+    expect(el.querySelector('small')).toBeNull();
+    const invoice = el.querySelector<HTMLAnchorElement>('a[href="/facturation"]')!;
+    expect(invoice.getAttribute('aria-label')).toBe('Facture');
+    expect(invoice.getAttribute('title')).toBe('Facture');
     expect(el.querySelectorAll('svg.ico')).toHaveLength(3);
+  });
+
+  it('une entrée sans route reste « à réaliser » : sans lien, aria-disabled, nom accessible', async () => {
+    TestBed.configureTestingModule({
+      imports: [NavRailComponent],
+      providers: [provideRouter([{ path: 'patients', component: Blank }])],
+    });
+    const fixture = TestBed.createComponent(NavRailComponent);
+    // Avant le premier rendu : la liste du composant reçoit une entrée sans route.
+    (fixture.componentInstance as unknown as { entries: NavRailEntry[] }).entries = [
+      { key: 'later', label: 'Plus tard', icon: 'invoice', route: null },
+    ];
+    document.body.append(fixture.nativeElement);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    const later = el.querySelector<HTMLElement>('.item.later')!;
+    expect(later.tagName).toBe('SPAN');
+    expect(later.getAttribute('aria-disabled')).toBe('true');
+    expect(later.getAttribute('role')).toBe('link');
+    expect(later.hasAttribute('href')).toBe(false);
+    expect(later.hasAttribute('tabindex')).toBe(false);
+    expect(later.getAttribute('aria-label')).toBe('Plus tard, à réaliser');
+    expect(later.getAttribute('title')).toBe('Plus tard, à réaliser');
+    expect(later.querySelector('small')?.textContent).toBe('à réaliser');
   });
 
   it('replié par défaut : 56 px, libellés masqués, nom accessible et infobulle sur chaque carreau', async () => {
@@ -99,7 +118,6 @@ describe('NavRailComponent (rail)', () => {
     for (const label of labels()) expect(getComputedStyle(label).display).toBe('none');
     expect(patients.getAttribute('aria-label')).toBe('Patients');
     expect(patients.getAttribute('title')).toBe('Patients');
-    expect(rail.querySelector('.item.later')?.getAttribute('title')).toBe('Facture, à réaliser');
   });
 
   it('carreau actif selon la route : /patients et /patients/**, pas ailleurs', async () => {
@@ -111,6 +129,29 @@ describe('NavRailComponent (rail)', () => {
     await fixture.whenStable();
     expect(patients.classList.contains('active')).toBe(false);
     expect(patients.hasAttribute('aria-current')).toBe(false);
+  });
+
+  it('Facture actif sur /facturation et /facturation/** (requête comprise), aria-current="page"', async () => {
+    const { fixture, el, patients } = await render('/facturation');
+    const invoice = el.querySelector<HTMLAnchorElement>('a[href="/facturation"]')!;
+    expect(invoice.classList.contains('active')).toBe(true);
+    expect(invoice.getAttribute('aria-current')).toBe('page');
+    expect(patients.hasAttribute('aria-current')).toBe(false);
+
+    for (const url of [
+      '/facturation/a-facturer',
+      '/facturation/reglages',
+      '/facturation?statut=late',
+    ]) {
+      await TestBed.inject(Router).navigateByUrl(url);
+      await fixture.whenStable();
+      expect(invoice.getAttribute('aria-current')).toBe('page');
+    }
+
+    await TestBed.inject(Router).navigateByUrl('/patients');
+    await fixture.whenStable();
+    expect(invoice.classList.contains('active')).toBe(false);
+    expect(invoice.hasAttribute('aria-current')).toBe(false);
   });
 
   it('au survol : déplié à 220 px avec les libellés ; replié quand le pointeur sort', async () => {

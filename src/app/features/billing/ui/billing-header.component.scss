@@ -1,0 +1,176 @@
+// En-tête du module (maquette facturation/01, .mhead de facturation.css) : padding 14 24 0, ligne de
+// titre de 44 px, puis onglets de 38 px dessinés comme ceux de l'en-tête patient (shared/ui/
+// patient-header, repris ici sans le modifier). Propriétés logiques seulement (design/arabe.md).
+:host {
+  display: block;
+}
+
+.mhead {
+  padding: 14px 24px 0;
+  background: var(--surface-raised);
+  border-block-end: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+
+.mhead-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+
+  h1 {
+    margin: 0;
+    font: 600 20px/28px var(--font-ui);
+    letter-spacing: -0.01em;
+  }
+}
+
+.create {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline-start: auto;
+}
+
+/* « Nouvelle facture » : bouton plein de 32 px, rayon 8, libellé 14 semi-gras, touche N. */
+.new {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: var(--primary-on);
+  font: 600 14px/1 var(--font-ui);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--primary-hover);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  kbd {
+    display: inline-block;
+    min-width: 18px;
+    padding: 0 5px;
+    border: 1px solid color-mix(in srgb, var(--primary-on) 35%, transparent);
+    border-block-end-width: 2px;
+    border-radius: 4px;
+    background: color-mix(in srgb, var(--primary-on) 18%, transparent);
+    color: inherit;
+    font: 11px/18px var(--font-mono);
+    text-align: center;
+  }
+}
+
+/* Onglets : 38 px, filet de 2 px sous l'onglet courant (en-tête patient). */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    border-block-end: 2px solid transparent;
+    border-start-start-radius: 6px;
+    border-start-end-radius: 6px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font: var(--mat-sys-label-large);
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--text-primary);
+      background: var(--surface-ground);
+    }
+
+    &.active {
+      color: var(--primary);
+      border-block-end-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Réglages, au bout de la ligne. */
+    &.end {
+      margin-inline-start: auto;
+    }
+  }
+}
+
+/* Compteur de « À facturer » (maquette .badge). */
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--primary-on);
+  font: 600 12px/1 var(--font-ui);
+}
+
+/* Sous 760 px : marges de l'en-tête patient. */
+@media (max-width: 760px) {
+  .mhead {
+    padding: 12px 16px 0;
+  }
+}
+
+/* Sous 600 px (maquette mobile) : onglets sur toute la largeur, « Nouvelle facture » en barre du bas
+   (la page réserve sa hauteur sous le contenu). */
+@media (max-width: 600px) {
+  .tabs {
+    gap: 0;
+
+    a {
+      flex: 1 1 0;
+      justify-content: center;
+      min-width: 0;
+      padding: 0 4px;
+
+      &.end {
+        margin-inline-start: 0;
+      }
+    }
+  }
+
+  .create {
+    position: fixed;
+    inset-inline: 0;
+    inset-block-end: 0;
+    z-index: 20;
+    margin: 0;
+    padding: 10px 12px 14px;
+    background: var(--surface-raised);
+    border-block-start: 1px solid var(--border-subtle);
+  }
+
+  .new {
+    flex: 1 1 auto;
+
+    kbd {
+      display: none;
+    }
+  }
+}

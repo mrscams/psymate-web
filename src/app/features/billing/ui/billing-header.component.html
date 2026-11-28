@@ -1,0 +1,40 @@
+<div class="mhead">
+  <div class="mhead-row">
+    <h1 i18n="Titre du module Facturation (G Q67 : le carreau dit Facture)@@billing.header.title">
+      Facturation
+    </h1>
+    @if (showCreate()) {
+      <div class="create">
+        <a class="new" [routerLink]="newInvoiceUrl" aria-keyshortcuts="N">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          <span i18n="Bouton de l'en-tête du module Facturation@@billing.header.new"
+            >Nouvelle facture</span
+          >
+          <kbd aria-hidden="true">N</kbd>
+        </a>
+      </div>
+    }
+  </div>
+  <nav
+    class="tabs"
+    aria-label="Facturation"
+    i18n-aria-label="Étiquette des onglets du module Facturation@@billing.header.tabs"
+  >
+    @for (tab of tabs; track tab.key) {
+      <a
+        [routerLink]="tab.link"
+        routerLinkActive="active"
+        ariaCurrentWhenActive="page"
+        [routerLinkActiveOptions]="tab.match"
+        [class.end]="tab.end"
+      >
+        <span>{{ tab.label }}</span>
+        @if (tab.key === 'billable' && badge(); as count) {
+          <span class="badge">{{ count }}</span>
+        }
+      </a>
+    }
+  </nav>
+</div>

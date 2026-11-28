@@ -1,0 +1,25 @@
+// Module en pleine largeur (data.contentWidth 'full') : l'en-tête d'un bord à l'autre, puis la page
+// de l'onglet avec les marges de la maquette (.page : 20 24 40). Propriétés logiques seulement.
+:host {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+}
+
+.content {
+  padding: 20px 24px 40px;
+}
+
+@media (max-width: 760px) {
+  .content {
+    padding: 16px 16px 32px;
+  }
+}
+
+/* Sous 600 px, « Nouvelle facture » est une barre fixe en bas d'écran : le contenu garde sa hauteur
+   au-dessus d'elle. */
+@media (max-width: 600px) {
+  .content {
+    padding-block-end: 88px;
+  }
+}

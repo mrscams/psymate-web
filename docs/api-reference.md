@@ -1,6 +1,6 @@
 # Référence de l'API PsyMate
 
-Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.16.0). 107 chemins, 191 schémas.
+Généré depuis le contrat OpenAPI (`PsyMate API`, info.version 0.17.0). 133 chemins, 250 schémas.
 
 Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/auth/login`), sauf celles marquées publiques dans leur description (`/api/auth/*`, `/api/public/**`, `/api/me/appeal`, `/api/me/export`). Erreurs : `application/problem+json` avec `code` et `errors[]`.
 
@@ -19,6 +19,13 @@ Toutes les routes `/api/**` exigent une session (cookie posé par `POST /api/aut
 - [Entrées](#tag-entrees) (6)
 - [Export de compte](#tag-export-de-compte) (3)
 - [Export patient](#tag-export-patient) (1)
+- [Facturation : chiffres](#tag-facturation-chiffres) (2)
+- [Facturation : factures](#tag-facturation-factures) (12)
+- [Facturation : paiements](#tag-facturation-paiements) (5)
+- [Facturation : prestations](#tag-facturation-prestations) (4)
+- [Facturation : profil du patient](#tag-facturation-profil-du-patient) (2)
+- [Facturation : réglages](#tag-facturation-reglages) (4)
+- [Facturation : séances à facturer](#tag-facturation-seances-a-facturer) (5)
 - [Graphe](#tag-graphe) (2)
 - [Liens](#tag-liens) (4)
 - [Patients](#tag-patients) (10)
@@ -1107,6 +1114,762 @@ operationId : `exportPatient`
 | 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : format INVALID_VALUE (paramètre absent, vide ou différent de md et pdf). La propriété du patient est vérifiée avant le format. |
 | 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 | 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EXPORT_FAILED : génération du PDF impossible. |
+
+## <a id="tag-facturation-chiffres"></a>Facturation : chiffres
+
+### `GET /api/billing/summary`
+
+**Chiffres du bandeau de la facturation**
+
+Session praticien. Mois courant au jour de Europe/Paris : encaissé (paiements non annulés reçus ce mois, remboursements déduits) et nombre de paiements ; restes dus et nombre de factures émises concernées ; retards (échéance passée, reste dû positif) et jours de retard de la plus ancienne ; séances à facturer, somme de leurs tarifs (G Q87) et nombre de séances sans tarif.
+
+operationId : `billingSummary`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingSummaryDto](#schema-billingsummarydto) (*/*) | Les chiffres. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/patients/{id}/billing`
+
+**Facturation d'un patient**
+
+Session praticien. Pour la fiche d'un patient (archivé compris) : somme des restes dus de ses factures émises et leur nombre, échéance la plus proche d'une facture avec un reste dû, nombre de séances à facturer, tarif commun (son tarif, sinon le prix de la prestation par défaut) et son origine, destinataire par défaut d'une nouvelle facture.
+
+operationId : `patientBilling`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [PatientBillingDto](#schema-patientbillingdto) (*/*) | La facturation du patient. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-facturation-factures"></a>Facturation : factures
+
+### `GET /api/invoices`
+
+**Liste les factures**
+
+Session praticien. Factures et avoirs du praticien : brouillons d'abord, puis date d'émission décroissante, puis identifiant ; pagination par curseur. Statut calculé (draft, due, partial, paid, void ; issued pour un avoir) et retard au jour de Europe/Paris. q cherche, sans tenir compte de la casse ni des accents, dans le numéro, le nom du destinataire et le nom affiché du patient.
+
+operationId : `listInvoices`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `status` | query | string | non | Statut calculé : draft, due, partial, paid ou void. Absent : tous (avoirs compris). |
+| `overdue` | query | boolean | non | true : en retard seulement ; false : pas en retard. |
+| `kind` | query | string | non | Nature : invoice ou credit_note. Absent : les deux. |
+| `patientId` | query | string (uuid) | non | Un seul patient. |
+| `q` | query | string | non | Recherche, 2 à 100 caractères : numéro, nom du destinataire ou nom affiché du patient. |
+| `from` | query | string (date) | non | Date d'émission minimale incluse (AAAA-MM-JJ). |
+| `cursor` | query | string | non | Curseur opaque (nextCursor de la page précédente). |
+| `limit` | query | integer (int32) | non | Taille de la page, de 1 à 100 ; 50 par défaut. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [InvoicePageDto](#schema-invoicepagedto) (*/*) | Une page de factures. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patientId inexistant ou d'un autre praticien. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : status ou kind INVALID_VALUE ; q OUT_OF_RANGE (moins de 2 ou plus de 100 caractères) ; limit OUT_OF_RANGE (1 à 100) ou INVALID_FORMAT ; cursor INVALID_FORMAT ; overdue, from, patientId INVALID_FORMAT. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/invoices`
+
+**Crée un brouillon de facture**
+
+Session praticien. Brouillon d'un patient du praticien : une ligne par séance de sessionEntryIds, par date (désignation « {prestation retenue} du JJ/MM/AAAA » ou « Séance du JJ/MM/AAAA », prix = tarif de la séance selon G Q87, quantité 1, date et prestation de la séance), puis les lignes données dans leur ordre. Chaque séance passe à l'état invoiced. Destinataire par défaut : le tiers payeur du profil de facturation s'il existe, sinon le patient avec l'adresse de son profil. Date d'émission prévue : aujourd'hui (Europe/Paris) ; échéance et mention de bas de page : celles des réglages. Une séance encore inconnue de la facturation mais close est créée à la demande. Répond la facture créée.
+
+operationId : `createInvoice`
+
+Corps (`application/json`) : [CreateInvoiceRequest](#schema-createinvoicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [InvoiceDto](#schema-invoicedto) (*/*) | Brouillon créé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant ou d'un autre praticien. SESSION_NOT_BILLABLE : séance inexistante, ouverte, d'accueil, de contact, d'un autre praticien, ou écartée puis archivée. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, plus de nouveau brouillon (patientId dans le problème). SESSION_ALREADY_INVOICED : séance déjà dans une autre facture, brouillon compris ; sessionEntryId dans le problème. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_REQUIRED : une séance demandée n'a aucun tarif (ni montant fixé, ni tarif du patient, ni prestation) ; sessionEntryId dans le problème. VALIDATION_FAILED avec errors[] : patientId REQUIRED ou INVALID_FORMAT ; sessionEntryIds OUT_OF_RANGE (plus de 200) ou INVALID_FORMAT ; sessionEntryIds[i] INVALID_VALUE (doublon, ou séance d'un autre patient) ; lines OUT_OF_RANGE (plus de 100 lignes libres ou de 200 lignes de séance) ; lines[i].label REQUIRED ou OUT_OF_RANGE (200 caractères) ; lines[i].quantity OUT_OF_RANGE (1 à 999) ou INVALID_FORMAT ; lines[i].unitPrice REQUIRED, OUT_OF_RANGE (-10000000 à 10000000) ou INVALID_FORMAT (nombre décimal, chaîne) ; lines[i].serviceId INVALID_VALUE (prestation inconnue, d'un autre praticien, ou archivée et absente des lignes actuelles du brouillon) ; lines[i].sessionEntryId INVALID_VALUE (séance en double, ou d'un autre patient) ; lines[i].occurredOn INVALID_FORMAT ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/invoices/{id}`
+
+**Lit une facture**
+
+Session praticien. Facture complète : lignes, émetteur, destinataire, montants, historique. Pour un brouillon, l'émetteur reflète les réglages du moment, la TVA est calculée avec eux et nextNumberPreview donne le numéro qu'il recevrait s'il était émis maintenant ; pour un document émis, l'instantané de l'émission.
+
+operationId : `getInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [InvoiceDto](#schema-invoicedto) (*/*) | La facture. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PATCH /api/invoices/{id}`
+
+**Modifie un brouillon**
+
+Session praticien. Brouillon seulement. Fusion partielle : un champ absent reste inchangé. patientId : tant que le brouillon n'a aucune ligne de séance (le destinataire repasse à celui du nouveau patient, sauf si recipient est donné) ; recipient : null revient au destinataire par défaut ; dueTerm date exige dueOn ; footerNote null l'efface ; lines remplace toutes les lignes (100 lignes libres et 200 lignes de séance au plus) : une ligne de séance retirée rend la séance à facturer (pending), une séance ajoutée passe à invoiced. Montants recalculés. Répond la facture relue.
+
+operationId : `updateInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture. |
+
+Corps (`application/json`) : [UpdateInvoiceRequest](#schema-updateinvoicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [InvoiceDto](#schema-invoicedto) (*/*) | Brouillon modifié. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. PATIENT_NOT_FOUND : nouveau patient inexistant ou d'un autre praticien. SESSION_NOT_BILLABLE : séance inexistante, ouverte, d'accueil, de contact, d'un autre praticien, ou écartée puis archivée. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_ISSUED : la facture est émise, annulée, ou c'est un avoir : elle ne se modifie plus et ne se supprime pas. PATIENT_ARCHIVED : nouveau patient archivé. SESSION_ALREADY_INVOICED : séance déjà dans une autre facture, brouillon compris ; sessionEntryId dans le problème. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : patientId REQUIRED, INVALID_FORMAT ou INVALID_VALUE (le brouillon garde des lignes de séance) ; recipient.name REQUIRED ou OUT_OF_RANGE ; recipient.addressLines OUT_OF_RANGE ; issueDate REQUIRED ou INVALID_FORMAT ; dueTerm REQUIRED ou INVALID_VALUE ; dueOn REQUIRED (échéance date), OUT_OF_RANGE (avant la date d'émission), INVALID_VALUE (hors échéance date) ou INVALID_FORMAT ; footerNote OUT_OF_RANGE (500 caractères) ; lines REQUIRED (null) ; lines OUT_OF_RANGE (plus de 100 lignes libres ou de 200 lignes de séance) ; lines[i].label REQUIRED ou OUT_OF_RANGE (200 caractères) ; lines[i].quantity OUT_OF_RANGE (1 à 999) ou INVALID_FORMAT ; lines[i].unitPrice REQUIRED, OUT_OF_RANGE (-10000000 à 10000000) ou INVALID_FORMAT (nombre décimal, chaîne) ; lines[i].serviceId INVALID_VALUE (prestation inconnue, d'un autre praticien, ou archivée et absente des lignes actuelles du brouillon) ; lines[i].sessionEntryId INVALID_VALUE (séance en double, ou d'un autre patient) ; lines[i].occurredOn INVALID_FORMAT ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `DELETE /api/invoices/{id}`
+
+**Supprime un brouillon**
+
+Session praticien. Brouillon seulement : suppression physique (E9), avec ses lignes et son historique ; ses séances reviennent à facturer (pending).
+
+operationId : `deleteInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Brouillon supprimé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_ISSUED : la facture est émise, annulée, ou c'est un avoir : elle ne se modifie plus et ne se supprime pas. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/invoices/{id}/credit-notes`
+
+**Émet un avoir sur une facture**
+
+Session praticien. Avoir émis d'emblée (pas de brouillon d'avoir), en une transaction : numéro attribué dans la suite des avoirs du praticien et de l'année du jour (Europe/Paris), à condition que expectedNumber soit encore le suivant ; date d'émission aujourd'hui ; destinataire de la facture ; émetteur du moment avec la TVA de la facture ; une ligne par ligne annulée (même désignation, date, quantité ; prix unitaire et montant opposés, donc négatifs pour une séance) ; total négatif ; refundDue = ce que l'avoir dépasse du reste dû de la facture (à rembourser par POST /api/invoices/{avoir}/payments). Portée full : toutes les lignes encore non créditées ; lines : les lignes de lineIds, entières. Sur la facture d'origine, seuls credited, le statut (void quand plus aucune ligne ne reste) et updatedAt changent ; historique credit_note_issued (et voided) ; les séances des lignes annulées reviennent à facturer. Le PDF est rendu une fois, maintenant, et rangé chiffré. Un paiement de la facture ne s'annule plus ensuite (409 PAYMENT_NOT_CANCELLABLE). Répond l'avoir (forme Invoice, kind credit_note, status issued).
+
+operationId : `createCreditNote`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture à annuler. |
+
+Corps (`application/json`) : [CreateCreditNoteRequest](#schema-createcreditnoterequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [InvoiceDto](#schema-invoicedto) (*/*) | Avoir émis. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_ISSUED : la facture est un brouillon. CREDIT_NOTE_NOT_CREDITABLE : le document est un avoir. INVOICE_VOID : la facture est déjà annulée par un avoir. LINE_ALREADY_CREDITED : une ligne demandée est déjà annulée (lineId dans le problème). CREDIT_NOTE_NUMBER_CHANGED : expectedNumber n'est plus le suivant (nextNumber dans le problème) ; rien n'est émis. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : scope REQUIRED ou INVALID_VALUE ; lineIds REQUIRED (portée lines sans lineIds), OUT_OF_RANGE (vide, ou plus de 300), INVALID_VALUE (portée full avec des lignes, ou avoir partiel dont le sous-total n'est pas positif ou qui dépasserait le total de la facture) ; lineIds[i] INVALID_VALUE (doublon, ou ligne d'une autre facture), REQUIRED ou INVALID_FORMAT ; reasonCode REQUIRED ou INVALID_VALUE ; reasonText REASON_TEXT_REQUIRED (motif other sans texte) ou OUT_OF_RANGE (300) ; expectedNumber REQUIRED ou OUT_OF_RANGE (30) ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF de l'avoir n'a pas pu être produit ; rien n'est émis. |
+
+### `POST /api/invoices/{id}/duplicate`
+
+**Duplique une facture**
+
+Session praticien. Nouveau brouillon du même patient avec les mêmes lignes (désignation, date, prestation, quantité, prix unitaire) mais sans leurs séances : aucune séance ne change d'état. Destinataire par défaut, date du jour, échéance et mention des réglages, montants recalculés ; historique draft_created avec duplicateOf. La facture d'origine, brouillon, émise ou annulée, ne change pas. Répond le brouillon créé.
+
+operationId : `duplicateInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture à copier. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [InvoiceDto](#schema-invoicedto) (*/*) | Brouillon créé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : patient archivé, plus de nouveau brouillon (patientId dans le problème). CREDIT_NOTE_NOT_DUPLICABLE : un avoir ne se duplique pas. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/invoices/{id}/issue`
+
+**Émet un brouillon**
+
+Session praticien. Émission d'un brouillon, en une transaction : numéro attribué dans la suite du praticien et de l'année de la date d'émission (préfixe-année-0001, continue, sans trou), à condition que expectedNumber soit encore le suivant ; statut issued ; échéance calculée (à réception : la date d'émission ; 15 ou 30 jours ; ou la date choisie) ; émetteur (réglages du moment) et destinataire figés ; montants figés ; historique issued. La date d'émission est celle du brouillon : passée permise, future refusée, et jamais antérieure à la dernière facture émise de la même suite. alreadyPaid enregistre dans la même transaction un paiement du total (historique payment_recorded). Le PDF est rendu une fois, maintenant, et rangé chiffré : si le rendu échoue, rien n'est émis. Les séances restent facturées. Répond la facture émise.
+
+operationId : `issueInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du brouillon. |
+
+Corps (`application/json`) : [IssueInvoiceRequest](#schema-issueinvoicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [InvoiceDto](#schema-invoicedto) (*/*) | Facture émise. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NUMBER_CHANGED : expectedNumber n'est plus le suivant (une autre facture vient d'être émise) ; nextNumber dans le problème ; rien n'est émis. INVOICE_ISSUED : la facture est émise, annulée, ou c'est un avoir : elle ne se modifie plus et ne se supprime pas. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | BILLING_SETTINGS_INCOMPLETE avec errors[] (siret, addressLines, service ; code REQUIRED) : réglages incomplets, comme missing des réglages. EMPTY_INVOICE : aucune ligne, ou sous-total nul ou négatif. RATE_REQUIRED : une ligne de séance sans prix positif (sessionEntryId dans le problème). VALIDATION_FAILED avec errors[] : expectedNumber REQUIRED ou OUT_OF_RANGE ; issueDate OUT_OF_RANGE (date future) ou INVALID_VALUE (antérieure à la dernière facture émise de la même année) ; recipient.name REQUIRED ; alreadyPaid.mode REQUIRED, INVALID_VALUE ou MODE_NOT_ACCEPTED (absent des modes acceptés, other toujours accepté) ; alreadyPaid.receivedOn REQUIRED, INVALID_FORMAT ou OUT_OF_RANGE (date future) ; alreadyPaid.reference OUT_OF_RANGE ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF n'a pas pu être produit ; rien n'est émis. |
+
+### `GET /api/invoices/{id}/pdf`
+
+**Télécharge le PDF d'une facture**
+
+Session praticien. application/pdf, A4, en français. Brouillon : rendu à la demande avec le filigrane « Brouillon » et les réglages du moment ; fichier facture-brouillon.pdf. Facture émise ou avoir : le fichier rangé à l'émission, tel quel (il ne change pas si les réglages changent) ; fichier {numéro}.pdf. variant=receipted : facture acquittée rendue à la demande (titre « Facture acquittée », tampon « Acquittée », paiements), pour une facture entièrement réglée ; fichier {numéro}-acquittee.pdf.
+
+operationId : `invoicePdf`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture. |
+| `variant` | query | `receipted` | non | receipted : facture acquittée. Absent : le document lui-même. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | string (binary) (application/pdf) | Le PDF, en pièce jointe (Content-Disposition). |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_PAID : variant=receipted sur un brouillon, un avoir, une facture annulée ou pas entièrement réglée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : variant INVALID_VALUE. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF n'a pas pu être produit ou relu. |
+
+### `POST /api/invoices/{id}/send`
+
+**Envoie une facture ou un avoir par e-mail**
+
+Session praticien. Envoi immédiat (synchrone) par le serveur d'envoi de l'application : expéditeur technique de PsyMate, nom affiché « {praticien} via PsyMate », Reply-To = e-mail affiché des réglages (sinon celui du compte ; aucun Reply-To s'il n'y en a pas), objet et message tels que validés par le praticien, en texte brut, variables {numéro}, {montant}, {reste dû}, {échéance} remplacées (montants en euros à virgule, échéance JJ/MM/AAAA ; pour un avoir, montant négatif et reste dû 0), le PDF rangé à l'émission en pièce jointe ({numéro}.pdf), et rien d'autre. Une facture émise ou annulée et un avoir s'envoient ; un brouillon non. 30 envois par heure et par praticien au plus (chaque tentative compte). L'envoi réussi est inscrit dans l'historique (sent, avec l'adresse et le modèle). 202 sans corps.
+
+operationId : `sendInvoice`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture ou de l'avoir. |
+
+Corps (`application/json`) : [SendInvoiceRequest](#schema-sendinvoicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 202 | — | E-mail remis au serveur d'envoi. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : document inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_ISSUED : un brouillon ne s'envoie pas. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : to EMAIL_INVALID (absente, mal formée, plusieurs adresses, plus de 320 caractères) ; subject REQUIRED, OUT_OF_RANGE (200) ou INVALID_VALUE (saut de ligne) ; body REQUIRED ou OUT_OF_RANGE (5000) ; template REQUIRED ou INVALID_VALUE ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | TOO_MANY_EMAILS : 30 envois dans l'heure ; en-tête Retry-After et retryAfterSeconds (secondes). Rien n'est envoyé. RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF rangé du document est illisible ; rien n'est envoyé. |
+| 503 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_SENT : le serveur d'envoi a refusé le message ou ne répond pas ; rien n'est inscrit dans l'historique. |
+
+### `POST /api/invoices/batch`
+
+**Crée des brouillons par lot**
+
+Session praticien. De 1 à 200 séances : un brouillon par patient, avec les mêmes lignes de séance que la création d'un brouillon. Tout ou rien : à la première erreur, aucun brouillon n'est créé et aucune séance ne change d'état. Répond les brouillons, dans l'ordre où chaque patient apparaît la première fois.
+
+operationId : `createInvoiceBatch`
+
+Corps (`application/json`) : [CreateInvoiceBatchRequest](#schema-createinvoicebatchrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [InvoiceBatchDto](#schema-invoicebatchdto) (*/*) | Brouillons créés. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_NOT_BILLABLE : séance inexistante, ouverte, d'accueil, de contact, d'un autre praticien, ou écartée puis archivée. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : le patient d'une séance est archivé (patientId dans le problème). SESSION_ALREADY_INVOICED : séance déjà dans une autre facture, brouillon compris ; sessionEntryId dans le problème. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_REQUIRED : une séance n'a aucun tarif ; sessionEntryId dans le problème. VALIDATION_FAILED avec errors[] : sessionEntryIds REQUIRED (absent), OUT_OF_RANGE (vide ou plus de 200) ou INVALID_FORMAT ; sessionEntryIds[i] INVALID_VALUE (doublon) ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/invoices/by-number/{number}`
+
+**Lit une facture par son numéro**
+
+Session praticien. Même réponse que la lecture par identifiant, pour une facture ou un avoir émis du praticien (numéro exact, casse comprise).
+
+operationId : `getInvoiceByNumber`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `number` | path | string | oui | Numéro de la facture ou de l'avoir. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [InvoiceDto](#schema-invoicedto) (*/*) | La facture. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : numéro inconnu ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-facturation-paiements"></a>Facturation : paiements
+
+### `POST /api/invoices/{id}/payments`
+
+**Enregistre un paiement**
+
+Session praticien. Facture émise : paiement reçu (kind payment), au plus le reste dû ; le statut devient partial ou paid. Avoir dont le remboursement dû est positif : remboursement versé (kind refund), au plus le remboursement encore dû. Le reste dû (paid) est tenu dans la même transaction, sous verrou de la facture ; historique payment_recorded (identifiant et mode, sans montant). Répond le paiement créé.
+
+operationId : `recordPayment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la facture ou de l'avoir. |
+
+Corps (`application/json`) : [RecordPaymentRequest](#schema-recordpaymentrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [BillingPaymentDto](#schema-billingpaymentdto) (*/*) | Paiement enregistré. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_FOUND : facture inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | INVOICE_NOT_PAYABLE : brouillon, facture annulée, ou avoir sans remboursement dû. AMOUNT_EXCEEDS_BALANCE : montant au-delà du reste dû (balanceDue dans le problème, en centimes) ou, pour un avoir, du remboursement encore dû (refundDue). |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : amount REQUIRED, OUT_OF_RANGE (pas strictement positif, ou au-delà d'un entier 32 bits) ou INVALID_FORMAT (décimal, chaîne) ; mode REQUIRED, INVALID_VALUE ou MODE_NOT_ACCEPTED (paiement dont le mode est absent des modes acceptés ; other toujours accepté) ; receivedOn REQUIRED, INVALID_FORMAT ou OUT_OF_RANGE (date future) ; reference OUT_OF_RANGE (120 caractères) ; note OUT_OF_RANGE (500 caractères) ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/payments`
+
+**Journal des encaissements**
+
+Session praticien. Paiements et remboursements reçus de from à to inclus (date de réception ; chaque borne facultative), d'un seul mode si mode est donné, annulés compris (cancelledAt) : date de réception décroissante, puis identifiant décroissant ; pagination par curseur. totals porte sur toute la période et le mode demandés, pas sur la page : paiements annulés exclus, remboursements déduits.
+
+operationId : `listPayments`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `from` | query | string (date) | non | Première date de réception incluse (AAAA-MM-JJ). |
+| `to` | query | string (date) | non | Dernière date de réception incluse (AAAA-MM-JJ). |
+| `mode` | query | `transfer` \| `cheque` \| `cash` \| `card` \| `other` | non | Un seul mode : transfer, cheque, cash, card ou other. |
+| `cursor` | query | string | non | Curseur opaque (nextCursor de la page précédente). |
+| `limit` | query | integer (int32) | non | Taille de la page, de 1 à 100 ; 50 par défaut. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [PaymentPageDto](#schema-paymentpagedto) (*/*) | Une page du journal et ses totaux. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : from, to INVALID_FORMAT ; to OUT_OF_RANGE (avant from) ; mode INVALID_VALUE ; limit OUT_OF_RANGE (1 à 100) ou INVALID_FORMAT ; cursor INVALID_FORMAT. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/payments/{id}/cancel`
+
+**Annule un paiement**
+
+Session praticien. Pose cancelledAt ; la ligne reste (aucun paiement n'est supprimé) ; le reste dû de la facture (ou le remboursement dû de l'avoir) revient ; historique payment_cancelled. Idempotent : un paiement déjà annulé est répondu tel quel. Un paiement (kind payment) d'une facture qui porte un avoir émis ne s'annule plus ; un remboursement s'annule toujours. Répond le paiement annulé.
+
+operationId : `cancelPayment`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du paiement. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingPaymentDto](#schema-billingpaymentdto) (*/*) | Paiement annulé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PAYMENT_NOT_FOUND : paiement inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PAYMENT_NOT_CANCELLABLE : paiement d'une facture qui porte un avoir émis (le remboursement dû de l'avoir en tient compte) ; rien ne change. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/payments/{id}/receipt`
+
+**Télécharge le reçu d'un paiement**
+
+Session praticien. application/pdf, A4, en français, rendu à la demande (jamais rangé) : émetteur de la facture, destinataire, date, mode, référence, montant, total de la facture et reste à régler à ce jour ; pour un remboursement, le numéro de l'avoir. Un paiement annulé garde son reçu, marqué « Annulé ». La note n'y figure pas. Fichier recu-{numéro}-{date}.pdf.
+
+operationId : `paymentReceipt`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du paiement. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | string (binary) (application/pdf) | Le PDF, en pièce jointe (Content-Disposition). |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PAYMENT_NOT_FOUND : paiement inexistant ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF n'a pas pu être produit. |
+
+### `GET /api/payments/export`
+
+**Exporte le journal des encaissements**
+
+Session praticien. Téléchargement direct (Content-Disposition), en français, des paiements et remboursements non annulés reçus de from à to inclus (un an au plus), du plus ancien au plus récent. Colonnes : date (JJ/MM/AAAA), numéro de la facture ou de l'avoir, mode, référence, montant ; le nom complet du patient (après le numéro) seulement avec identity=full_name : par défaut, aucun nom. CSV : UTF-8 avec marque d'ordre des octets, séparateur point-virgule, fins de ligne CRLF, montants en euros à virgule (60,00 ; négatifs pour un remboursement). PDF : A4, mêmes colonnes, totaux de la période par mode. Fichier encaissements-{from}-{to}.csv ou .pdf.
+
+operationId : `exportPayments`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `from` | query | string (date) | non | Première date de réception incluse (AAAA-MM-JJ). Obligatoire. |
+| `to` | query | string (date) | non | Dernière date de réception incluse (AAAA-MM-JJ), moins d'un an après from. Obligatoire. |
+| `format` | query | `csv` \| `pdf` | non | csv (par défaut) ou pdf. |
+| `identity` | query | `document_number` \| `full_name` | non | document_number (par défaut) : aucun nom ; full_name : nom complet du patient. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | string (binary) (application/pdf) | Le fichier, en pièce jointe (Content-Disposition). |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : from, to REQUIRED ou INVALID_FORMAT ; to OUT_OF_RANGE (avant from, ou un an ou plus après from) ; format INVALID_VALUE (csv ou pdf) ; identity INVALID_VALUE (document_number ou full_name). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+| 500 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PDF_UNAVAILABLE : le PDF n'a pas pu être produit. |
+
+## <a id="tag-facturation-prestations"></a>Facturation : prestations
+
+### `GET /api/me/billing-services`
+
+**Prestations du praticien**
+
+Session praticien. Prestations non archivées du praticien courant : la prestation par défaut d'abord, puis par libellé. Prix en centimes d'euro entiers.
+
+operationId : `listServices`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingServicesDto](#schema-billingservicesdto) (*/*) | Prestations. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/me/billing-services`
+
+**Crée une prestation**
+
+Session praticien. Le praticien et le cabinet viennent de la session. La première prestation créée devient la prestation par défaut, quel que soit isDefault ; avec isDefault = true, la nouvelle prestation devient la prestation par défaut et retire le défaut de l'autre. 50 prestations non archivées au plus. price est un entier en centimes d'euro (6000 = 60,00 €) : un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). Tout champ autre que label, durationMin, price et isDefault est refusé (UNKNOWN_FIELD).
+
+operationId : `createService`
+
+Corps (`application/json`) : [CreateBillingServiceRequest](#schema-createbillingservicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 201 | [BillingServiceDto](#schema-billingservicedto) (*/*) | Prestation créée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : corps JSON absent ou illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SERVICE_LIMIT_REACHED : le praticien a déjà 50 prestations non archivées ; VALIDATION_FAILED avec errors[] : label REQUIRED ou OUT_OF_RANGE (plus de 120 caractères) ; price REQUIRED, OUT_OF_RANGE (zéro, négatif ou au-delà d'un entier 32 bits) ou INVALID_FORMAT (nombre décimal, chaîne) ; durationMin OUT_OF_RANGE (hors 1 à 600) ou INVALID_FORMAT ; isDefault INVALID_FORMAT (pas un booléen) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PATCH /api/me/billing-services/{id}`
+
+**Modifie une prestation**
+
+Session praticien. Fusion partielle : label, price et isDefault absents ou null restent inchangés ; durationMin à null efface la durée. isDefault = true fait de cette prestation la prestation par défaut et retire le défaut de l'autre ; isDefault = false sur la prestation par défaut est refusé (il faut en désigner une autre). La prestation d'un autre praticien, ou archivée, répond 404. Tout champ autre que label, durationMin, price et isDefault est refusé (UNKNOWN_FIELD).
+
+operationId : `updateService`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la prestation. |
+
+Corps (`application/json`) : [UpdateBillingServiceRequest](#schema-updatebillingservicerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingServiceDto](#schema-billingservicedto) (*/*) | Prestation modifiée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SERVICE_NOT_FOUND : prestation inexistante, archivée ou d'un autre praticien. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : label REQUIRED (vide) ou OUT_OF_RANGE (plus de 120 caractères) ; price OUT_OF_RANGE (zéro, négatif ou au-delà d'un entier 32 bits) ou INVALID_FORMAT (nombre décimal, chaîne) ; durationMin OUT_OF_RANGE (hors 1 à 600) ou INVALID_FORMAT ; isDefault INVALID_VALUE (false sur la prestation par défaut) ou INVALID_FORMAT ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `DELETE /api/me/billing-services/{id}`
+
+**Archive une prestation**
+
+Session praticien. La prestation est archivée, jamais supprimée : elle disparaît de la liste. Idempotent : une prestation déjà archivée répond 204. La prestation par défaut ne s'archive pas tant qu'il reste d'autres prestations (409) ; seule, elle s'archive. La prestation d'un autre praticien répond 404.
+
+operationId : `archiveService`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant de la prestation. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Prestation archivée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SERVICE_NOT_FOUND : prestation inexistante ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SERVICE_IS_DEFAULT : prestation par défaut alors que d'autres prestations restent ; en désigner une autre par défaut d'abord. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-facturation-profil-du-patient"></a>Facturation : profil du patient
+
+### `GET /api/patients/{id}/billing-profile`
+
+**Profil de facturation d'un patient**
+
+Session praticien, propriétaire du patient. Tous les champs sont null tant que rien n'est enregistré. Lisible aussi pour un patient archivé. Le patient d'un autre praticien répond 404.
+
+operationId : `getBillingProfile`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingProfileDto](#schema-billingprofiledto) (*/*) | Profil de facturation. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant ou d'un autre praticien. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PUT /api/patients/{id}/billing-profile`
+
+**Remplace le profil de facturation d'un patient**
+
+Session praticien, propriétaire du patient. Remplace tout le profil : un champ absent, null ou vide est effacé. rate est un entier en centimes d'euro (5500 = 55,00 €) : un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). Refusé pour un patient archivé (409). Tout champ autre que rate, addressLines, thirdPartyName et thirdPartyAddress est refusé (UNKNOWN_FIELD). Répond le profil enregistré.
+
+operationId : `putBillingProfile`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `id` | path | string (uuid) | oui | Identifiant du patient. |
+
+Corps (`application/json`) : [BillingProfileRequest](#schema-billingprofilerequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingProfileDto](#schema-billingprofiledto) (*/*) | Profil enregistré. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patient inexistant ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_ARCHIVED : le patient est archivé. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : rate OUT_OF_RANGE (zéro, négatif ou au-delà d'un entier 32 bits) ou INVALID_FORMAT (nombre décimal, chaîne) ; addressLines, thirdPartyAddress OUT_OF_RANGE (plus de 300 caractères) ; thirdPartyName OUT_OF_RANGE (plus de 200 caractères) ; INVALID_FORMAT (texte attendu) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-facturation-reglages"></a>Facturation : réglages
+
+### `GET /api/me/billing-settings`
+
+**Réglages de facturation**
+
+Session praticien. Les réglages existent toujours : sans réglages enregistrés, valeurs par défaut (régime health_exempt, préfixes F et AV, échéance on_receipt, modes transfer, cheque, cash), adresse et e-mail proposés depuis le dossier professionnel tant qu'ils ne sont pas enregistrés. identity est en lecture seule. vat.mention est fournie par l'application, en français quelle que soit la langue servie. numbering.next* sont les prochains numéros de l'année en cours (Europe/Paris) ; numbering.locked est vrai dès qu'un numéro a été attribué. missing liste ce qui empêche d'émettre une facture (siret, addressLines, service). L'IBAN n'est jamais renvoyé : payment.ibanLast4 seulement.
+
+operationId : `getBillingSettings`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingSettingsDto](#schema-billingsettingsdto) (*/*) | Réglages de facturation. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PUT /api/me/billing-settings`
+
+**Remplace les réglages de facturation**
+
+Session praticien. Remplace tous les champs modifiables : un texte absent, null ou vide est effacé ; un bloc absent ou null (vat, numbering, payment, emailTemplates) prend ses valeurs par défaut. Les règles de champ sont toutes rapportées ensemble (422). Les préfixes ne changent plus dès qu'un numéro a été attribué (409). Les champs en lecture seule de la réponse et tout autre champ sont refusés (UNKNOWN_FIELD). Répond les réglages enregistrés.
+
+operationId : `putBillingSettings`
+
+Corps (`application/json`) : [BillingSettingsRequest](#schema-billingsettingsrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillingSettingsDto](#schema-billingsettingsdto) (*/*) | Réglages enregistrés. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : corps JSON absent ou illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | NUMBERING_LOCKED : un préfixe change alors qu'un numéro de facture ou d'avoir a déjà été attribué. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : siret SIRET_INVALID (pas 14 chiffres, ou clé de Luhn fausse) ; vat.rateBp VAT_RATE_REQUIRED (régime liable sans taux) ou OUT_OF_RANGE (hors 0 à 10000) ; vat.vatNumber VAT_NUMBER_REQUIRED (régime liable sans numéro), OUT_OF_RANGE ou INVALID_VALUE ; vat.regime, payment.dueTerm, payment.acceptedModes (vide ou mode inconnu), numbering.invoicePrefix, numbering.creditNotePrefix (caractère refusé, ou égal au préfixe des factures), displayEmail, displayPhone, emailTemplates.*.subject (saut de ligne) INVALID_VALUE ; OUT_OF_RANGE (texte trop long) ; INVALID_FORMAT (type JSON) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PUT /api/me/billing-settings/iban`
+
+**Enregistre l'IBAN**
+
+Session praticien. Exige le mot de passe actuel du compte. L'IBAN est normalisé (espaces retirés, majuscules), contrôlé (format et clé mod 97), puis rangé chiffré hors de la base ; seuls ses quatre derniers caractères sont gardés (payment.ibanLast4 des réglages). Il n'est jamais renvoyé. Remplace l'IBAN précédent. Après cinq mots de passe faux en quinze minutes, 429 sans vérifier le mot de passe. Tout champ autre que iban et currentPassword est refusé (UNKNOWN_FIELD).
+
+operationId : `putIban`
+
+Corps (`application/json`) : [BillingIbanRequest](#schema-billingibanrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | IBAN enregistré. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : corps JSON absent ou illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PASSWORD_INVALID : le mot de passe ne correspond pas au compte. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : iban IBAN_INVALID (format ou clé mod 97) ou REQUIRED ; currentPassword REQUIRED ou OUT_OF_RANGE ; INVALID_FORMAT ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | TOO_MANY_ATTEMPTS : cinq mots de passe faux en quinze minutes (PUT et DELETE de l'IBAN confondus) ; le mot de passe n'est plus vérifié jusqu'à la sortie du plus ancien échec de la fenêtre. En-tête Retry-After et champ retryAfterSeconds en secondes. RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `DELETE /api/me/billing-settings/iban`
+
+**Efface l'IBAN**
+
+Session praticien. Exige le mot de passe actuel du compte, dans le corps. L'IBAN rangé est effacé et payment.ibanLast4 passe à null. Idempotent : sans IBAN, 204. Même plafond d'essais du mot de passe que le PUT (429). Tout champ autre que currentPassword est refusé (UNKNOWN_FIELD).
+
+operationId : `deleteIban`
+
+Corps (`application/json`) : [BillingIbanDeleteRequest](#schema-billingibandeleterequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | IBAN effacé. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : corps JSON absent ou illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PASSWORD_INVALID : le mot de passe ne correspond pas au compte. EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : currentPassword REQUIRED ou OUT_OF_RANGE ; INVALID_FORMAT ; UNKNOWN_FIELD. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | TOO_MANY_ATTEMPTS : cinq mots de passe faux en quinze minutes (PUT et DELETE de l'IBAN confondus) ; le mot de passe n'est plus vérifié jusqu'à la sortie du plus ancien échec de la fenêtre. En-tête Retry-After et champ retryAfterSeconds en secondes. RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+## <a id="tag-facturation-seances-a-facturer"></a>Facturation : séances à facturer
+
+### `GET /api/billing/billable-sessions`
+
+**Séances à facturer, par patient**
+
+Session praticien. Séances à l'état pending du praticien courant : un groupe par patient, par nom affiché (sans tenir compte de la casse ni des accents), séances par date croissante. Tarif de chaque séance (G Q87) : montant fixé sur la séance, sinon tarif du patient, sinon prix de la prestation retenue (celle de la séance, sinon la prestation par défaut) ; rateSource dit lequel. dismissedCount compte les séances écartées des 90 derniers jours (du patient demandé s'il y en a un). Un patient archivé garde son groupe (patient.archived).
+
+operationId : `listBillableSessions`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `until` | query | string (date) | non | Jour limite inclus (AAAA-MM-JJ) : séances du jour ou d'avant. Absent : sans limite. |
+| `patientId` | query | string (uuid) | non | Un seul patient. Absent : tous. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillableSessionsDto](#schema-billablesessionsdto) (*/*) | Séances à facturer. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | PATIENT_NOT_FOUND : patientId inexistant ou d'un autre praticien. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : until INVALID_FORMAT (pas une date AAAA-MM-JJ) ; patientId INVALID_FORMAT (pas un UUID). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `PATCH /api/billing/billable-sessions/{sessionEntryId}`
+
+**Change le tarif ou la prestation d'une séance**
+
+Session praticien. Fusion partielle de amount et serviceId : un champ absent reste inchangé, null l'efface et rend le tarif calculé (tarif du patient, sinon prix de la prestation retenue). amount est un entier en centimes d'euro strictement positif : un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). serviceId désigne une prestation non archivée du praticien. Tout autre champ est refusé (UNKNOWN_FIELD). Valable aussi pour une séance écartée. Répond la séance avec son tarif retenu. Si la séance est close mais pas encore connue de la facturation (événement de clôture pas encore traité), sa ligne est créée à la demande.
+
+operationId : `updateBillableSession`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `sessionEntryId` | path | string (uuid) | oui | Identifiant de la séance. |
+
+Corps (`application/json`) : [UpdateBillableSessionRequest](#schema-updatebillablesessionrequest)
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [BillableSessionDto](#schema-billablesessiondto) (*/*) | Séance modifiée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_NOT_BILLABLE : séance inexistante, ouverte, archivée, d'accueil, de contact, ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_ALREADY_INVOICED : la séance est dans une facture, brouillon compris. |
+| 422 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | VALIDATION_FAILED avec errors[] : amount OUT_OF_RANGE (zéro, négatif ou au-delà d'un entier 32 bits) ou INVALID_FORMAT (nombre décimal, chaîne) ; serviceId INVALID_VALUE (prestation archivée, inexistante ou d'un autre praticien) ou INVALID_FORMAT (pas un UUID) ; UNKNOWN_FIELD (champ refusé). |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/billing/billable-sessions/{sessionEntryId}/dismiss`
+
+**Ne pas facturer une séance**
+
+Session praticien. La séance passe à l'état dismissed et quitte la liste des séances à facturer ; réversible par /restore. Idempotent : une séance déjà écartée répond 204. Si la séance est close mais pas encore connue de la facturation (événement de clôture pas encore traité), sa ligne est créée à la demande.
+
+operationId : `dismissBillableSession`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `sessionEntryId` | path | string (uuid) | oui | Identifiant de la séance. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Séance écartée. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_NOT_BILLABLE : séance inexistante, ouverte, archivée, d'accueil, de contact, ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_ALREADY_INVOICED : la séance est dans une facture, brouillon compris. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `POST /api/billing/billable-sessions/{sessionEntryId}/restore`
+
+**Remettre une séance à facturer**
+
+Session praticien. La séance écartée revient à l'état pending. Idempotent : une séance déjà à facturer répond 204. Une séance écartée dont la séance a été archivée depuis n'est pas remise (404). Si la séance est close mais pas encore connue de la facturation (événement de clôture pas encore traité), sa ligne est créée à la demande.
+
+operationId : `restoreBillableSession`
+
+| Paramètre | Dans | Type | Requis | Description |
+| --- | --- | --- | --- | --- |
+| `sessionEntryId` | path | string (uuid) | oui | Identifiant de la séance. |
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 204 | — | Séance remise à facturer. |
+| 400 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | MALFORMED_REQUEST : identifiant qui n'est pas un UUID, ou corps JSON illisible. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 404 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_NOT_BILLABLE : séance inexistante, ouverte, archivée, d'accueil, de contact, ou d'un autre praticien. |
+| 409 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | SESSION_ALREADY_INVOICED : la séance est dans une facture, brouillon compris. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
+
+### `GET /api/billing/billable-sessions/dismissed`
+
+**Séances écartées des 90 derniers jours**
+
+Session praticien. Séances marquées « ne pas facturer » (y compris celles écartées par l'archivage de la séance) dont le jour tombe dans les 90 derniers jours (au jour de Europe/Paris), la plus récente d'abord, chacune avec son patient. Mêmes champs qu'une séance à facturer, sans regroupement.
+
+operationId : `listDismissedSessions`
+
+| Réponse | Contenu | Description |
+| --- | --- | --- |
+| 200 | [DismissedSessionsDto](#schema-dismissedsessionsdto) (*/*) | Séances écartées. |
+| 401 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | UNAUTHENTICATED : aucune session valide (cookie absent, expiré ou révoqué). |
+| 403 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | EMAIL_NOT_CONFIRMED : adresse e-mail du compte non confirmée. |
+| 429 | [ProblemDetail](#schema-problemdetail) (application/problem+json) | RATE_LIMITED : limite de débit atteinte (en-tête Retry-After et champ retryAfterSeconds, en secondes). |
 
 ## <a id="tag-graphe"></a>Graphe
 
@@ -3032,6 +3795,301 @@ Rendez-vous rattachés au patient, triés par début.
 | --- | --- | --- | --- |
 | `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Le rendez-vous demandé et, avec includeSameGuest, les autres rendez-vous du même invité, dans leur état final (patient renseigné, guest null). |
 
+### <a id="schema-billablesessiondto"></a>BillableSessionDto
+
+Séance à facturer. Aucun texte clinique (ni titre, ni compte rendu). Montant en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int32) | non | Tarif retenu pour cette séance, en centimes d'euro : 6000 = 60,00 €. Null quand rateSource vaut none (la séance ne peut pas entrer dans une facture). |
+| `durationMin` | integer (int32) | non | Durée retenue à la clôture, en minutes. Null si inconnue. |
+| `modality` | string | non | Modalité : in_person, video, phone ou email. |
+| `occurredOn` | string (date) | non | Jour de la séance (AAAA-MM-JJ), au fuseau Europe/Paris. |
+| `rateSource` | `session` \| `patient` \| `service` \| `none` | non | Origine du tarif de cette séance (G Q87) : session (montant fixé sur la séance), patient (tarif du patient), service (prix de la prestation retenue) ou none. |
+| `serviceId` | string (uuid) | non | Prestation retenue : celle choisie pour la séance (PATCH), sinon la prestation par défaut. Null sans prestation. |
+| `serviceLabel` | string | non | Libellé de la prestation retenue. Null sans prestation. |
+| `sessionEntryId` | string (uuid) | non | Identifiant de la séance (entrée de type session). |
+
+### <a id="schema-billablesessiongroupdto"></a>BillableSessionGroupDto
+
+Séances à facturer d'un patient, par date.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `lastInvoice` | object | non | Dernière facture émise du patient ; null s'il n'en a pas. |
+| `openDraftCount` | integer (int32) | non | Nombre de brouillons de facture en cours pour ce patient. |
+| `patient` | object | non | Patient du groupe. |
+| `rate` | integer (int32) | non | Tarif commun du patient en centimes d'euro : son tarif, sinon le prix de la prestation par défaut. Null s'il n'y en a aucun. Ne tient pas compte d'un montant fixé sur une séance (voir amount et rateSource de chaque séance). |
+| `rateSource` | `session` \| `patient` \| `service` \| `none` | non | session si au moins une séance du groupe a un montant fixé à la main ; sinon l'origine de rate : patient, service ou none (G Q87). |
+| `sessions` | [BillableSessionDto](#schema-billablesessiondto)[] | non | Séances à facturer du patient, de la plus ancienne à la plus récente. |
+
+### <a id="schema-billablesessionsdto"></a>BillableSessionsDto
+
+Séances à facturer (état pending) du praticien, une entrée par patient, par nom affiché.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `dismissedCount` | integer (int64) | non | Nombre de séances écartées (« ne pas facturer ») des 90 derniers jours, pour le patient demandé s'il y en a un. |
+| `groups` | [BillableSessionGroupDto](#schema-billablesessiongroupdto)[] | non | Groupes par patient, par nom affiché (sans tenir compte des accents). |
+
+### <a id="schema-billingemailtemplatedto"></a>BillingEmailTemplateDto
+
+Modèle d'e-mail : objet et message. Variables remplacées à l'envoi : {numéro}, {montant}, {reste dû}, {échéance}.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `body` | string | non | Message, 5 000 caractères au plus. |
+| `subject` | string | non | Objet, 200 caractères au plus. |
+
+### <a id="schema-billingemailtemplaterequest"></a>BillingEmailTemplateRequest
+
+Modèle d'e-mail. Un objet ou un message absent, null ou vide reprend le texte par défaut de l'application.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `body` | string | non | Message, 5 000 caractères au plus. |
+| `subject` | string | non | Objet, 200 caractères au plus, sur une seule ligne (INVALID_VALUE sinon). |
+
+### <a id="schema-billingemailtemplatesdto"></a>BillingEmailTemplatesDto
+
+Modèles d'e-mail du praticien. Sans modèle enregistré, le texte par défaut de l'application, en français.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `invoice` | [BillingEmailTemplateDto](#schema-billingemailtemplatedto) | non |  |
+| `reminder` | [BillingEmailTemplateDto](#schema-billingemailtemplatedto) | non |  |
+
+### <a id="schema-billingemailtemplatesrequest"></a>BillingEmailTemplatesRequest
+
+Modèles d'e-mail : envoi d'une facture (invoice) et relance (reminder). Absent ou null : textes par défaut.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `invoice` | [BillingEmailTemplateRequest](#schema-billingemailtemplaterequest) | non |  |
+| `reminder` | [BillingEmailTemplateRequest](#schema-billingemailtemplaterequest) | non |  |
+
+### <a id="schema-billingibandeleterequest"></a>BillingIbanDeleteRequest
+
+Mot de passe actuel du compte, exigé pour effacer l'IBAN.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `currentPassword` | string | oui | Mot de passe actuel du compte (403 PASSWORD_INVALID s'il est faux). |
+
+### <a id="schema-billingibanrequest"></a>BillingIbanRequest
+
+IBAN à enregistrer et mot de passe actuel du compte. L'IBAN est rangé chiffré, jamais renvoyé ; seuls ses quatre derniers caractères restent lisibles (ibanLast4).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `currentPassword` | string | oui | Mot de passe actuel du compte (403 PASSWORD_INVALID s'il est faux). |
+| `iban` | string | oui | IBAN, espaces admis, lettres en majuscules ou minuscules ; format et clé mod 97 vérifiés (IBAN_INVALID). |
+
+### <a id="schema-billingissueridentitydto"></a>BillingIssuerIdentityDto
+
+Identité du praticien sur les factures, en lecture seule : elle vient du dossier professionnel et se modifie là-bas.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `name` | string | non | Nom affiché du praticien. |
+| `professionalNumber` | string | non | Numéro professionnel (ADELI ou RPPS) ; null s'il n'est pas renseigné. |
+| `title` | string | non | Titre tiré de la profession, en français comme sur la facture (Psychologue, Psychiatre, Coach). Null si la profession est inconnue. |
+
+### <a id="schema-billinglastinvoicedto"></a>BillingLastInvoiceDto
+
+Dernière facture émise du patient : numéro et date d'émission.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `issueDate` | string (date) | non | Date d'émission (AAAA-MM-JJ). |
+| `number` | string | non | Numéro de la facture. |
+
+### <a id="schema-billingnumberingdto"></a>BillingNumberingDto
+
+Numérotation continue, sans trou, par nature et par année civile (Europe/Paris) : préfixe, année, numéro sur quatre chiffres. Aucun champ ne permet de choisir le prochain numéro.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `creditNotePrefix` | string | non | Préfixe des avoirs, 10 caractères au plus. |
+| `invoicePrefix` | string | non | Préfixe des factures, 10 caractères au plus. |
+| `locked` | boolean | non | Vrai dès qu'un numéro (facture ou avoir) a été attribué : les préfixes ne changent plus (409 NUMBERING_LOCKED). |
+| `nextCreditNoteNumber` | string | non | Prochain numéro d'avoir de l'année en cours, à titre indicatif. |
+| `nextInvoiceNumber` | string | non | Prochain numéro de facture de l'année en cours, à titre indicatif : il est attribué à l'émission. |
+
+### <a id="schema-billingnumberingrequest"></a>BillingNumberingRequest
+
+Préfixes de numérotation. Absent, null ou vide : préfixe par défaut (F, AV). Lettres et chiffres, tirets ou soulignés entre eux, 10 caractères au plus ; les deux préfixes diffèrent. Ils ne changent plus dès qu'un numéro a été attribué (409 NUMBERING_LOCKED).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `creditNotePrefix` | string | non | Préfixe des avoirs. |
+| `invoicePrefix` | string | non | Préfixe des factures. |
+
+### <a id="schema-billingpatientrefdto"></a>BillingPatientRefDto
+
+Patient : identifiant, nom affiché et archivage. Aucune donnée clinique.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `archived` | boolean | non | Patient archivé : son groupe se lit sans être facturable (409). |
+| `displayName` | string | non | Nom affiché du patient. |
+| `id` | string (uuid) | non | Identifiant du patient. |
+
+### <a id="schema-billingpaymentdto"></a>BillingPaymentDto
+
+Paiement ou remboursement. Montant en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | non | Montant en centimes. |
+| `cancelledAt` | string (date-time) | non | Instant d'annulation, ISO 8601 UTC. Null si le paiement vaut. |
+| `id` | string (uuid) | non | Identifiant du paiement. |
+| `invoiceId` | string (uuid) | non | Facture payée (ou avoir remboursé). |
+| `invoiceNumber` | string | non | Numéro de la facture. |
+| `kind` | `payment` \| `refund` | non | Nature : payment ou refund. |
+| `mode` | string | non | Mode : cash, cheque, transfer, card ou other. |
+| `note` | string | non | Note. Null sans note. |
+| `receivedOn` | string (date) | non | Date de réception (AAAA-MM-JJ). |
+| `reference` | string | non | Référence (numéro de chèque…). Null sans référence. |
+
+### <a id="schema-billingpaymenttermsdto"></a>BillingPaymentTermsDto
+
+Modalités de règlement proposées par défaut sur chaque facture.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `acceptedModes` | string[] | non | Modes de paiement acceptés, sans doublon, parmi transfer, cheque, cash, card, other. |
+| `chequePayee` | string | non | Ordre des chèques, 120 caractères au plus ; null si non renseigné. |
+| `dueTerm` | `on_receipt` \| `days_15` \| `days_30` | non | Échéance par défaut : on_receipt (à réception), days_15, days_30 (jours après l'émission). |
+| `ibanLast4` | string | non | Quatre derniers caractères de l'IBAN enregistré, null sans IBAN. L'IBAN entier n'est jamais renvoyé. |
+| `showBankDetails` | boolean | non | Afficher les coordonnées bancaires sur les factures. |
+
+### <a id="schema-billingpaymenttermsrequest"></a>BillingPaymentTermsRequest
+
+Modalités de règlement. Un champ absent ou null prend sa valeur par défaut : dueTerm on_receipt, acceptedModes [transfer, cheque, cash], showBankDetails false, chequePayee effacé.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `acceptedModes` | string[] | non | Modes acceptés, au moins un, parmi transfer, cheque, cash, card, other (INVALID_VALUE sinon) ; les doublons sont retirés. |
+| `chequePayee` | string | non | Ordre des chèques, 120 caractères au plus. |
+| `dueTerm` | `on_receipt` \| `days_15` \| `days_30` | non | on_receipt, days_15 ou days_30 (INVALID_VALUE sinon). |
+| `showBankDetails` | boolean | non | Afficher les coordonnées bancaires sur les factures. |
+
+### <a id="schema-billingprofiledto"></a>BillingProfileDto
+
+Profil de facturation d'un patient. Tous les champs sont null tant que rien n'est enregistré.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse de facturation, lignes séparées par des sauts de ligne. |
+| `rate` | integer (int32) | non | Tarif du patient en centimes d'euro (entier strictement positif) : 5500 = 55,00 €. Null : le tarif vient de la prestation par défaut (G Q87). |
+| `thirdPartyAddress` | string | non | Adresse du tiers. |
+| `thirdPartyName` | string | non | Nom du tiers à qui adresser la facture. |
+
+### <a id="schema-billingprofilerequest"></a>BillingProfileRequest
+
+Profil de facturation complet : remplace l'existant ; un champ absent, null ou vide est effacé. Montant en centimes d'euro entiers : un nombre décimal est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse de facturation, 300 caractères au plus. |
+| `rate` | integer (int32) | non | Tarif en centimes d'euro, entier strictement positif ; null l'efface. |
+| `thirdPartyAddress` | string | non | Adresse du tiers, 300 caractères au plus. |
+| `thirdPartyName` | string | non | Nom du tiers, 200 caractères au plus. |
+
+### <a id="schema-billingservicedto"></a>BillingServiceDto
+
+Prestation du praticien. Montant en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | non | Durée en minutes, de 1 à 600. Null si non précisée. |
+| `id` | string (uuid) | non | Identifiant de la prestation. |
+| `isDefault` | boolean | non | Prestation par défaut : son prix sert de tarif quand ni la séance ni le patient n'en ont (G Q87). Une seule par praticien. |
+| `label` | string | non | Libellé, 120 caractères au plus. |
+| `price` | integer (int32) | non | Prix en centimes d'euro (entier strictement positif) : 6000 = 60,00 €. Hors taxes si le praticien est assujetti à la TVA. |
+
+### <a id="schema-billingservicesdto"></a>BillingServicesDto
+
+Prestations non archivées du praticien : la prestation par défaut d'abord, puis par libellé.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `services` | [BillingServiceDto](#schema-billingservicedto)[] | non | Prestations, 50 au plus. |
+
+### <a id="schema-billingsettingsdto"></a>BillingSettingsDto
+
+Réglages de facturation du praticien. Ils existent toujours : sans réglages enregistrés, valeurs par défaut, adresse et e-mail proposés depuis le dossier professionnel.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse du cabinet sur les factures, lignes séparées par des sauts de ligne. Tant qu'elle n'est pas enregistrée, adresse du dossier professionnel proposée (null s'il n'en a pas). |
+| `displayEmail` | string | non | E-mail affiché sur les factures. Tant qu'il n'est pas enregistré, e-mail du compte proposé. |
+| `displayPhone` | string | non | Téléphone affiché, facultatif ; null s'il n'est pas renseigné. |
+| `emailTemplates` | [BillingEmailTemplatesDto](#schema-billingemailtemplatesdto) | non |  |
+| `footerNote` | string | non | Mention au bas de chaque facture, 500 caractères au plus ; null sinon. |
+| `identity` | [BillingIssuerIdentityDto](#schema-billingissueridentitydto) | non |  |
+| `missing` | string[] | non | Ce qui empêche d'émettre une facture, dans cet ordre : siret (absent), addressLines (aucune adresse, ni enregistrée ni proposée), service (aucune prestation active). Vide quand tout est prêt. |
+| `numbering` | [BillingNumberingDto](#schema-billingnumberingdto) | non |  |
+| `payment` | [BillingPaymentTermsDto](#schema-billingpaymenttermsdto) | non |  |
+| `siret` | string | non | SIRET, 14 chiffres ; null s'il n'est pas renseigné. |
+| `vat` | [BillingVatDto](#schema-billingvatdto) | non |  |
+
+### <a id="schema-billingsettingsrequest"></a>BillingSettingsRequest
+
+Réglages complets : remplacent l'existant. Un texte absent, null ou vide est effacé ; un bloc absent ou null (vat, numbering, payment, emailTemplates) prend ses valeurs par défaut. Les champs en lecture seule de la réponse (identity, vat.mention, numbering.nextInvoiceNumber, numbering.nextCreditNoteNumber, numbering.locked, payment.ibanLast4, missing) et tout autre champ sont refusés (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse du cabinet, 300 caractères au plus. |
+| `displayEmail` | string | non | E-mail affiché (INVALID_VALUE s'il est mal formé). |
+| `displayPhone` | string | non | Téléphone affiché : chiffres, espaces, +, parenthèses, points et tirets. |
+| `emailTemplates` | [BillingEmailTemplatesRequest](#schema-billingemailtemplatesrequest) | non |  |
+| `footerNote` | string | non | Mention au bas de chaque facture, 500 caractères au plus. |
+| `numbering` | [BillingNumberingRequest](#schema-billingnumberingrequest) | non |  |
+| `payment` | [BillingPaymentTermsRequest](#schema-billingpaymenttermsrequest) | non |  |
+| `siret` | string | non | SIRET : 14 chiffres dont la clé de Luhn (SIRET_INVALID sinon) ; les espaces sont retirés. |
+| `vat` | [BillingVatRequest](#schema-billingvatrequest) | non |  |
+
+### <a id="schema-billingsummarydto"></a>BillingSummaryDto
+
+Chiffres de la facturation au jour de Europe/Paris. Montants en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `billableAmount` | integer (int64) | non | Somme des tarifs des séances à facturer qui en ont un. |
+| `billableCount` | integer (int32) | non | Nombre de séances à facturer. |
+| `billableWithoutRate` | integer (int32) | non | Nombre de séances à facturer sans tarif. |
+| `collected` | integer (int64) | non | Encaissé dans le mois : paiements non annulés reçus ce mois, remboursements déduits. |
+| `month` | string | non | Mois courant (AAAA-MM), celui de collected. |
+| `oldestOverdueDays` | integer (int32) | non | Jours de retard de la plus ancienne échéance dépassée. Null sans facture en retard. |
+| `outstanding` | integer (int64) | non | Somme des restes dus des factures émises. |
+| `outstandingCount` | integer (int32) | non | Nombre de factures émises avec un reste dû. |
+| `overdue` | integer (int64) | non | Somme des restes dus des factures en retard. |
+| `overdueCount` | integer (int32) | non | Nombre de factures en retard. |
+| `paymentCount` | integer (int32) | non | Nombre de paiements non annulés reçus dans le mois. |
+
+### <a id="schema-billingvatdto"></a>BillingVatDto
+
+Régime de TVA et mention portée sur chaque facture (G Q92).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `mention` | string | non | Mention légale du régime, fournie par l'application et toujours en français, quelle que soit la langue servie : ce n'est pas un champ libre. health_exempt : « TVA non applicable, article 261-4-1° du Code général des impôts » ; franchise : « TVA non applicable, article 293 B du Code général des impôts » ; null en régime liable (aucune mention d'exonération). |
+| `rateBp` | integer (int32) | non | Taux de TVA en points de base (2000 = 20 %), de 0 à 10000. Renseigné en régime liable seulement, null sinon. |
+| `regime` | `health_exempt` \| `franchise` \| `liable` | non | Régime : health_exempt (exonérée, soins à la personne), franchise (franchise en base) ou liable (assujettie : prix hors taxes, la facture montre HT, TVA, TTC). |
+| `vatNumber` | string | non | Numéro de TVA intracommunautaire, en régime liable seulement, null sinon. |
+
+### <a id="schema-billingvatrequest"></a>BillingVatRequest
+
+Régime de TVA. Absent ou null : health_exempt. En régime liable, rateBp (VAT_RATE_REQUIRED) et vatNumber (VAT_NUMBER_REQUIRED) sont obligatoires ; hors régime liable, ils sont ignorés et effacés.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `rateBp` | integer (int32) | non | Taux en points de base, de 0 à 10000 (2000 = 20 %). |
+| `regime` | `health_exempt` \| `franchise` \| `liable` | non | health_exempt, franchise ou liable (INVALID_VALUE sinon). |
+| `vatNumber` | string | non | Numéro de TVA intracommunautaire : deux lettres de pays puis 2 à 18 caractères alphanumériques, 20 au plus ; espaces retirés, lettres en majuscules. |
+
 ### <a id="schema-bookingrequestsdto"></a>BookingRequestsDto
 
 Demandes de rendez-vous en ligne en attente de réponse (G Q74) : rendez-vous à confirmer nés d'une demande en ligne, à venir.
@@ -3152,6 +4210,17 @@ Création d'un rendez-vous, ou d'une série si recurrence est présent. Exacteme
 | `tentative` | boolean | non | true pour « À confirmer » (statut tentative, appliqué à toutes les occurrences). Défaut : false. |
 | `tz` | string | non | Fuseau IANA dans lequel les occurrences d'une série gardent la même heure locale et dans lequel until est lu (INVALID_VALUE si inconnu). Défaut : Europe/Paris. |
 
+### <a id="schema-createbillingservicerequest"></a>CreateBillingServiceRequest
+
+Nouvelle prestation. Montant en centimes d'euro entiers : un nombre décimal est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | non | Durée en minutes, de 1 à 600, facultative. |
+| `isDefault` | boolean | non | Devient la prestation par défaut (retire le défaut de l'autre). Facultatif : la première prestation créée devient la prestation par défaut de toute façon. |
+| `label` | string | oui | Libellé, obligatoire, 120 caractères au plus. |
+| `price` | integer (int32) | oui | Prix en centimes d'euro, entier strictement positif : 6000 = 60,00 €. |
+
 ### <a id="schema-createbookingrequest"></a>CreateBookingRequest
 
 Demande de rendez-vous en ligne (G Q72). Aucun champ libre : ni motif, ni message. La demande n'est rattachée à aucun dossier ; rien n'entre dans l'agenda avant la vérification de l'e-mail.
@@ -3168,6 +4237,18 @@ Demande de rendez-vous en ligne (G Q72). Aucun champ libre : ni motif, ni messag
 | `phone` | string | non | Téléphone, facultatif, 30 caractères au plus : chiffres, espaces, +, point, tiret, parenthèses, au moins un chiffre (INVALID_FORMAT sinon) ; chaîne vide : aucun téléphone. |
 | `startsAt` | string (date-time) | oui | Début du créneau choisi, instant UTC ISO 8601 : exactement le startsAt d'un créneau offert (GET …/slots). Obligatoire. |
 | `website` | string | non | Piège anti-spam (honeypot) : champ caché du formulaire, à laisser vide ; rempli, la demande est ignorée en silence (202 sans ligne ni e-mail). |
+
+### <a id="schema-createcreditnoterequest"></a>CreateCreditNoteRequest
+
+Avoir sur une facture émise : portée, lignes annulées, motif et numéro attendu. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `expectedNumber` | string | oui | Numéro d'avoir que le praticien a vu (numbering.nextCreditNoteNumber des réglages). S'il n'est plus le suivant de la suite : 409 CREDIT_NOTE_NUMBER_CHANGED, rien n'est émis. |
+| `lineIds` | string (uuid)[] | non | Portée lines : identifiants des lignes de la facture à annuler (1 à 300, sans doublon, aucune déjà créditée). Portée full : absent, null ou vide. |
+| `reasonCode` | `session_cancelled` \| `wrong_amount` \| `wrong_recipient` \| `other` | oui | Motif : session_cancelled (séance annulée), wrong_amount (montant erroné), wrong_recipient (erreur de destinataire), other (reasonText obligatoire). |
+| `reasonText` | string | non | Texte du motif, imprimé sur l'avoir, 300 caractères au plus ; obligatoire avec other (REASON_TEXT_REQUIRED). |
+| `scope` | `full` \| `lines` | oui | full : toutes les lignes encore non créditées ; lines : les lignes de lineIds, entières. |
 
 ### <a id="schema-createemotionrequest"></a>CreateEmotionRequest
 
@@ -3196,6 +4277,24 @@ Création d'une entrée. Champs minimaux par type : note = body ; event = title 
 | `title` | string | non | Titre (obligatoire pour event et situation). Refusé pour une séance (NOT_ALLOWED_ON_CREATE). |
 | `type` | `note` \| `event` \| `situation` \| `feeling` \| `session` \| `medication` | oui | Type de l'entrée. Obligatoire (REQUIRED). |
 | `visibility` | `private` \| `clinical` | non | Visibilité : private ou clinical (défaut clinical). Autre valeur : INVALID_VALUE. |
+
+### <a id="schema-createinvoicebatchrequest"></a>CreateInvoiceBatchRequest
+
+Séances à facturer, de 1 à 200, sans doublon : un brouillon par patient, tout ou rien. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `sessionEntryIds` | string (uuid)[] | oui | Séances à facturer, de 1 à 200, sans doublon. |
+
+### <a id="schema-createinvoicerequest"></a>CreateInvoiceRequest
+
+Nouveau brouillon : une ligne par séance de sessionEntryIds (désignation sans texte clinique, tarif de la séance), par date, puis les lignes données dans leur ordre. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `lines` | [InvoiceLineRequest](#schema-invoicelinerequest)[] | non | Lignes à ajouter après les séances : 100 lignes libres au plus. Facultatif. |
+| `patientId` | string (uuid) | oui | Patient de la facture. |
+| `sessionEntryIds` | string (uuid)[] | non | Séances à facturer, 200 au plus, sans doublon : séances closes du patient, à facturer ou écartées. Facultatif. |
 
 ### <a id="schema-createlinkrequest"></a>CreateLinkRequest
 
@@ -3297,6 +4396,30 @@ Listes fermées de l'annuaire. Seules les entrées actives sont rendues, dans l'
 | `languages` | [Item](#schema-item)[] | non | Langues proposées par défaut (15 codes ISO 639-1, triées par libellé français) ; tout autre code ISO 639-1 reste accepté dans le profil. |
 | `modalities` | [Item](#schema-item)[] | non | Modalités de consultation, liste fixe : in_person (au cabinet), video (en visio), home (à domicile). |
 | `specialties` | [Item](#schema-item)[] | non | Spécialités actives, par rang puis libellé français (liste administrable). |
+
+### <a id="schema-dismissedsessiondto"></a>DismissedSessionDto
+
+Séance écartée : mêmes champs qu'une séance à facturer, plus son patient. Aucun texte clinique.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int32) | non | Tarif retenu en centimes d'euro. Null quand rateSource vaut none. |
+| `durationMin` | integer (int32) | non | Durée retenue à la clôture, en minutes. Null si inconnue. |
+| `modality` | string | non | Modalité : in_person, video, phone ou email. |
+| `occurredOn` | string (date) | non | Jour de la séance (AAAA-MM-JJ), au fuseau Europe/Paris. |
+| `patient` | object | non | Patient de la séance. |
+| `rateSource` | `session` \| `patient` \| `service` \| `none` | non | Origine du tarif (G Q87) : session, patient, service ou none. |
+| `serviceId` | string (uuid) | non | Prestation retenue : celle choisie pour la séance, sinon la prestation par défaut. Null sans prestation. |
+| `serviceLabel` | string | non | Libellé de la prestation retenue. Null sans prestation. |
+| `sessionEntryId` | string (uuid) | non | Identifiant de la séance (entrée de type session). |
+
+### <a id="schema-dismissedsessionsdto"></a>DismissedSessionsDto
+
+Séances écartées (« ne pas facturer ») des 90 derniers jours, la plus récente d'abord.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `sessions` | [DismissedSessionDto](#schema-dismissedsessiondto)[] | non | Séances écartées, chacune avec son patient. |
 
 ### <a id="schema-documentdto"></a>DocumentDto
 
@@ -3858,6 +4981,224 @@ Invité : personne qui n'a pas encore de fiche patient (G Q60). Nom obligatoire,
 | `lastName` | string | oui | Nom, 100 caractères au plus. Obligatoire. |
 | `phone` | string | non | Téléphone, 30 caractères au plus : chiffres, espaces, +, point, tiret, parenthèses, au moins un chiffre (INVALID_FORMAT sinon) ; chaîne vide : aucun téléphone. |
 
+### <a id="schema-invoicealreadypaidrequest"></a>InvoiceAlreadyPaidRequest
+
+Paiement du total reçu avant l'émission. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `mode` | `transfer` \| `cheque` \| `cash` \| `card` \| `other` | oui | Mode : transfer, cheque, cash, card ou other ; un mode accepté par les réglages, other toujours (MODE_NOT_ACCEPTED sinon). |
+| `receivedOn` | string (date) | oui | Date de réception (AAAA-MM-JJ), aujourd'hui au plus tard. |
+| `reference` | string | non | Référence (numéro de chèque…), 120 caractères au plus. Facultative. |
+
+### <a id="schema-invoicebatchdto"></a>InvoiceBatchDto
+
+Brouillons créés, un par patient, dans l'ordre où chaque patient apparaît la première fois dans la demande.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `invoices` | [InvoiceBatchItemDto](#schema-invoicebatchitemdto)[] | non | Brouillons créés. |
+
+### <a id="schema-invoicebatchitemdto"></a>InvoiceBatchItemDto
+
+Brouillon créé pour un patient. Total en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `id` | string (uuid) | non | Identifiant du brouillon. |
+| `patient` | object | non | Patient du brouillon. |
+| `total` | integer (int64) | non | Total du brouillon en centimes. |
+
+### <a id="schema-invoicecreditnoterefdto"></a>InvoiceCreditNoteRefDto
+
+Avoir émis sur cette facture.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `id` | string (uuid) | non | Identifiant de l'avoir. |
+| `issueDate` | string (date) | non | Date d'émission (AAAA-MM-JJ). |
+| `number` | string | non | Numéro de l'avoir. |
+| `total` | integer (int64) | non | Total de l'avoir en centimes, négatif. |
+
+### <a id="schema-invoicedto"></a>InvoiceDto
+
+Facture ou avoir, avec ses lignes, son émetteur, son destinataire et son historique. Montants en centimes d'euro entiers (6000 = 60,00 €).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `balanceDue` | integer (int64) | non | Reste dû en centimes, jamais négatif ; 0 pour un avoir. |
+| `cancels` | object | non | Pour un avoir : la facture annulée. Null sinon. |
+| `cancelsNumber` | string | non | Pour un avoir : numéro de la facture annulée. Null sinon. |
+| `creditNoteNumber` | string | non | Numéro du dernier avoir émis sur cette facture. Null sans avoir. |
+| `creditNotes` | [InvoiceCreditNoteRefDto](#schema-invoicecreditnoterefdto)[] | non | Avoirs émis sur cette facture, par date d'émission puis numéro. |
+| `credited` | integer (int64) | non | Total crédité par les avoirs émis sur cette facture, en centimes, positif ; 0 pour un avoir. |
+| `dueOn` | string (date) | non | Échéance effective (AAAA-MM-JJ). |
+| `dueTerm` | `on_receipt` \| `days_15` \| `days_30` \| `date` | non | Échéance : on_receipt, days_15, days_30 ou date (dueOn choisie). |
+| `footerNote` | string | non | Mention de bas de page. Null sans mention. |
+| `history` | [InvoiceHistoryDto](#schema-invoicehistorydto)[] | non | Historique, du plus ancien au plus récent. |
+| `id` | string (uuid) | non | Identifiant de la facture. |
+| `issueDate` | string (date) | non | Date d'émission (AAAA-MM-JJ) ; pour un brouillon, la date d'émission prévue. |
+| `issuer` | object | non | Émetteur. |
+| `kind` | `invoice` \| `credit_note` | non | Nature : invoice (facture) ou credit_note (avoir). |
+| `lastPaymentMode` | string | non | Mode du dernier paiement non annulé. Null sans paiement. |
+| `lines` | [InvoiceLineDto](#schema-invoicelinedto)[] | non | Lignes, par position. |
+| `nextNumberPreview` | string | non | Brouillon : numéro que la facture recevrait si elle était émise maintenant, dans la suite de l'année de sa date d'émission prévue (simple aperçu, attribué à l'émission). Null pour un document émis. |
+| `number` | string | non | Numéro attribué à l'émission. Null pour un brouillon. |
+| `overdue` | boolean | non | En retard : facture émise, échéance passée (au jour de Europe/Paris), reste dû positif. |
+| `overdueDays` | integer (int32) | non | Jours de retard. Null sans retard. |
+| `paid` | integer (int64) | non | Total payé en centimes, paiements annulés exclus ; pour un avoir, total remboursé. |
+| `patient` | object | non | Patient de la facture. |
+| `payments` | [BillingPaymentDto](#schema-billingpaymentdto)[] | non | Paiements (M15-10) ; vide tant qu'il n'y en a pas. |
+| `reasonCode` | `session_cancelled` \| `wrong_amount` \| `wrong_recipient` \| `other` | non | Pour un avoir : motif, session_cancelled, wrong_amount, wrong_recipient ou other. Null pour une facture. |
+| `reasonText` | string | non | Pour un avoir : texte du motif. Null sans texte et pour une facture. |
+| `recipient` | object | non | Destinataire. |
+| `refundDue` | integer (int64) | non | Pour un avoir : montant encore à rembourser en centimes, positif : ce que l'avoir dépassait du reste dû de la facture à son émission, remboursements non annulés déduits. 0 pour une facture. |
+| `status` | `draft` \| `due` \| `partial` \| `paid` \| `void` \| `issued` | non | Statut calculé : draft, due, partial, paid, void ; issued pour un avoir. |
+| `subject` | object | non | Ce que la facture couvre. |
+| `subtotal` | integer (int64) | non | Sous-total (somme des lignes) en centimes ; négatif pour un avoir. |
+| `total` | integer (int64) | non | Total en centimes ; négatif pour un avoir (il retire ce montant de la facture annulée). |
+| `updatedAt` | string (date-time) | non | Dernière modification, ISO 8601 UTC. |
+| `vat` | integer (int64) | non | TVA en centimes, 0 hors régime assujetti ; négative pour un avoir. |
+
+### <a id="schema-invoicehistorydto"></a>InvoiceHistoryDto
+
+Événement de l'historique de la facture.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `at` | string (date-time) | non | Instant de l'événement, ISO 8601 UTC. |
+| `detail` | object | non | Détail de l'événement ; pour draft_created : sessionCount (lignes de séance à la création) et batch (créé par lot). |
+| `kind` | string | non | Nature : draft_created, issued, sent, payment_recorded, payment_cancelled, credit_note_issued, voided. |
+
+### <a id="schema-invoiceissuerdto"></a>InvoiceIssuerDto
+
+Émetteur : pour un brouillon, les réglages de facturation du moment ; pour un document émis, l'instantané pris à l'émission.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `acceptedModes` | string[] | non | Modes de paiement acceptés, parmi transfer, cheque, cash, card, other. |
+| `addressLines` | string | non | Adresse, lignes séparées par des sauts de ligne. |
+| `bankDetailsShown` | boolean | non | Coordonnées bancaires imprimées : réglage activé et IBAN enregistré (l'IBAN n'est jamais renvoyé). |
+| `chequePayee` | string | non | Ordre des chèques. |
+| `displayEmail` | string | non | E-mail affiché. |
+| `displayPhone` | string | non | Téléphone affiché. |
+| `name` | string | non | Nom affiché du praticien. |
+| `professionalNumber` | string | non | Numéro professionnel (ADELI, RPPS). Null s'il n'est pas renseigné. |
+| `siret` | string | non | SIRET (14 chiffres). Null s'il n'est pas renseigné. |
+| `title` | string | non | Titre imprimé de la profession. |
+| `vatMention` | string | non | Mention légale du régime de TVA (G Q92) ; null en régime assujetti, qui imprime HT, TVA et TTC. |
+| `vatNumber` | string | non | Numéro de TVA intracommunautaire, en régime assujetti. |
+| `vatRateBp` | integer (int32) | non | Taux de TVA en points de base (2000 = 20 %), en régime assujetti. |
+
+### <a id="schema-invoicelinedto"></a>InvoiceLineDto
+
+Ligne de facture. Aucun texte clinique : une date et une désignation. Montants en centimes d'euro entiers.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | non | Montant : quantité × prix unitaire, en centimes ; sur un avoir, l'opposé du montant de la ligne annulée (négatif pour une ligne de séance). |
+| `credited` | boolean | non | Ligne d'une facture annulée par un avoir ; toujours faux sur un avoir. |
+| `id` | string (uuid) | non | Identifiant de la ligne (change quand les lignes sont remplacées). |
+| `label` | string | non | Désignation. |
+| `occurredOn` | string (date) | non | Date de la ligne (AAAA-MM-JJ). Null sans date. |
+| `position` | integer (int32) | non | Position, à partir de 1. |
+| `quantity` | integer (int32) | non | Quantité, de 1 à 999. |
+| `serviceId` | string (uuid) | non | Prestation de la ligne. Null sans prestation. |
+| `sessionEntryId` | string (uuid) | non | Séance facturée par cette ligne. Null pour une ligne libre. |
+| `unitPrice` | integer (int32) | non | Prix unitaire en centimes ; négatif pour une remise ; sur un avoir, l'opposé du prix de la ligne annulée. |
+
+### <a id="schema-invoicelinerequest"></a>InvoiceLineRequest
+
+Ligne de facture. Avec sessionEntryId : ligne de la séance (désignation et prix donnés, date de la séance) ; sans : ligne libre. Prix en centimes d'euro entiers, négatif pour une remise ; un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `label` | string | oui | Désignation, obligatoire, 200 caractères au plus. Aucun texte clinique. |
+| `occurredOn` | string (date) | non | Date de la ligne (AAAA-MM-JJ), facultative ; pour une ligne de séance, toujours le jour de la séance (la valeur envoyée est ignorée). |
+| `quantity` | integer (int32) | non | Quantité, de 1 à 999 ; 1 si absente. |
+| `serviceId` | string (uuid) | non | Prestation du praticien, non archivée (une prestation archivée depuis reste admise si une ligne actuelle du brouillon la porte). Facultative. |
+| `sessionEntryId` | string (uuid) | non | Séance facturée par la ligne : séance close du patient de la facture, à facturer, écartée ou déjà dans ce brouillon. Absent pour une ligne libre. |
+| `unitPrice` | integer (int32) | oui | Prix unitaire en centimes d'euro, entier de -10000000 à 10000000 ; négatif pour une remise. |
+
+### <a id="schema-invoicepagedto"></a>InvoicePageDto
+
+Une page de factures : brouillons d'abord, puis date d'émission décroissante, puis identifiant.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `items` | [InvoiceSummaryDto](#schema-invoicesummarydto)[] | non | Factures de la page. |
+| `nextCursor` | string | non | Curseur opaque de la page suivante (paramètre cursor). Null sur la dernière page. |
+
+### <a id="schema-invoicerecipientdto"></a>InvoiceRecipientDto
+
+Destinataire : posé à la création depuis le patient (ou le tiers payeur) et son profil de facturation, modifiable sur un brouillon.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse, lignes séparées par des sauts de ligne. Null sans adresse. |
+| `name` | string | non | Nom du destinataire. |
+| `patientName` | string | non | Nom du patient quand le destinataire est quelqu'un d'autre (tiers payeur) ; null sinon. |
+
+### <a id="schema-invoicerecipientrequest"></a>InvoiceRecipientRequest
+
+Destinataire du brouillon : remplace nom et adresse. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse, 300 caractères au plus ; null ou vide l'efface. |
+| `name` | string | oui | Nom, obligatoire, 200 caractères au plus. |
+
+### <a id="schema-invoicerefdto"></a>InvoiceRefDto
+
+Facture que cet avoir annule.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `id` | string (uuid) | non | Identifiant de la facture. |
+| `number` | string | non | Numéro de la facture. |
+
+### <a id="schema-invoicesubjectdto"></a>InvoiceSubjectDto
+
+Ce que la facture couvre : nombre de lignes de séance, première et dernière date des lignes, et, pour une facture sans séance, la désignation de sa première ligne.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `firstOn` | string (date) | non | Plus ancienne date des lignes (AAAA-MM-JJ). Null sans date. |
+| `label` | string | non | Désignation de la première ligne quand la facture n'a aucune ligne de séance ; null sinon. |
+| `lastOn` | string (date) | non | Plus récente date des lignes (AAAA-MM-JJ). Null sans date. |
+| `sessionCount` | integer (int32) | non | Nombre de lignes de séance. |
+
+### <a id="schema-invoicesummarydto"></a>InvoiceSummaryDto
+
+Facture ou avoir dans la liste. Montants en centimes d'euro entiers (6000 = 60,00 €).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `balanceDue` | integer (int64) | non | Reste dû en centimes : total moins payé moins crédité, jamais négatif ; 0 pour un avoir. |
+| `cancelsNumber` | string | non | Pour un avoir : numéro de la facture qu'il annule. Null sinon. |
+| `creditNoteNumber` | string | non | Numéro du dernier avoir émis sur cette facture. Null sans avoir. |
+| `dueOn` | string (date) | non | Échéance effective (AAAA-MM-JJ) : la date choisie, sinon la date d'émission plus le délai (0, 15 ou 30 jours). |
+| `id` | string (uuid) | non | Identifiant de la facture. |
+| `issueDate` | string (date) | non | Date d'émission (AAAA-MM-JJ) ; pour un brouillon, la date d'émission prévue. |
+| `kind` | `invoice` \| `credit_note` | non | Nature : invoice (facture) ou credit_note (avoir). |
+| `lastPaymentMode` | string | non | Mode du dernier paiement non annulé (M15-10). Null sans paiement. |
+| `number` | string | non | Numéro attribué à l'émission. Null pour un brouillon. |
+| `overdue` | boolean | non | En retard : facture émise dont l'échéance est passée (au jour de Europe/Paris) et dont le reste dû est positif. |
+| `overdueDays` | integer (int32) | non | Jours de retard (aujourd'hui moins l'échéance). Null sans retard. |
+| `patient` | object | non | Patient de la facture. |
+| `status` | `draft` \| `due` \| `partial` \| `paid` \| `void` \| `issued` | non | Statut calculé : draft (brouillon), due (à payer), partial (en partie payée ou créditée), paid (soldée), void (annulée par un avoir) ; issued pour un avoir. |
+| `subject` | object | non | Ce que la facture couvre. |
+| `total` | integer (int64) | non | Total en centimes (sous-total plus TVA). Pour un brouillon, TVA calculée avec les réglages du moment. Négatif pour un avoir. |
+
+### <a id="schema-issueinvoicerequest"></a>IssueInvoiceRequest
+
+Émission d'un brouillon : numéro attendu (celui affiché, nextNumberPreview) et, si la facture est déjà réglée, le paiement reçu. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `alreadyPaid` | object | non | Facture déjà réglée : un paiement du total est enregistré dans la même transaction que l'émission. Absent ou null : aucun paiement. |
+| `expectedNumber` | string | oui | Numéro que le praticien a vu (nextNumberPreview du brouillon). S'il n'est plus le suivant de la suite : 409 INVOICE_NUMBER_CHANGED, rien n'est émis. |
+
 ### <a id="schema-item"></a>Item
 
 Entrée d'une liste fermée de l'annuaire, avec ses libellés fr, en et ar.
@@ -4173,6 +5514,30 @@ Rendez-vous actifs d'un patient à partir d'un instant, et les valeurs à prére
 | `appointments` | [AppointmentDto](#schema-appointmentdto)[] | non | Rendez-vous actifs (planned, tentative) du praticien courant pour ce patient, non terminés à l'instant from, triés par début. |
 | `defaults` | object | non | Défauts de création d'un rendez-vous pour ce patient. |
 
+### <a id="schema-patientbillingdto"></a>PatientBillingDto
+
+Où en est la facturation d'un patient. Montants en centimes d'euro entiers ; retard au jour de Europe/Paris.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `balanceDue` | integer (int64) | non | Somme des restes dus de ses factures émises. |
+| `billableCount` | integer (int32) | non | Nombre de ses séances à facturer. |
+| `dueInvoiceCount` | integer (int32) | non | Nombre de ses factures émises avec un reste dû. |
+| `nextDueOn` | string (date) | non | Échéance la plus proche d'une facture avec un reste dû (la plus ancienne, donc une échéance passée si une facture est en retard). Null sans reste dû. |
+| `patient` | object | non | Le patient. |
+| `rate` | integer (int32) | non | Tarif commun en centimes : son tarif, sinon le prix de la prestation par défaut. Null si rateSource vaut none. |
+| `rateSource` | `patient` \| `service` \| `none` | non | Origine du tarif : patient, service ou none (session n'apparaît pas ici : aucun montant fixé sur une séance n'entre dans le tarif commun). |
+| `recipient` | object | non | Destinataire par défaut d'une nouvelle facture. |
+
+### <a id="schema-patientbillingrecipientdto"></a>PatientBillingRecipientDto
+
+Destinataire qu'aurait une nouvelle facture : le tiers payeur du profil de facturation s'il est renseigné, sinon le patient avec l'adresse de son profil.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `addressLines` | string | non | Adresse, lignes séparées par des sauts de ligne. Null sans adresse. |
+| `name` | string | non | Nom du destinataire. |
+
 ### <a id="schema-patientdto"></a>PatientDto
 
 Fiche d'un patient du praticien connecté, avec ses drapeaux actifs et ses tags. Chaque modification par PATCH incrémente currentVersion et archive un instantané consultable via GET /api/patients/{id}/versions.
@@ -4228,6 +5593,55 @@ Information du Profil 360 d'un patient : ce qui décrit la personne, hors séanc
 | `periodYear` | integer (int32) | non | Année de tri du fil chronologique, 1900 à 2100 (history seulement) ; null si aucune ou hors history. |
 | `title` | string | non | L'information elle-même, 200 caractères au plus. |
 | `updatedAt` | string (date-time) | non | Date-heure de la dernière correction (égale à createdAt si jamais corrigée), UTC ISO 8601. |
+
+### <a id="schema-paymentjournalitemdto"></a>PaymentJournalItemDto
+
+Paiement ou remboursement du journal, avec son patient et partial. Montant en centimes d'euro entiers, toujours positif (un remboursement se reconnaît à kind).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | non | Montant en centimes. |
+| `cancelledAt` | string (date-time) | non | Instant d'annulation, ISO 8601 UTC. Null si le paiement vaut. |
+| `id` | string (uuid) | non | Identifiant du paiement. |
+| `invoiceId` | string (uuid) | non | Facture payée (ou avoir remboursé). |
+| `invoiceNumber` | string | non | Numéro de la facture (ou de l'avoir d'un remboursement). |
+| `kind` | `payment` \| `refund` | non | Nature : payment ou refund. |
+| `mode` | string | non | Mode : cash, cheque, transfer, card ou other. |
+| `note` | string | non | Note. Null sans note. |
+| `partial` | boolean | non | true : paiement qui ne solde pas la facture (montant inférieur à ce qui restait dû juste avant lui : total moins avoirs moins les paiements non annulés reçus avant lui). Toujours false pour un remboursement. |
+| `patient` | object | non | Patient de la facture. |
+| `receivedOn` | string (date) | non | Date de réception (AAAA-MM-JJ). |
+| `reference` | string | non | Référence (numéro de chèque…). Null sans référence. |
+
+### <a id="schema-paymentmodetotaldto"></a>PaymentModeTotalDto
+
+Somme nette d'un mode sur la période, remboursements déduits.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | non | Montant net en centimes. |
+| `mode` | string | non | Mode : cash, cheque, transfer, card ou other. |
+
+### <a id="schema-paymentpagedto"></a>PaymentPageDto
+
+Une page du journal : date de réception décroissante, puis identifiant décroissant ; totaux de toute la période.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `items` | [PaymentJournalItemDto](#schema-paymentjournalitemdto)[] | non | Paiements et remboursements de la page, annulés compris. |
+| `nextCursor` | string | non | Curseur opaque de la page suivante (paramètre cursor). Null sur la dernière page. |
+| `totals` | object | non | Totaux de toute la période. |
+
+### <a id="schema-paymenttotalsdto"></a>PaymentTotalsDto
+
+Totaux de toute la période (pas de la page) : paiements annulés exclus, remboursements déduits ; le filtre de mode s'applique.
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | non | Montant net en centimes : paiements moins remboursements. |
+| `byMode` | [PaymentModeTotalDto](#schema-paymentmodetotaldto)[] | non | Montant net par mode, modes présents sur la période seulement, dans l'ordre transfer, cheque, cash, card, other. |
+| `paymentCount` | integer (int32) | non | Nombre de paiements. |
+| `refundCount` | integer (int32) | non | Nombre de remboursements. |
 
 ### <a id="schema-preferences"></a>Preferences
 
@@ -4525,6 +5939,18 @@ Contact hors rendez-vous (téléphone, e-mail), consigné comme une séance déj
 | `modality` | `phone` \| `email` | oui | Modalité du contact. Obligatoire. |
 | `occurredFrom` | string (date-time) | oui | Date-heure du contact, UTC ISO 8601. Obligatoire. |
 
+### <a id="schema-recordpaymentrequest"></a>RecordPaymentRequest
+
+Paiement reçu (facture émise) ou remboursement versé (avoir avec un remboursement dû). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int64) | oui | Montant en centimes, entier strictement positif, au plus le reste dû de la facture (ou le remboursement encore dû de l'avoir). |
+| `mode` | `transfer` \| `cheque` \| `cash` \| `card` \| `other` | oui | Mode : transfer, cheque, cash, card ou other ; pour un paiement, un mode accepté par les réglages, other toujours (MODE_NOT_ACCEPTED sinon). |
+| `note` | string | non | Note pour le praticien, 500 caractères au plus ; n'apparaît sur aucun document. |
+| `receivedOn` | string (date) | oui | Date de réception (AAAA-MM-JJ), aujourd'hui au plus tard. |
+| `reference` | string | non | Référence (numéro de chèque, libellé du virement), 120 caractères au plus. |
+
 ### <a id="schema-recoverycodesresponse"></a>RecoveryCodesResponse
 
 Codes de secours de la 2FA, en clair, montrés une seule fois.
@@ -4604,6 +6030,17 @@ Page de résultats de la recherche dans l'annuaire public.
 | `pageSize` | integer (int32) | non | Taille de page, toujours 20. |
 | `total` | integer (int64) | non | Nombre total de fiches correspondantes (dans la limite de 500 fiches examinées). |
 | `totalPages` | integer (int32) | non | Nombre total de pages ; 0 s'il n'y a aucun résultat. |
+
+### <a id="schema-sendinvoicerequest"></a>SendInvoiceRequest
+
+Envoi par e-mail : destinataire, objet, message et modèle utilisé. Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `body` | string | oui | Message, 5 000 caractères au plus, envoyé tel quel en texte brut (variables remplacées), sans rien d'autre que le PDF joint. |
+| `subject` | string | oui | Objet, 200 caractères au plus, sur une seule ligne. Les variables {numéro}, {montant}, {reste dû} et {échéance} sont remplacées à l'envoi. |
+| `template` | `invoice` \| `reminder` | oui | Modèle de départ : invoice (envoi) ou reminder (relance) ; inscrit dans l'historique. |
+| `to` | string | oui | Adresse du destinataire, une seule, 320 caractères au plus (EMAIL_INVALID sinon, ou si elle est absente). |
 
 ### <a id="schema-sessionresponse"></a>SessionResponse
 
@@ -4886,6 +6323,40 @@ Modification partielle : un champ absent reste inchangé ; planningNote à null 
 | `modality` | `in_person` \| `video` \| `phone` | non | Nouvelle modalité. |
 | `planningNote` | string | non | Nouvelle note de planification (2 000 caractères au plus) ; null l'efface. |
 | `startsAt` | string (date-time) | non | Nouveau début, UTC ISO 8601 ; la durée est conservée si elle n'est pas fournie. |
+
+### <a id="schema-updatebillablesessionrequest"></a>UpdateBillableSessionRequest
+
+Tarif ou prestation de cette séance seulement. Un champ absent reste inchangé ; null l'efface et rend le tarif calculé. Montant en centimes d'euro entiers : un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `amount` | integer (int32) | non | Montant fixé sur la séance, en centimes d'euro, entier strictement positif ; null rend le tarif calculé (tarif du patient, sinon prix de la prestation). |
+| `serviceId` | string (uuid) | non | Prestation de la séance, non archivée, du praticien ; null revient à la prestation par défaut. |
+
+### <a id="schema-updatebillingservicerequest"></a>UpdateBillingServiceRequest
+
+Modification partielle : un champ absent ou null reste inchangé ; durationMin à null efface la durée ; isDefault à true fait de cette prestation la prestation par défaut et retire le défaut de l'autre. Montant en centimes d'euro entiers : un nombre décimal est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `durationMin` | integer (int32) | non | Nouvelle durée en minutes, de 1 à 600 ; null l'efface. |
+| `isDefault` | boolean | non | true : devient la prestation par défaut. false sur la prestation par défaut est refusé (INVALID_VALUE) : il faut désigner une autre prestation par défaut. |
+| `label` | string | non | Nouveau libellé, non vide, 120 caractères au plus. |
+| `price` | integer (int32) | non | Nouveau prix en centimes d'euro, entier strictement positif. |
+
+### <a id="schema-updateinvoicerequest"></a>UpdateInvoiceRequest
+
+Modification partielle d'un brouillon : un champ absent reste inchangé. lines remplace toutes les lignes (une ligne de séance retirée rend la séance à facturer). Montants en centimes d'euro entiers : un nombre décimal ou une chaîne est refusé (INVALID_FORMAT). Tout autre champ est refusé (UNKNOWN_FIELD).
+
+| Champ | Type | Requis | Description |
+| --- | --- | --- | --- |
+| `dueOn` | string (date) | non | Date d'échéance (AAAA-MM-JJ), seulement avec l'échéance date, au plus tôt la date d'émission ; null l'efface. |
+| `dueTerm` | `on_receipt` \| `days_15` \| `days_30` \| `date` | non | Échéance : on_receipt, days_15, days_30, ou date (dueOn obligatoire). |
+| `footerNote` | string | non | Mention de bas de page, 500 caractères au plus ; null ou vide l'efface. |
+| `issueDate` | string (date) | non | Date d'émission prévue (AAAA-MM-JJ). |
+| `lines` | [InvoiceLineRequest](#schema-invoicelinerequest)[] | non | Toutes les lignes, dans l'ordre (remplacement complet) : 100 lignes libres et 200 lignes de séance au plus. Les lignes sont recréées (leur id change). |
+| `patientId` | string (uuid) | non | Nouveau patient, tant que le brouillon n'a aucune ligne de séance (sinon 422 INVALID_VALUE) ; le destinataire repasse à celui du nouveau patient, sauf si recipient est donné. |
+| `recipient` | object | non | Destinataire ; null revient au destinataire par défaut du patient. |
 
 ### <a id="schema-updatepatientprofileitemrequest"></a>UpdatePatientProfileItemRequest
 
