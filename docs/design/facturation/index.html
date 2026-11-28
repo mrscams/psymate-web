@@ -12,7 +12,7 @@
   <nav class="doc-nav" aria-label="Maquettes"></nav>
 
   <h1>Module Facturation · maquettes</h1>
-  <p class="lede">Proposition complète pour le carreau « Facture » du rail, aujourd'hui marqué « à réaliser ». Sept pages de maquettes dans l'habillage Fluent 2 de l'application (mêmes tokens, mêmes composants, clair, sombre et doux : le sélecteur est en haut à droite). 22 novembre 2026.</p>
+  <p class="lede">Proposition complète pour le carreau « Facture » du rail, aujourd'hui marqué « à réaliser ». Sept pages de maquettes dans l'habillage de l'application (tokens de <code>src/theme/tokens.css</code>, palette Nordique, polices Inter et JetBrains Mono ; clair, sombre et doux : le sélecteur est en haut à droite). 22 novembre 2026, complétées le 28 novembre 2026 (M15-13) par les états que les fiches spécifiaient sans les dessiner.</p>
 
   <div class="banner neutral"><i data-i="info"></i><div>Ce sont des maquettes : rien n'a été changé dans <code>src/</code>, et le contrat OpenAPI ne porte encore aucune route de facturation. Le périmètre a été tranché le 22 novembre 2026 : les huit décisions sont en bas de cette page.</div></div>
 
@@ -48,7 +48,7 @@
       <tr><td><b>Une facture émise ne change plus</b></td><td>Brouillon : tout se modifie. Émise : aucun champ, pas de bouton « Modifier », pas de suppression. La correction passe par un avoir. Les deux gestes irréversibles (émettre, émettre un avoir) ont une confirmation qui dit le numéro attribué.</td></tr>
       <tr><td><b>Le serveur juge</b></td><td>Numéro, date d'émission, total, reste dû, statut « en retard », chiffres du bandeau : tout vient de l'API. Le client vérifie la forme (montant, patient choisi) ; 409 et 422 sont traités par l'écran, sur le champ concerné.</td></tr>
       <tr><td><b>Relire après écrire</b></td><td>Après un paiement, une émission ou un avoir : la facture, la liste, « À facturer » et le bandeau sont relus, pas recalculés localement.</td></tr>
-      <tr><td><b>L'habillage de l'application, rien d'autre</b></td><td>Barre de 48 px, rail de 56 px avec le carreau Facture actif, en-tête de module identique à l'en-tête patient, onglets Fluent, tableaux, puces, panneau latéral de 480 px, dialogues : tous existent déjà. Aucun token nouveau.</td></tr>
+      <tr><td><b>L'habillage de l'application, rien d'autre</b></td><td>Barre de 48 px, rail de 56 px avec le carreau Facture actif, en-tête de module identique à l'en-tête patient, onglets, tableaux, puces, panneau latéral de 480 px, dialogues : tous existent déjà. Aucun token nouveau.</td></tr>
       <tr><td><b>Un statut, une icône et un mot</b></td><td>La couleur ne porte jamais seule l'information. « En retard » est orange, pas rouge : le rouge reste aux erreurs et aux actions destructrices.</td></tr>
       <tr><td><b>Le PDF est en clair</b></td><td>La feuille reste blanche dans les trois thèmes, comme les exports produits par l'API.</td></tr>
     </tbody>

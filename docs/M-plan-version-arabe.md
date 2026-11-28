@@ -738,6 +738,8 @@ Livrable : PR « M16-23 Version arabe : agenda », puis pnpm progress:log --task
 
 ### M16-24 — `billing` de droite à gauche
 
+> **Couverte par les tâches M15-15 à M15-20** (constat du 28 novembre 2026, M15-13) : la feature `billing` naît avec le jalon M15, après l'ouverture de la version arabe ; chaque écran suit dès sa tâche `docs/design/arabe.md` et les particularités ci-dessous (fiches 33 à 39, section « Version arabe »). Aucune PR M16-24 séparée n'est à ouvrir.
+
 ```text
 Tâche M16-24 — features/billing de droite à gauche (dépôt psymate-web). Utilise l'agent frontend-feature-dev. Dépend de M16-09 et de M15-20 fusionnée : si features/billing n'existe pas sur main ou si une tâche M15 y est ouverte, arrête-toi et rends compte.
 

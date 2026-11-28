@@ -11,6 +11,18 @@
   .sum .kpi { border-right: 1px solid var(--border-subtle); }
   .sum .by { padding: 14px 18px; }
   .mode { display: inline-flex; align-items: center; gap: 6px; }
+  /* États ajoutés : tokens seulement. */
+  .sum.solo { display: block; }
+  .sum.solo .kpi { border-right: 0; }
+  .noicon { display: inline-block; width: 16px; height: 16px; }
+  .table tr.cancelled .sub { color: var(--text-secondary); }
+  .pp { position: relative; }
+  .pp .m-full { display: flex; margin-top: 8px; }
+  .pp .icon-btn.on { background: var(--surface-sunken); color: var(--text-primary); }
+  .pp .menu div { height: 40px; }
+  .m-pay { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto 84px; gap: 10px; align-items: center; min-height: 44px; border-bottom: 1px solid var(--border-subtle); }
+  .m-pay:last-child { border-bottom: 0; }
+  .m-pay .mode { color: var(--text-secondary); font-size: 12px; }
 </style>
 </head>
 <body>
@@ -115,6 +127,298 @@
     <li><b>Le secret par défaut.</b> L'export sans nom est le choix présélectionné ; le nom complet est un choix explicite, expliqué.</li>
     <li><b>Mobile.</b> Cartes d'une ligne (date, patient, mode, montant), total en tête, export dans le menu.</li>
   </ul>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Un paiement annulé</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements" data-sub="Paiements" style="--h: 940px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Mois précédent" aria-label="Mois précédent"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">Novembre 2026</button>
+          <button aria-pressed="false" title="Mois suivant" aria-label="Mois suivant"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="true">Mois</button><button aria-pressed="false">Trimestre</button><button aria-pressed="false">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="true">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="false">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum">
+        <div class="kpi"><div class="lbl">Encaissé en novembre 2026</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements · 1 remboursement déduit</div></div>
+        <div class="by">
+          <div class="bars" role="list">
+            <div class="b"><span class="mode"><i data-i="bank"></i>Virement</span><span class="track" aria-hidden="true"><i style="width:100%"></i></span><span class="num">1 080,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="track" aria-hidden="true"><i style="width:61%"></i></span><span class="num">660,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cash"></i>Espèces</span><span class="track" aria-hidden="true"><i style="width:39%"></i></span><span class="num">420,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="card"></i>Carte</span><span class="track" aria-hidden="true"><i style="width:17%"></i></span><span class="num">180,00 €</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:120px">Reçu le</th><th style="width:22%">Patient</th><th>Facture</th><th>Mode</th><th>Référence</th><th class="num">Montant</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr><td class="mono s">20/11/2026</td><td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td><td class="mono"><a href="#">F-2026-0145</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">19/11/2026</td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono"><a href="#">F-2026-0146</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR ROUSSEL H</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">16/11/2026</td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono"><a href="04-facture.html">F-2026-0144</a> <span class="sub" style="font-family:var(--font-ui)">· partiel</span></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 0004512</td><td class="num">120,00 €</td><td><div class="acts"><button class="icon-btn" title="Télécharger le reçu"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr class="cancelled"><td class="mono s void">13/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm void">Marie D.</span></div></td><td class="mono"><a href="#" class="void">F-2026-0143</a> <span class="sub" style="font-family:var(--font-ui)">· annulé</span></td><td><span class="mode void"><i data-i="cheque"></i>Chèque</span></td><td class="void">n° 7731006</td><td class="num void">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">13/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0143</a></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 7731006</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">12/11/2026</td><td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td><td class="mono"><a href="#">F-2026-0142</a></td><td><span class="mode"><i data-i="card"></i>Carte</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">10/11/2026</td><td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td><td class="mono"><a href="#">AV-2026-0003</a> <span class="sub" style="font-family:var(--font-ui)">· remboursement</span></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">REMB BENALI S</td><td class="num">− 60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">09/11/2026</td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono"><a href="#">F-2026-0141</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR RENAUD P</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">06/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0140</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="5">Total de la période</td><td class="num">2 340,00 €</td><td></td></tr></tfoot>
+        </table>
+        <div class="foot"><span>9 paiements affichés sur 41</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Le chèque de Marie D. du 13/11 a été saisi deux fois ; la saisie en trop est annulée (<code>POST /api/payments/{id}/cancel</code>, L5 : idempotent, <code>cancelledAt</code> renseigné). La ligne reste à sa place dans l'ordre des dates, barrée et en <code>text-secondary</code>, avec « · annulé » écrit (et lu) à côté du numéro, comme « · partiel » (fiche 37, Structure 3 et Accessibilité). Elle ne compte ni dans le total de la période ni dans la répartition par mode : <code>totals</code> exclut les annulés (L5.4), d'où 2 340,00 € inchangés. « sur 41 » compte la ligne annulée : L5 ne sert pas ce nombre (<code>totals.paymentCount</code> et <code>refundCount</code> excluent les annulés, pas de compte des lignes), écart signalé.</p>
+
+  <h3>Étendue Trimestre</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements?periode=2026-T4" data-sub="Paiements" style="--h: 900px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Trimestre précédent" aria-label="Trimestre précédent"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">4ᵉ trimestre 2026</button>
+          <button aria-pressed="false" title="Trimestre suivant" aria-label="Trimestre suivant"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="false">Mois</button><button aria-pressed="true">Trimestre</button><button aria-pressed="false">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="true">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="false">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum">
+        <div class="kpi"><div class="lbl">Encaissé en 4ᵉ trimestre 2026</div><div class="val">4 860,00 €</div><div class="ctx">81 paiements · 1 remboursement déduit</div></div>
+        <div class="by">
+          <div class="bars" role="list">
+            <div class="b"><span class="mode"><i data-i="bank"></i>Virement</span><span class="track" aria-hidden="true"><i style="width:100%"></i></span><span class="num">2 220,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="track" aria-hidden="true"><i style="width:62%"></i></span><span class="num">1 380,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cash"></i>Espèces</span><span class="track" aria-hidden="true"><i style="width:41%"></i></span><span class="num">900,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="card"></i>Carte</span><span class="track" aria-hidden="true"><i style="width:16%"></i></span><span class="num">360,00 €</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:120px">Reçu le</th><th style="width:22%">Patient</th><th>Facture</th><th>Mode</th><th>Référence</th><th class="num">Montant</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr><td class="mono s">20/11/2026</td><td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td><td class="mono"><a href="#">F-2026-0145</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">19/11/2026</td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono"><a href="#">F-2026-0146</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR ROUSSEL H</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">16/11/2026</td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono"><a href="04-facture.html">F-2026-0144</a> <span class="sub" style="font-family:var(--font-ui)">· partiel</span></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 0004512</td><td class="num">120,00 €</td><td><div class="acts"><button class="icon-btn" title="Télécharger le reçu"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">13/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0143</a></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 7731006</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">12/11/2026</td><td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td><td class="mono"><a href="#">F-2026-0142</a></td><td><span class="mode"><i data-i="card"></i>Carte</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">10/11/2026</td><td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td><td class="mono"><a href="#">AV-2026-0003</a> <span class="sub" style="font-family:var(--font-ui)">· remboursement</span></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">REMB BENALI S</td><td class="num">− 60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">09/11/2026</td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono"><a href="#">F-2026-0141</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR RENAUD P</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">06/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0140</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="5">Total de la période</td><td class="num">4 860,00 €</td><td></td></tr></tfoot>
+        </table>
+        <div class="foot"><span>8 paiements affichés sur 82</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Étendue « Trimestre » : <code>?periode=2026-T4</code> (fiche 37), soit <code>GET /api/payments?from=2026-10-01&amp;to=2026-12-31</code> (L5 ne connaît que <code>from</code> et <code>to</code> ; le web les calcule à partir de la période). Libellé de période « 4ᵉ trimestre 2026 » ; le résumé garde le modèle de la fiche, « Encaissé en {période} ». Les flèches passent d'un trimestre à l'autre ; leurs noms « Trimestre précédent », « Trimestre suivant » sont calqués sur « Mois précédent », « Mois suivant » (la fiche ne nomme que ceux du mois). Total et répartition viennent de <code>totals</code> pour tout le trimestre ; la première page de la liste est la même que celle de novembre, les lignes étant triées par date décroissante.</p>
+
+  <h3>Étendue Année, avec le mode « Autre »</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements?periode=2026" data-sub="Paiements" style="--h: 930px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Année précédente" aria-label="Année précédente"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">2026</button>
+          <button aria-pressed="false" title="Année suivante" aria-label="Année suivante"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="false">Mois</button><button aria-pressed="false">Trimestre</button><button aria-pressed="true">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="true">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="false">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button><button aria-pressed="false">Autre</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum">
+        <div class="kpi"><div class="lbl">Encaissé en 2026</div><div class="val">24 180,00 €</div><div class="ctx">403 paiements · 3 remboursements déduits</div></div>
+        <div class="by">
+          <div class="bars" role="list">
+            <div class="b"><span class="mode"><i data-i="bank"></i>Virement</span><span class="track" aria-hidden="true"><i style="width:100%"></i></span><span class="num">11 040,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="track" aria-hidden="true"><i style="width:62%"></i></span><span class="num">6 840,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cash"></i>Espèces</span><span class="track" aria-hidden="true"><i style="width:38%"></i></span><span class="num">4 140,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="card"></i>Carte</span><span class="track" aria-hidden="true"><i style="width:18%"></i></span><span class="num">2 040,00 €</span></div>
+            <div class="b"><span class="mode"><span class="noicon" aria-hidden="true"></span>Autre</span><span class="track" aria-hidden="true"><i style="width:1%"></i></span><span class="num">120,00 €</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:120px">Reçu le</th><th style="width:22%">Patient</th><th>Facture</th><th>Mode</th><th>Référence</th><th class="num">Montant</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr><td class="mono s">20/11/2026</td><td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td><td class="mono"><a href="#">F-2026-0145</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">19/11/2026</td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono"><a href="#">F-2026-0146</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR ROUSSEL H</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">16/11/2026</td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono"><a href="04-facture.html">F-2026-0144</a> <span class="sub" style="font-family:var(--font-ui)">· partiel</span></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 0004512</td><td class="num">120,00 €</td><td><div class="acts"><button class="icon-btn" title="Télécharger le reçu"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">13/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0143</a></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 7731006</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">12/11/2026</td><td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td><td class="mono"><a href="#">F-2026-0142</a></td><td><span class="mode"><i data-i="card"></i>Carte</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">10/11/2026</td><td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td><td class="mono"><a href="#">AV-2026-0003</a> <span class="sub" style="font-family:var(--font-ui)">· remboursement</span></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">REMB BENALI S</td><td class="num">− 60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">09/11/2026</td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono"><a href="#">F-2026-0141</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR RENAUD P</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">06/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0140</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="5">Total de la période</td><td class="num">24 180,00 €</td><td></td></tr></tfoot>
+        </table>
+        <div class="foot"><span>8 paiements affichés sur 406</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Étendue « Année » : <code>?periode=2026</code>, libellé « 2026 », <code>from=2026-01-01&amp;to=2026-12-31</code>. Deux paiements de 2026 ont le mode <code>other</code> : le bouton « Autre » apparaît au bout du groupe de modes et la répartition a une cinquième ligne (fiche 37 : « Autre » s'il existe au moins un paiement de ce mode sur la période, ce que dit <code>totals.byMode</code>). Les noms des flèches (« Année précédente », « Année suivante ») sont calqués sur ceux du mois. Le mode « Autre » n'a pas d'icône : ni la fiche ni le jeu d'icônes des maquettes n'en fixent une, la place est laissée vide (à trancher).</p>
+
+  <h3>Filtre sur le mode « Autre »</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements?periode=2026&amp;mode=other" data-sub="Paiements" style="--h: 560px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Année précédente" aria-label="Année précédente"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">2026</button>
+          <button aria-pressed="false" title="Année suivante" aria-label="Année suivante"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="false">Mois</button><button aria-pressed="false">Trimestre</button><button aria-pressed="true">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="false">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="false">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button><button aria-pressed="true">Autre</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum">
+        <div class="kpi"><div class="lbl">Encaissé en 2026</div><div class="val">120,00 €</div><div class="ctx">2 paiements</div></div>
+        <div class="by">
+          <div class="bars" role="list">
+            <div class="b"><span class="mode"><span class="noicon" aria-hidden="true"></span>Autre</span><span class="track" aria-hidden="true"><i style="width:100%"></i></span><span class="num">120,00 €</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:120px">Reçu le</th><th style="width:22%">Patient</th><th>Facture</th><th>Mode</th><th>Référence</th><th class="num">Montant</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr><td class="mono s">02/06/2026</td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono"><a href="#">F-2026-0068</a></td><td><span class="mode"><span class="noicon" aria-hidden="true"></span>Autre</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">14/03/2026</td><td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td><td class="mono"><a href="#">F-2026-0035</a></td><td><span class="mode"><span class="noicon" aria-hidden="true"></span>Autre</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="5">Total de la période</td><td class="num">120,00 €</td><td></td></tr></tfoot>
+        </table>
+        <div class="foot"><span>2 paiements affichés sur 2</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><span class="off">Suivant ›</span></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Filtre <code>?mode=other</code> (<code>GET /api/payments?…&amp;mode=other</code>) : la liste, le total et la répartition sont ceux du filtre (fiche 37, critère « le total est celui du filtre »). Un paiement de mode « Autre » s'enregistre toujours, même hors des modes acceptés (L5 : « <code>other</code> toujours accepté »).</p>
+
+  <h3>Vide : aucun paiement sur la période</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements?periode=2026-08" data-sub="Paiements" style="--h: 520px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Mois précédent" aria-label="Mois précédent"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">Août 2026</button>
+          <button aria-pressed="false" title="Mois suivant" aria-label="Mois suivant"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="true">Mois</button><button aria-pressed="false">Trimestre</button><button aria-pressed="false">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="true">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="false">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum solo">
+        <div class="kpi"><div class="lbl">Encaissé en août 2026</div><div class="val">0,00 €</div><div class="ctx">0 paiement</div></div>
+      </div>
+      <div class="panel">
+        <div class="state">
+          <i data-i="calendar"></i>
+          <b>Aucun paiement sur cette période</b>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Vide (fiche 37, Interactions) : « Aucun paiement sur cette période », sans action. Le résumé affiche ce que sert <code>totals</code> (montant nul, <code>byMode</code> vide, donc aucune ligne par mode). « Autre » n'apparaît pas : aucun paiement de ce mode sur la période. « Exporter le journal » reste disponible.</p>
+
+  <h3>Vide sous filtre de mode</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements?periode=2026-07&amp;mode=cheque" data-sub="Paiements" style="--h: 520px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false" title="Mois précédent" aria-label="Mois précédent"><i data-i="left"></i></button>
+          <button aria-pressed="true" aria-live="polite">Juillet 2026</button>
+          <button aria-pressed="false" title="Mois suivant" aria-label="Mois suivant"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue"><button aria-pressed="true">Mois</button><button aria-pressed="false">Trimestre</button><button aria-pressed="false">Année</button></div>
+        <div class="seg" role="group" aria-label="Mode de paiement"><button aria-pressed="false">Tous</button><button aria-pressed="false">Virement</button><button aria-pressed="true">Chèque</button><button aria-pressed="false">Espèces</button><button aria-pressed="false">Carte</button></div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+      <div class="panel sum solo">
+        <div class="kpi"><div class="lbl">Encaissé en juillet 2026</div><div class="val">0,00 €</div><div class="ctx">0 paiement</div></div>
+      </div>
+      <div class="panel">
+        <div class="state">
+          <i data-i="cheque"></i>
+          <b>Aucun paiement par chèque sur cette période</b>
+          <button class="btn outline">Tous les modes</button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Vide sous filtre de mode : « Aucun paiement par chèque sur cette période » et « Tous les modes », qui retire <code>?mode=</code> et relit la liste et les totaux. Le résumé est celui du filtre.</p>
+
+  <h3>Sous 600 px</h3>
+  <div class="two">
+    <div class="phone pp">
+      <div class="m-appbar"><i data-i="doc" class="lg"></i>Facturation<span class="spacer"></span><button class="icon-btn" title="Plus d'actions" aria-haspopup="menu"><i data-i="more"></i></button><span class="av sm">CM</span></div>
+      <div class="m-tabs"><a href="#">Factures</a><a href="#">À facturer</a><a href="#" aria-current="page">Paiements</a></div>
+      <div class="m-page">
+        <div class="panel" style="margin-bottom:12px"><div class="kpi"><div class="lbl">Encaissé en novembre 2026</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements · 1 remboursement déduit</div></div></div>
+        <div class="seg m-full" role="group" aria-label="Période"><button aria-pressed="false" aria-label="Mois précédent"><i data-i="left"></i></button><button aria-pressed="true" aria-live="polite" style="flex:1">Novembre 2026</button><button aria-pressed="false" aria-label="Mois suivant"><i data-i="right"></i></button></div>
+        <div class="seg m-full" role="group" aria-label="Étendue"><button aria-pressed="true" style="flex:1">Mois</button><button aria-pressed="false" style="flex:1">Trimestre</button><button aria-pressed="false" style="flex:1">Année</button></div>
+        <div class="mf" style="margin:16px 0 6px"><label>Mode de paiement</label>Tous<i data-i="down" class="suffix"></i></div>
+        <ul class="m-list">
+          <li class="m-pay"><span class="mono s muted">20/11</span><span class="strong">Théo M.</span><span class="mode"><i data-i="cash"></i>Espèces</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">19/11</span><span class="strong">Hélène R.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">16/11</span><span class="strong">Léa M.</span><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="num">120,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">13/11</span><span class="strong">Marie D.</span><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">12/11</span><span class="strong">Nour K.</span><span class="mode"><i data-i="card"></i>Carte</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">10/11</span><span class="strong">Samir B.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">− 60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">09/11</span><span class="strong">Paul R.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">06/11</span><span class="strong">Marie D.</span><span class="mode"><i data-i="cash"></i>Espèces</span><span class="num">60,00 €</span></li>
+        </ul>
+        <div class="foot" style="padding:10px 0 0">8 paiements affichés sur 40<span class="pg"><a href="#">Suivant ›</a></span></div>
+      </div>
+      <div class="m-bottom"><button class="btn primary block">Nouvelle facture</button></div>
+    </div>
+    <div class="phone pp">
+      <div class="m-appbar"><i data-i="doc" class="lg"></i>Facturation<span class="spacer"></span><button class="icon-btn on" title="Plus d'actions" aria-haspopup="menu"><i data-i="more"></i></button><span class="av sm">CM</span></div>
+      <div class="m-tabs"><a href="#">Factures</a><a href="#">À facturer</a><a href="#" aria-current="page">Paiements</a></div>
+      <div class="m-page">
+        <div class="panel" style="margin-bottom:12px"><div class="kpi"><div class="lbl">Encaissé en novembre 2026</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements · 1 remboursement déduit</div></div></div>
+        <div class="seg m-full" role="group" aria-label="Période"><button aria-pressed="false" aria-label="Mois précédent"><i data-i="left"></i></button><button aria-pressed="true" aria-live="polite" style="flex:1">Novembre 2026</button><button aria-pressed="false" aria-label="Mois suivant"><i data-i="right"></i></button></div>
+        <div class="seg m-full" role="group" aria-label="Étendue"><button aria-pressed="true" style="flex:1">Mois</button><button aria-pressed="false" style="flex:1">Trimestre</button><button aria-pressed="false" style="flex:1">Année</button></div>
+        <div class="mf" style="margin:16px 0 6px"><label>Mode de paiement</label>Tous<i data-i="down" class="suffix"></i></div>
+        <ul class="m-list">
+          <li class="m-pay"><span class="mono s muted">20/11</span><span class="strong">Théo M.</span><span class="mode"><i data-i="cash"></i>Espèces</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">19/11</span><span class="strong">Hélène R.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">16/11</span><span class="strong">Léa M.</span><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="num">120,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">13/11</span><span class="strong">Marie D.</span><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">12/11</span><span class="strong">Nour K.</span><span class="mode"><i data-i="card"></i>Carte</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">10/11</span><span class="strong">Samir B.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">− 60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">09/11</span><span class="strong">Paul R.</span><span class="mode"><i data-i="bank"></i>Virement</span><span class="num">60,00 €</span></li>
+          <li class="m-pay"><span class="mono s muted">06/11</span><span class="strong">Marie D.</span><span class="mode"><i data-i="cash"></i>Espèces</span><span class="num">60,00 €</span></li>
+        </ul>
+        <div class="foot" style="padding:10px 0 0">8 paiements affichés sur 40<span class="pg"><a href="#">Suivant ›</a></span></div>
+      </div>
+      <div class="m-bottom"><button class="btn primary block">Nouvelle facture</button></div>
+      <div class="menu" role="menu" style="right: 56px; top: 44px; min-width: 0">
+        <div role="menuitem"><i data-i="download"></i>Exporter le journal</div>
+      </div>
+    </div>
+  </div>
+  <p class="notes">Sous 600 px (fiche 37, Structure 6) : le total en tête, puis la période et l'étendue ; les modes dans une liste (champ « Mode de paiement », valeur « Tous », mêmes choix que le groupe de bureau, « Autre » compris s'il existe) ; une carte d'une ligne par paiement (date, patient, mode, montant), qui ouvre la facture ; « Exporter le journal » dans le menu de la barre (à droite), qui ouvre le même dialogue d'export. La fiche ne dit pas quel menu porte l'export : ici celui de la page. « Nouvelle facture » en barre du bas, comme sur les autres onglets du module (fiche 33, cadre et version sous 600 px). Le menu de ligne (reçu, annulation) reste accessible depuis la facture ouverte.</p>
 
   <div class="pager"></div>
 </div>

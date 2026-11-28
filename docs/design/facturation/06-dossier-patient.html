@@ -15,6 +15,17 @@
   .entry .line .r { margin-left: auto; }
   .frag { background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-2); padding: 16px 18px; }
   .frag.top { border-top: 4px solid var(--entry-session); }
+  /* États spécifiés par la fiche (section du bas) */
+  .frag-frame { padding: 20px; background: var(--surface-ground); }
+  .frag-frame .frag { width: 420px; }
+  .modes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .reveal { padding: 0 0 10px 26px; }
+  .entry .line + .reveal { margin-top: -6px; }
+  .pcard-head .chip { margin-inline-start: 8px; }
+  .skel-pill { display: inline-block; width: 150px; height: 28px; border-radius: var(--radius-pill); background: var(--surface-sunken); }
+  .kpi .skel { padding: 4px 0 0; gap: 10px; }
+  .state.compact { padding: 22px 24px; }
+  .state .btn .ic { width: 16px; height: 16px; color: inherit; }
 </style>
 </head>
 <body>
@@ -53,7 +64,6 @@
         <span class="spacer"></span>
         <span class="muted">Période</span>
         <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
-        <button class="btn outline"><i data-i="download"></i>Exporter</button>
       </div>
 
       <div class="panel">
@@ -71,6 +81,7 @@
     </div>
   </div></div>
   <p class="notes">C'est l'écran 01, avec <code>?patient=</code> dans l'adresse. Trois choses changent quand le filtre est posé : une puce « Patient : … » apparaît en tête des filtres (la croix l'enlève et rend la liste entière) ; le bandeau de chiffres du cabinet laisse la place à la carte du patient (reste dû, à facturer, tarif, destinataire des factures) ; la colonne Patient disparaît. « Nouvelle facture » ouvre alors l'éditeur avec ce patient déjà choisi. Le filtre ne suit pas vers « À facturer » ni « Paiements ».</p>
+  <p class="notes">Exporter : aucune route au contrat (L5), hors M15. Le bouton de la fiche 38 (Barre de filtres) n'est donc pas dessiné.</p>
 
   <h2>Les points d'entrée</h2>
   <div class="three">
@@ -103,6 +114,7 @@
         <div class="line"><i data-i="doc" class="muted"></i><div><div>Facturation</div><div class="s muted">Pas encore facturée · 60,00 €</div></div><a class="r btn sm outline" href="03-editeur.html">Facturer</a></div>
       </div>
       <p class="notes"><b>Dans l'agenda</b>, détail d'un rendez-vous terminé : une ligne « Facturation » dit où en est la séance (pas encore facturée, brouillon, <span class="mono">F-2026-0146</span> payée) et y mène. Un rendez-vous à venir, annulé ou non honoré n'a pas cette ligne : une absence ne se facture pas.</p>
+      <p class="notes"><b>Hors M15 (L-plan L1) : aucun rendez-vous n'est relié à une séance.</b> Ses états « Brouillon » et facturée ne sont pas dessinés.</p>
     </div>
   </div>
 
@@ -115,6 +127,185 @@
     <li><b>Un seul écran de factures.</b> Les factures d'un patient sont la liste du module, filtrée : mêmes lignes, mêmes statuts, mêmes actions, rien à apprendre deux fois, et aucun composant partagé à modifier.</li>
     <li><b>Le moins de gestes possible au cabinet.</b> Le patient paie en sortant : une case à la clôture, un mode de paiement, la facture acquittée est prête.</li>
   </ul>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Clôture de séance : « Réglée en séance » cochée</h3>
+  <div class="frame frag-frame">
+    <div class="frag entry">
+      <b style="font: 600 16px/22px var(--font-ui)">Clore la séance</b>
+      <p class="muted">Marie D. · 50 min · cabinet</p>
+      <div class="line"><span class="box on"></span><div><div>Ajouter à « À facturer »</div><div class="s muted">Séance de psychothérapie · 60,00 €</div></div></div>
+      <div class="line"><span class="box on"></span><div><div>Réglée en séance</div><div class="s muted">Crée la facture acquittée tout de suite</div></div></div>
+      <div class="reveal">
+        <div class="flabel">Mode de paiement</div>
+        <div class="modes" role="group" aria-label="Mode de paiement">
+          <button class="pick" aria-pressed="true"><i data-i="cash"></i>Espèces</button>
+          <button class="pick" aria-pressed="false"><i data-i="cheque"></i>Chèque</button>
+          <button class="pick" aria-pressed="false"><i data-i="bank"></i>Virement</button>
+          <button class="pick" aria-pressed="false"><i data-i="card"></i>Carte</button>
+          <button class="pick" aria-pressed="false">Autre</button>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:6px"><button class="btn outline">Annuler</button><button class="btn primary">Clore la séance</button></div>
+    </div>
+  </div>
+  <p class="notes">Fiche 38, Points d'entrée 2 : cochée, « Réglée en séance » révèle le mode de paiement, sans déplacer le focus. Modes de L5 (<code>cash</code>, <code>cheque</code>, <code>transfer</code>, <code>card</code>, <code>other</code>), libellés et puces à choix unique de la fiche 36 ; la fiche 36 ne propose que les modes acceptés dans les réglages, plus Autre (ici les cinq, comme le panneau de paiement de la page 04). La fiche attend un champ <code>billing: { billable, paidNow?: { mode } }</code> sur la clôture ; L5.5 le retire : après <code>POST /api/sessions/{id}/close</code>, le web crée la facture (<code>POST /api/invoices { patientId, sessionEntryIds: [id] }</code>) puis l'émet (<code>POST /api/invoices/{id}/issue { expectedNumber, alreadyPaid: { mode, receivedOn } }</code>) ; une première case décochée fait appeler <code>…/dismiss</code>. La fiche ne dit pas si la première case reste cochée quand la seconde l'est : elle est laissée telle quelle.</p>
+
+  <h3>Fiche patient : adresse de facturation et destinataire tiers</h3>
+  <div class="frame frag-frame">
+    <div class="frag entry">
+      <b style="font: 600 16px/22px var(--font-ui)">Suivi</b>
+      <div class="fgrid" style="margin-top:6px">
+        <div class="mf"><label>Durée de séance</label>50<span class="suffix">min</span></div>
+        <div class="mf"><label>Tarif de la séance</label>60,00<span class="suffix">€</span></div>
+      </div>
+      <p class="hint">Vide : le tarif de la prestation par défaut s'applique (60,00 €).</p>
+      <div class="mf area" style="margin-top:14px"><label>Adresse de facturation</label><div>14 rue Saint-Maur<br>75011 Paris</div></div>
+      <div class="mf" style="margin-top:14px"><label>Destinataire tiers (facultatif)</label></div>
+      <div class="mf area" style="margin-top:14px"><label>Adresse du destinataire tiers</label></div>
+      <div class="line"><i data-i="doc" class="muted"></i><div><div>Facturation</div><div class="s muted">Reste dû : 60,00 €</div></div><a class="r" href="#">Voir les factures <i data-i="right"></i></a></div>
+    </div>
+  </div>
+  <p class="notes">Fiche 38, Points d'entrée 1 (fiche 16, rubrique Suivi) : l'adresse de facturation et un destinataire tiers facultatif, sous le tarif. Champs de L5.1 <code>GET</code> / <code>PUT /api/patients/{id}/billing-profile</code> <code>{ rate?, addressLines?, thirdPartyName?, thirdPartyAddress? }</code> ; <code>PUT</code> remplace, <code>null</code> efface ; <code>409 PATIENT_ARCHIVED</code> en écriture. La fiche ne nomme pas ces champs : « Adresse de facturation », « Destinataire tiers (facultatif) », « Adresse du destinataire tiers » sont des libellés neutres tirés de L5. Écart : la fiche 38 les fait lire et écrire par <code>PATCH /api/patients/{id}</code> (<code>billingAddress</code>, <code>billingRecipient?</code>) ; L5.5 : par <code>billing-profile</code>.</p>
+
+  <h3>Carte d'un patient archivé</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?patient=4d2b" style="--h: 680px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel" style="margin-bottom:16px" role="region" aria-label="Samir B.">
+        <div class="pcard-head">
+          <span class="av">SB</span>
+          <div><div><span class="strong">Samir B.</span><span class="chip">Patient archivé</span></div><div class="s muted">Factures adressées à Samir Benali, 5 rue des Vinaigriers, 75010 Paris</div></div>
+          <div class="right"><a href="#">Modifier dans la fiche</a><a class="btn outline" href="#">Ouvrir le dossier</a></div>
+        </div>
+        <div class="kpis" style="margin:0;grid-template-columns:repeat(3,1fr)">
+          <div class="kpi"><div class="lbl">Reste dû</div><div class="val">60,00 €</div><div class="ctx">1 facture à régler · échéance le 18/11/2026</div></div>
+          <div class="kpi"><div class="lbl">À facturer</div><div class="val">1 <small>séance</small></div><div class="ctx"><a href="02-a-facturer.html">Voir</a></div></div>
+          <div class="kpi"><div class="lbl">Tarif de la séance</div><div class="val">60,00 €</div><div class="ctx">tarif par défaut</div></div>
+        </div>
+      </div>
+
+      <div class="quick">
+        <button class="pick" aria-pressed="true"><i data-i="user"></i>Patient : Samir B.<i data-i="close"></i></button>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">À régler</button>
+          <button aria-pressed="false">En retard <span class="n">1</span></button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:128px">Numéro</th><th>Émise le</th><th>Objet</th><th>Échéance</th><th class="num">Montant</th><th class="num">Reste dû</th><th>Statut</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr class="hover"><td class="mono">F-2026-0139</td><td class="mono s">19/10/2026</td><td>1 séance <span class="sub">· 19 oct.</span></td><td class="mono s">18/11/2026</td><td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st late">En retard</span> <span class="sub">4 jours</span></td><td><div class="acts"><button class="btn sm outline">Encaisser</button><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono">AV-2026-0003</td><td class="mono s">10/11/2026</td><td>Avoir <span class="sub">· annule F-2026-0138</span></td><td class="muted">—</td><td class="num">− 60,00 €</td><td class="num muted">—</td><td><span class="st credit">Avoir</span></td><td></td></tr>
+            <tr><td class="mono void">F-2026-0138</td><td class="mono s muted">12/10/2026</td><td class="muted">1 séance <span class="sub">· 12 oct.</span></td><td class="muted">—</td><td class="num muted">60,00 €</td><td class="num muted">—</td><td><span class="st void">Annulée</span> <span class="sub">AV-2026-0003</span></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>3 factures affichées</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><span class="off">Suivant ›</span></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 38, Interactions, « Patient archivé » : la carte le dit (puce « Patient archivé », <code>patient.archived</code> de <code>GET /api/patients/{id}/billing</code>, L5.4) ; la liste reste consultable ; « Encaisser » reste possible sur ce qui est dû ; « Nouvelle facture » de l'en-tête ouvre l'éditeur <b>sans</b> ce patient prérempli (<code>/facturation/nouvelle</code>, sans <code>?patient=</code> ; <code>POST /api/invoices</code> répondrait <code>409 PATIENT_ARCHIVED</code>). Pas de « Brouillons » dans les statuts : le patient n'en a pas. La fiche ne dit pas si « Modifier dans la fiche » reste proposé ; <code>PUT …/billing-profile</code> répond <code>409 PATIENT_ARCHIVED</code> (L5.1) : à trancher.</p>
+
+  <h3>Chargement (carte et liste)</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?patient=7c1e" style="--h: 600px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel" style="margin-bottom:16px" aria-busy="true">
+        <div class="pcard-head">
+          <span class="av" aria-hidden="true"></span>
+          <div class="skel" style="padding:0;gap:8px;width:420px"><i style="width:30%"></i><i style="width:90%"></i></div>
+        </div>
+        <div class="kpis" style="margin:0;grid-template-columns:repeat(3,1fr)">
+          <div class="kpi"><div class="skel"><i style="width:40%"></i><i style="width:60%;height:20px"></i><i style="width:75%"></i></div></div>
+          <div class="kpi"><div class="skel"><i style="width:40%"></i><i style="width:30%;height:20px"></i><i style="width:55%"></i></div></div>
+          <div class="kpi"><div class="skel"><i style="width:50%"></i><i style="width:45%;height:20px"></i><i style="width:50%"></i></div></div>
+        </div>
+      </div>
+      <div class="quick">
+        <span class="skel-pill" aria-hidden="true"></span>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">À régler</button>
+          <button aria-pressed="false">En retard</button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel" aria-busy="true"><div class="skel"><i style="width:40%"></i><i></i><i style="width:85%"></i><i style="width:92%"></i><i style="width:70%"></i></div></div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 38, Interactions : trois états par bloc ; chargement de la carte (<code>GET /api/patients/{id}/billing</code>) et de la liste (<code>GET /api/invoices?patientId=</code>), chacun son squelette (<code>pm-state</code>, comme la page 01). La puce « Patient : … » attend le nom affiché rendu par la carte : elle est un squelette tant que la carte charge (la fiche ne le précise pas).</p>
+
+  <h3>Erreur (carte et liste)</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?patient=7c1e" style="--h: 640px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel" style="margin-bottom:16px">
+        <div class="state compact"><i data-i="alert"></i><b>La carte du patient n'a pas pu être chargée</b><p>Vérifiez votre connexion, puis réessayez.</p><button class="btn outline">Réessayer</button></div>
+      </div>
+      <div class="quick">
+        <button class="pick" aria-pressed="true"><i data-i="user"></i>Patient : Marie D.<i data-i="close"></i></button>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">À régler</button>
+          <button aria-pressed="false">En retard</button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel"><div class="state"><i data-i="alert"></i><b>Les factures n'ont pas pu être chargées</b><p>Vérifiez votre connexion, puis réessayez.</p><button class="btn outline">Réessayer</button></div></div>
+    </div>
+  </div></div>
+  <p class="notes">Erreur de chacun des deux blocs, chacun avec « Réessayer » (fiche 38 : trois états par bloc ; fiche 33 : erreur avec « Réessayer »). Le texte de la liste est celui de la page 01 ; celui de la carte n'est donné par aucune fiche : phrase neutre. Les deux erreurs sont montrées ensemble pour l'économie ; chacune peut survenir seule, l'autre bloc s'affiche alors normalement.</p>
+
+  <h3>Liste vide</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?patient=9e05" style="--h: 600px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel" style="margin-bottom:16px" role="region" aria-label="Camille B.">
+        <div class="pcard-head">
+          <span class="av">CB</span>
+          <div><div class="strong">Camille B.</div><div class="s muted">Factures adressées à Camille Bernard, 9 rue Keller, 75011 Paris</div></div>
+          <div class="right"><a href="#">Modifier dans la fiche</a><a class="btn outline" href="#">Ouvrir le dossier</a></div>
+        </div>
+        <div class="kpis" style="margin:0;grid-template-columns:repeat(3,1fr)">
+          <div class="kpi"><div class="lbl">Reste dû</div><div class="val">0,00 €</div><div class="ctx">rien à régler</div></div>
+          <div class="kpi"><div class="lbl">À facturer</div><div class="val">1 <small>séance</small></div><div class="ctx"><a href="02-a-facturer.html">Voir</a></div></div>
+          <div class="kpi"><div class="lbl">Tarif de la séance</div><div class="val">60,00 €</div><div class="ctx">tarif par défaut</div></div>
+        </div>
+      </div>
+      <div class="quick">
+        <button class="pick" aria-pressed="true"><i data-i="user"></i>Patient : Camille B.<i data-i="close"></i></button>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">À régler</button>
+          <button aria-pressed="false">En retard</button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel"><div class="state"><i data-i="doc"></i><b>Aucune facture pour ce patient</b><button class="btn outline"><i data-i="plus"></i>Nouvelle facture</button></div></div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 38, Interactions : liste vide, « Aucune facture pour ce patient » et « Nouvelle facture » (éditeur avec ce patient déjà choisi, <code>/facturation/nouvelle?patient=:id</code>). La carte garde ses trois chiffres : rien à régler, une séance à facturer (lien « Voir » vers la page 02), tarif par défaut. Pas de « Brouillons » dans les statuts : le patient n'en a pas.</p>
 
   <div class="pager"></div>
 </div>
