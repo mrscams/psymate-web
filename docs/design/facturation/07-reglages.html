@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 07 Réglages</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+<style>
+  .set { display: grid; grid-template-columns: 200px minmax(0, 1fr) 360px; gap: 20px; align-items: start; }
+  .toc { position: sticky; top: 16px; display: grid; gap: 2px; }
+  .toc a { position: relative; display: flex; align-items: center; height: 36px; padding: 0 12px; border-radius: var(--radius-md); color: var(--text-secondary); }
+  .toc a:hover { background: var(--surface-sunken); text-decoration: none; color: var(--text-primary); }
+  .toc a.on { color: var(--text-primary); font-weight: 600; background: var(--surface-sunken); }
+  .toc a.on::before { content: ''; position: absolute; left: 0; top: 9px; bottom: 9px; width: 3px; border-radius: var(--radius-pill); background: var(--primary); }
+  .sect { padding: 20px 22px; border-bottom: 1px solid var(--border-subtle); }
+  .sect:last-of-type { border-bottom: 0; }
+  .sect h2 { font: 600 16px/22px var(--font-ui); }
+  .sect .help { color: var(--text-secondary); margin: 2px 0 18px; max-width: 64ch; }
+  .savebar { display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-top: 1px solid var(--border-subtle); background: var(--surface-raised); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
+  .numrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .numrow .mf { min-width: 110px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>07 · Réglages de facturation</h1>
+  <p class="lede">Ce qui figure sur toutes les factures et ce que le module propose par défaut. On y passe une fois à la première facture, puis quand un tarif change. L'aperçu de droite montre l'effet de chaque réglage sur la feuille.</p>
+
+  <h2>La page</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/reglages" data-sub="Réglages" style="--h: 1560px">
+    <div class="mhead" data-tab="reglages"></div>
+    <div class="page">
+      <div class="set">
+        <nav class="toc" aria-label="Rubriques">
+          <a class="on" href="#">Identité</a><a href="#">TVA</a><a href="#">Numérotation</a><a href="#">Prestations et tarifs</a><a href="#">Règlement</a><a href="#">E-mails</a>
+        </nav>
+
+        <div class="panel">
+          <section class="sect">
+            <h2>Identité sur les factures</h2>
+            <p class="help">Nom, titre et numéro professionnel viennent de votre dossier professionnel : ils se modifient là-bas.</p>
+            <div class="fgrid">
+              <div class="mf ro"><label>Nom</label>Claire Moreau<i data-i="lock" class="suffix"></i></div>
+              <div class="mf ro"><label>Titre</label>Psychologue clinicienne<i data-i="lock" class="suffix"></i></div>
+              <div class="mf ro"><label>N° ADELI</label><span class="mono">75 93 0000 0</span><i data-i="lock" class="suffix"></i></div>
+              <div>
+                <div class="mf focus"><label>N° SIRET</label><span class="mono">000 000 000 00000</span><span class="caretline"></span></div>
+                <p class="hint">14 chiffres. Obligatoire pour émettre une facture.</p>
+              </div>
+              <div class="mf full"><label>Adresse du cabinet</label>12 rue des Lilas, 75011 Paris</div>
+              <div class="mf"><label>E-mail affiché</label>claire.moreau@example.test</div>
+              <div class="mf"><label>Téléphone affiché (facultatif)</label>01 00 00 00 00</div>
+            </div>
+          </section>
+
+          <section class="sect">
+            <h2>TVA</h2>
+            <p class="help">Détermine la mention portée sur chaque facture. En cas de doute, demandez à votre comptable.</p>
+            <div class="rcards">
+              <div class="rcard on"><span class="radio on"></span><b>Exonérée, soins à la personne</b><span class="d">Mention : « TVA non applicable, article 261-4-1° du Code général des impôts ».</span></div>
+              <div class="rcard"><span class="radio"></span><b>Franchise en base</b><span class="d">Mention : « TVA non applicable, article 293 B du Code général des impôts ».</span></div>
+              <div class="rcard"><span class="radio"></span><b>Assujettie à la TVA</b><span class="d">Les factures détaillent le hors taxes, la TVA et le toutes taxes. Taux et numéro de TVA à renseigner.</span></div>
+            </div>
+          </section>
+
+          <section class="sect">
+            <h2>Numérotation</h2>
+            <p class="help">Les numéros se suivent sans trou, dans l'ordre d'émission. Le format ne se change plus après la première facture émise.</p>
+            <div class="numrow">
+              <div class="mf ro"><label>Factures</label><span class="mono">F-2026-</span><i data-i="lock" class="suffix"></i></div>
+              <div class="mf ro"><label>Avoirs</label><span class="mono">AV-2026-</span><i data-i="lock" class="suffix"></i></div>
+              <span class="muted">Prochain numéro : <span class="mono" style="color:var(--text-primary)">F-2026-0148</span> · la suite repart à 0001 chaque 1<sup>er</sup> janvier</span>
+            </div>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations et tarifs</h2>
+            <p class="help">Les désignations proposées dans une facture. Le tarif d'un patient, s'il est renseigné dans sa fiche, passe avant.</p>
+            <table class="table" style="margin: 0 -12px; width: calc(100% + 24px)">
+              <thead><tr><th>Désignation sur la facture</th><th>Durée</th><th class="num">Tarif</th><th>Par défaut</th><th style="width:1%"></th></tr></thead>
+              <tbody>
+                <tr><td class="nm">Séance de psychothérapie</td><td class="muted">50 min</td><td class="num">60,00 €</td><td><span class="radio on"></span></td><td><div class="acts" style="opacity:1"><button class="icon-btn" title="Modifier"><i data-i="edit"></i></button></div></td></tr>
+                <tr><td class="nm">Première consultation</td><td class="muted">60 min</td><td class="num">70,00 €</td><td><span class="radio"></span></td><td><div class="acts" style="opacity:1"><button class="icon-btn" title="Modifier"><i data-i="edit"></i></button></div></td></tr>
+                <tr><td class="nm">Séance de couple</td><td class="muted">75 min</td><td class="num">80,00 €</td><td><span class="radio"></span></td><td><div class="acts" style="opacity:1"><button class="icon-btn" title="Modifier"><i data-i="edit"></i></button></div></td></tr>
+              </tbody>
+            </table>
+            <p style="margin-top:10px"><a href="#"><i data-i="plus"></i> Ajouter une prestation</a></p>
+          </section>
+
+          <section class="sect">
+            <h2>Règlement</h2>
+            <p class="help">Ce que la facture dit au patient sur la façon de vous régler.</p>
+            <div class="fgrid">
+              <div class="mf"><label>Échéance par défaut</label>À réception<i data-i="down" class="suffix"></i></div>
+              <div class="mf"><label>Chèques à l'ordre de</label>Claire Moreau</div>
+              <div class="full">
+                <div class="flabel">Modes de paiement acceptés</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px">
+                  <button class="pick" aria-pressed="true"><i data-i="bank"></i>Virement</button><button class="pick" aria-pressed="true"><i data-i="cheque"></i>Chèque</button><button class="pick" aria-pressed="true"><i data-i="cash"></i>Espèces</button><button class="pick" aria-pressed="false"><i data-i="card"></i>Carte</button>
+                </div>
+              </div>
+              <div class="full">
+                <label class="check"><span class="switch on"></span>Afficher mes coordonnées bancaires sur les factures</label>
+                <div class="mf" style="margin-top:14px"><label>IBAN</label><span class="mono">FR76 •••• •••• •••• •••• •••• •12</span><span class="suffix"><a href="#">Modifier</a></span></div>
+              </div>
+              <div class="mf area full"><label>Mention au bas de chaque facture (facultatif)</label><span class="ph">Par exemple : membre d'une association de gestion agréée, le règlement par chèque est accepté.</span></div>
+            </div>
+          </section>
+
+          <section class="sect">
+            <h2>E-mails</h2>
+            <p class="help">Modèles proposés à l'envoi ; vous pouvez toujours retoucher le message avant de l'envoyer.</p>
+            <ul class="rows">
+              <li><i data-i="mail" class="muted"></i><div><div>Envoi d'une facture</div><div class="s muted">« Votre facture {numéro} »</div></div><a class="r" href="#">Modifier</a></li>
+              <li><i data-i="mail" class="muted"></i><div><div>Relance d'une facture en retard</div><div class="s muted">« Rappel : facture {numéro} »</div></div><a class="r" href="#">Modifier</a></li>
+            </ul>
+          </section>
+          <div class="savebar"><span class="muted s">Modifications non enregistrées : N° SIRET</span><span class="spacer"></span><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></div>
+        </div>
+
+        <aside style="position:sticky;top:16px">
+          <div class="paper mini" data-inv="f0146"></div>
+          <p class="notes" style="text-align:center">Aperçu sur une facture d'exemple</p>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Quatrième onglet du module, à droite de la ligne d'onglets. Les réglages s'appliquent aux factures émises ensuite : une facture déjà émise garde ce qui était vrai le jour de son émission (identité, mention de TVA, tarif). Les champs verrouillés renvoient au dossier professionnel (fiche 13). Les valeurs d'exemple (ADELI, SIRET, IBAN) sont volontairement factices.</p>
+
+  <h2>Modifier une prestation</h2>
+  <div class="two">
+    <div>
+      <div class="panel" style="max-width:480px">
+        <div class="panel-head"><h2>Modifier la prestation</h2><div class="right"><button class="icon-btn" title="Fermer"><i data-i="close"></i></button></div></div>
+        <div class="pad" style="display:grid;gap:20px;padding-top:22px">
+          <div class="mf"><label>Désignation sur la facture</label>Séance de couple</div>
+          <div class="fgrid">
+            <div class="mf"><label>Durée (facultatif)</label>75<span class="suffix">min</span></div>
+            <div class="mf"><label>Tarif</label>80,00<span class="suffix">€</span></div>
+          </div>
+          <label class="check"><span class="box"></span>Proposer par défaut pour une nouvelle séance</label>
+          <div class="banner neutral" style="margin:0"><i data-i="info"></i><div>Le nouveau tarif s'applique aux prochaines factures. Les factures déjà émises et les brouillons en cours ne changent pas.</div></div>
+        </div>
+        <div class="savebar" style="justify-content:flex-end"><button class="btn danger-outline" style="margin-right:auto">Retirer</button><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></div>
+      </div>
+      <p class="notes">Panneau latéral partagé de 480 px, le même pour ajouter et modifier. « Retirer » masque la prestation des listes de choix ; les factures qui l'emploient gardent leur désignation.</p>
+    </div>
+    <div class="doc-card">
+      <h3>Ce que l'écran affirme</h3>
+      <ul class="bullets">
+        <li><b>Une donnée, un endroit.</b> Nom, titre et numéro ADELI ou RPPS ne sont pas ressaisis : ils sont lus du dossier professionnel et affichés verrouillés.</li>
+        <li><b>La mention légale n'est pas un champ libre.</b> Le praticien choisit sa situation ; le texte de la mention est fourni par l'application.</li>
+        <li><b>La numérotation se montre, elle ne se règle pas.</b> Le prochain numéro est affiché pour rassurer ; il n'y a pas de champ pour le changer une fois la première facture émise.</li>
+        <li><b>Un enregistrement par page</b>, avec le rappel de ce qui a changé, comme les autres pages de Mon compte.</li>
+        <li><b>L'IBAN est masqué</b> à l'affichage ; « Modifier » redemande le mot de passe, comme les réglages de sécurité (fiche 18).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

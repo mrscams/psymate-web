@@ -614,6 +614,95 @@ Un visiteur sans compte choisit un créneau sur la page publique d'un praticien,
 | M14-14 | Agenda : demandes en ligne, confirmer, refuser | web / `features/agenda` | K2.2 Q65, K3.2 étapes 2 à 4, K5.2, K10 ; design 15 (section M14) et sa maquette ; `api-reference.md` | `listRequests()` et demandes dans le store (trois états, relecture après chaque écriture) ; entrée « Demandes » avec compteur et panneau « Demandes en ligne » ; mention « Demande en ligne » dans la grille, la liste et le mois ; détail : pastille, bloc Contact (e-mail et téléphone), « Refuser » et sa phrase sur l'e-mail, phrase sur les formulaires Annuler et Déplacer ; toasts | Critères (M14-14) de la fiche 15 : compteur égal à la réponse de l'API (2 avec le seed), demande hors fenêtre atteinte, confirmer et refuser relus par `GET`, rendez-vous posé par le praticien sans mention ni « Refuser », `409 APPOINTMENT_NOT_ACTIVE`, trois états du panneau, clavier, axe-core 0 violation | Vitest (store, détail, panneau), e2e `agenda/demandes-en-ligne` | M14-10, maquette de M14-09 |
 | M14-15 | Agenda : rattacher un invité à un patient (peut glisser après le jalon) | web / `features/agenda` | K3.2 étape 5, K3.4 ; J5 (« Rendez-vous invités dans l'agenda ») ; design 15 (section M14) ; `api-reference.md` (`attach-patient`) | Action « Rattacher à un patient » du détail d'un invité non purgé : sélecteur de patient du panneau 15b, case `includeSameGuest`, `attachPatient()`, relecture ; erreurs `409`, `422 PATIENT_ARCHIVED`, `403` / `404` ; phrase sur l'arrêt des e-mails automatiques | Rattachement visible dans le détail et dans les rendez-vous du patient ; case cochée : les autres rendez-vous du même invité suivent ; ni invité purgé ni rendez-vous de patient n'ont l'action ; patient archivé refusé ; axe-core 0 violation | Vitest (store, panneau), e2e agenda | M14-14 |
 
+## C13. Facturation (web), jalon M15 (22 novembre 2026)
+
+Module Facturation ouvert par le carreau « Facture » du rail (fiches `docs/design/33-facturation-factures.md` à `39-facturation-reglages.md`, maquettes `docs/design/facturation/`). Périmètre : G Q67 (G13), tranché par l'utilisateur le 22 novembre 2026. Plan détaillé, modèle, contrat, prompts et revue : `docs/L-plan-facturation.md` (L2 décisions, L5 contrat, L6 tâches, L8 prompts web, L9 revue, L10 ce qui reste ouvert). La section C12 est réservée au jalon M14 (prise de rendez-vous en ligne, tâche M14-09). Les tâches web continuent la numérotation du jalon : l'API occupe M15-01 à M15-12, le web M15-13 à M15-22. Vagues : M15-13 pendant l'API ; M15-14 après le tag `contract-v0.17.0` ; puis M15-15 → 16 → 17 → 18 → 19 → 20 dans la feature `billing`, un agent à la fois ; M15-21 dès que M15-16 est fusionnée, M15-22 dès que M15-19 l'est.
+
+**Lancé le 28 novembre 2026** à la demande de l'utilisateur, sans relecture des décisions techniques du plan (L6.4 : vague M15-A côté API, une session par couloir ensuite, surveillance toutes les dix minutes). Le prompt de chaque tâche est dans L7 (API) et L8 (web) ; la page de suivi (`pnpm progress`) affiche les 22 tâches du jalon avec leur prompt (cliquer une ligne, « Prompt à coller », « Copier le prompt »).
+
+Rappel des tâches API (le C de psymate-api fera foi, section C14 inscrite par M15-01) :
+
+| ID | Titre | Couloir | Dépend de |
+| --- | --- | --- | --- |
+| M15-01 | Décisions Q83 à Q95 et documentation | docs | — |
+| M15-02 | `SessionClosed` et `SessionFacade.closedSession` | clinical | — |
+| M15-03 | Identité d'émetteur et vérification du mot de passe | identity | — |
+| M15-04 | Identité de facturation d'un patient | patients | — |
+| M15-05 | Module `billing` : socle, `V18`, prestations, profil de facturation du patient | billing | — |
+| M15-06 | Réglages de facturation, IBAN | billing | M15-03, M15-05 |
+| M15-07 | Séances à facturer | billing | M15-02, M15-04, M15-06 |
+| M15-08 | Factures : brouillons, liste | billing | M15-07 |
+| M15-09 | Émission, numérotation, PDF | billing | M15-08 |
+| M15-10 | Paiements, journal, export, chiffres | billing | M15-09 |
+| M15-11 | Avoirs, envoi par e-mail | billing | M15-10 |
+| M15-12 | Seed, tag `contract-v0.17.0`, suivi | racine | M15-11 |
+
+### M15 Facturation (web)
+
+| ID | Titre | Dépôt / module | Lire | Quoi construire | Critères d'acceptation | Tests | Dépend de |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| M15-13 | Décisions Q68 à Q70, fiches 33 à 39 alignées sur le contrat, maquettes des états manquants | web / docs | L en entier ; G13 ; design 33 à 39 et `design/facturation/` ; `design/arabe.md` | Q68 à Q70 dans G13 ; « Route & API » des fiches selon L5 et écarts de L5.5 ; états « spécifiés, pas dessinés » ajoutés aux maquettes, captures régénérées ; README design, couverture, e2e-couverture, CLAUDE.md | Aucune décision hors de L et G ; chaque critère de fiche vérifiable par un test ; maquettes dans les trois thèmes, sans couleur hors tokens ; la PR dit que les maquettes complétées n'ont pas été relues par l'utilisateur | `pnpm lint` | — |
+| M15-14 | Contrat `0.17.0` ; socle : route du carreau du rail, feature `billing`, en-tête et onglets | web / `api` généré + `shared/ui/nav-rail` + `app.routes.ts` + `features/billing` | L2.1 Q68, L5, L6.2 ; design 33 (cadre du module), design 00 (rail) ; G Q57 | `CONTRACT_TAG = contract-v0.17.0`, `pnpm contract:pull` ; carreau « Facture » relié à `/facturation` (libellé inchangé) ; route lazy ; feature `billing` (index, routes, en-tête de module, quatre onglets, pages minimales sans appel d'API) ; `billing` dans `PATIENT_FEATURES` | Carreau actif sur `/facturation/**` avec aria-current ; quatre onglets ; `N` ouvre `/facturation/nouvelle` ; `admin` n'importe pas `billing` ; diff de `src/app/api` = sortie du générateur ; e2e shell et agenda verts ; axe-core 0 violation | Spec du rail, spec de l'en-tête de module, e2e `facturation/socle` | M15-12, M15-13 |
+| M15-15 | Réglages de facturation | web / `features/billing` | design 39, maquette 07 ; L5.1 ; design 29 | `data/billing-settings.*` (api, model, store), page Réglages : identité verrouillée, SIRET, TVA à trois régimes, numérotation, prestations et tarifs (panneau), règlement, IBAN (dialogue avec mot de passe), modèles d'e-mail, aperçu, barre d'enregistrement | Critères de la fiche 39 ; `missing` mène au champ ; IBAN jamais affiché en clair ; relecture après écriture ; axe-core 0 violation, clair et sombre | Vitest (store, composants, trois états), e2e `facturation/reglages` | M15-14 |
+| M15-16 | Factures : liste, bandeau de chiffres, filtre sur un patient | web / `features/billing` | design 33 et 38, maquettes 01 et 06 ; L5.3, L5.4 (`summary`, `patients/{id}/billing`) | `data/invoices.*`, `data/money.ts` ; liste (statuts, filtres dans l'URL, curseurs), bandeau, actions de ligne, état vide de première ouverture ; `?patient=` : puce, carte du patient, colonne Patient masquée ; version sous 600 px | Critères des fiches 33 et 38 (liste filtrée) ; ordre de l'API ; aucun chiffre calculé à l'écran ; « En retard » sans `danger` ; axe-core 0 violation | Vitest, e2e `facturation/factures` et `facturation/patient` | M15-15 |
+| M15-17 | Nouvelle facture : éditeur d'un brouillon, émission | web / `features/billing` | design 35, maquette 03 ; L3, L5.3 (jusqu'à `issue`) | Éditeur (patient, lignes, date et règlement, mention), enregistrement automatique, aperçu de la feuille en HTML, dialogue d'émission (`expectedNumber`, 409), « Déjà réglée », suppression du brouillon | Critères de la fiche 35 ; aucun `POST` avant le choix du patient ; total de l'API ; feuille en clair en thème sombre ; axe-core 0 violation | Vitest, e2e `facturation/editeur` | M15-16 |
+| M15-18 | Facture émise : paiement, avoir, envoi par e-mail | web / `features/billing` | design 36, maquette 04 ; L5.3, L5.4 | Page par numéro (feuille, rail), panneau de paiement, dialogue d'avoir, dialogue d'envoi, PDF et facture acquittée, annulation d'un paiement, page d'un avoir | Critères de la fiche 36 ; aucun champ sur une facture émise ; relecture après chaque écriture ; e-mail lu dans Mailpit ; axe-core 0 violation panneau et dialogues ouverts | Vitest, e2e `facturation/facture` | M15-17 |
+| M15-19 | À facturer | web / `features/billing` | design 34, maquette 02 ; L5.2, L5.3 (`batch`) | `data/billable.*` ; groupes par patient, sélection, barre flottante, création de brouillons en lot, « Ne pas facturer », « Écartées », tarif manquant, vue par date | Critères de la fiche 34 ; tarif et `rateSource` de l'API ; 409 traité par relecture ; axe-core 0 violation | Vitest, e2e `facturation/a-facturer` | M15-18 |
+| M15-20 | Paiements : journal et export | web / `features/billing` | design 37, maquette 05 ; L5.4 | `data/payments.*` ; journal (période, étendue, mode dans l'URL), résumé par mode, annulation, reçu, dialogue d'export | Critères de la fiche 37 ; totaux de l'API ; export sans nom par défaut ; axe-core 0 violation | Vitest, e2e `facturation/paiements` | M15-19 |
+| M15-21 | Fiche patient : tarif, adresse de facturation, lien « Voir les factures » | web / `features/patients` | design 38 (points d'entrée 1), design 16 ; L5.1 (`billing-profile`), L5.4 | Champ Tarif relié à `billing-profile.rate` ; ancien `followUp.fee` en aide, plus envoyé ; adresse et destinataire tiers ; ligne « Facturation » avec le reste dû et le lien vers `/facturation?patient=:id` | Critères de la fiche 38 pour la fiche patient ; un échec de `billing-profile` ne perd pas la fiche ; aucun import de `features/billing` ; axe-core 0 violation | Vitest, e2e `facturation/fiche-patient` | M15-16 |
+| M15-22 | Clôture de séance : « Ajouter à À facturer », « Réglée en séance » | web / `features/patient-shell` | design 38 (points d'entrée 2) ; L2.2 Q86, L5.2, L5.3, L5.5 | Deux cases dans le panneau de clôture ; `dismiss` après la clôture si décochée ; facture créée et émise acquittée si « Réglée en séance » ; un échec de facturation ne défait pas la clôture | Critères de la fiche 38 pour la clôture ; la clôture par défaut reste un seul appel ; aucun import de `features/billing` ; axe-core 0 violation | Vitest, e2e `facturation/cloture` | M15-19 |
+
+Hors M15 (L1, L10) : ligne « Facturation » dans le détail d'un rendez-vous de l'agenda ; reprise des séances closes avant la mise en service ; déclinaison mobile au-delà de la liste.
+
+## C14. Version arabe, jalon M16 (22 novembre 2026)
+
+PsyMate en arabe, de droite à gauche, sous `/ar/`. Périmètre et choix tranchés par l'utilisateur le 22 novembre 2026 : G Q71 (G14). Constats et mesures : `docs/Etude-traduction-arabe.md`. Plan détaillé, décisions proposées, règles communes, prompts et revue : `docs/M-plan-version-arabe.md` (M2 décisions, M4 tâches, M5 prompts API, M6 prompts web, M7 revue, M8 second temps).
+
+**Rien n'est lancé au 22 novembre 2026** : l'utilisateur lance les tâches lui-même (ordre et vérifications préalables : M4.5). Le prompt prêt à coller de chaque tâche est dans M5 (API), M6 (web) et M8 (second temps) ; la page de suivi (`pnpm progress`) affiche les 33 tâches du jalon avec leur prompt (cliquer une ligne, « Prompt à coller », « Copier le prompt »). Le tableau à huit colonnes des tâches web, au format de C13, est ajouté ici par M16-07.
+
+Rappel des tâches API (le C de psymate-api fera foi, section inscrite par M16-01) :
+
+| ID | Titre | Couloir | Dépend de |
+| --- | --- | --- | --- |
+| M16-01 | Décisions Q96 à Q102 et documentation | docs | — |
+| M16-02 | Langue de la requête résolue en un seul endroit ; préférence `locale` = `ar` | shared, identity | M16-01 |
+| M16-03 | Catalogues : `label_ar`, `inverse_label_ar`, administration | vocabulary, directory, linking, `V17` | M16-02, glossaire validé |
+| M16-04 | `messages_ar.properties`, test de parité | ressources | M16-02, glossaire validé |
+| M16-05 | E-mails en arabe, de droite à gauche | services d'envoi | M16-04 |
+| M16-06 | Seed, tag `contract-v0.17.0`, suivi | racine | M16-03, M16-05 |
+
+Rappel des tâches web :
+
+| ID | Titre | Couloir | Dépend de |
+| --- | --- | --- | --- |
+| M16-07 | Décisions Q72 à Q81, règles d'habillage arabe, glossaire clinique | docs | plan M sur `main` |
+| M16-08 | Socle de langue : bundle `/ar/`, locale de formatage, `Accept-Language`, raccourcis | `core`, `angular.json` | M16-07 |
+| M16-09 | Socle visuel : police, règles `:lang(ar)`, règle ESLint, composants partagés | `src/theme`, `shared/ui`, `tools/eslint` | M16-08 |
+| M16-10 | `auth` de droite à gauche | `features/auth` | M16-09 |
+| M16-11 | `public` de droite à gauche | `features/public` | M16-09 |
+| M16-12 | `account` de droite à gauche | `features/account` | M16-09 |
+| M16-13 | `admin` de droite à gauche | `features/admin` | M16-09 |
+| M16-14 | `patients` de droite à gauche | `features/patients` | M16-09 |
+| M16-15 | `patient-shell` de droite à gauche | `features/patient-shell` | M16-09 |
+| M16-16 | `overview` de droite à gauche, courbe laissée de gauche à droite | `features/overview` | M16-09 |
+| M16-17 | `timeline` de droite à gauche, vue décennie laissée de gauche à droite | `features/timeline` | M16-09 |
+| M16-18 | `graph` de droite à gauche, graphe lu vers la gauche | `features/graph` | M16-09 |
+| M16-19 | `entries` de droite à gauche | `features/entries` | M16-09 |
+| M16-20 | `capture` de droite à gauche, aucune date détectée en arabe | `features/capture` | M16-09 |
+| M16-21 | `search` de droite à gauche | `features/search` | M16-09 |
+| M16-22 | `profile360` de droite à gauche | `features/profile360` | M16-09 |
+| M16-23 | `agenda` de droite à gauche, calendrier en arabe | `features/agenda` | M16-09 |
+| M16-24 | `billing` de droite à gauche | `features/billing` | M16-09, M15-20 |
+| M16-25 | Contrat `0.17.0`, libellés arabes | `api` généré, `data/*.api.ts` | M16-06, M16-10 à M16-23 |
+| M16-26 | Traduction : pages publiques, connexion et inscription | `src/locale` | M16-08, glossaire validé |
+| M16-27 | Traduction : dossier patient | `src/locale` | M16-26 |
+| M16-28 | Traduction : compte, administration, agenda, socle | `src/locale` | M16-27 |
+| M16-29 | Ouverture : sélecteurs de langue, parcours e2e arabes | `core/preferences`, `shared/ui`, `e2e/arabe` | M16-09 à M16-28 |
+
+Second temps, à confirmer (M8) : M16-30 résumé « En bref » en arabe, M16-31 exports en arabe, M16-32 recherche plein texte en arabe (API) ; M16-33 dates dans la saisie libre en arabe (web).
+
+Hors M16 (M1) : dialecte, variante par pays, calendrier hégirien, chiffres arabo-indiens, traduction des données saisies, factures en arabe.
+
 ## C14. Version arabe, jalon M16 (22 novembre 2026)
 
 PsyMate en arabe, de droite à gauche, sous `/ar/`. Périmètre et choix tranchés par l'utilisateur le 22 novembre 2026 : G Q71 (G14). Constats et mesures : `docs/Etude-traduction-arabe.md`. Plan détaillé, décisions proposées, règles communes, prompts et revue : `docs/M-plan-version-arabe.md` (M2 décisions, M4 tâches, M5 prompts API, M6 prompts web, M7 revue, M8 second temps).

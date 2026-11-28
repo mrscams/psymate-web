@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 05 Paiements</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+<style>
+  .sum { display: grid; grid-template-columns: 300px minmax(0, 1fr); margin-bottom: 16px; }
+  .sum .kpi { border-right: 1px solid var(--border-subtle); }
+  .sum .by { padding: 14px 18px; }
+  .mode { display: inline-flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>05 · Paiements</h1>
+  <p class="lede">Le journal des encaissements : une ligne par paiement reçu, dans l'ordre des dates. C'est ce que le praticien rapproche de son relevé bancaire et ce qu'il transmet à son comptable en fin de mois ou d'année.</p>
+
+  <h2>Le journal</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements" data-sub="Paiements" style="--h: 900px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page">
+      <div class="quick">
+        <div class="seg" role="group" aria-label="Période">
+          <button aria-pressed="false"><i data-i="left"></i></button>
+          <button aria-pressed="true">Novembre 2026</button>
+          <button aria-pressed="false"><i data-i="right"></i></button>
+        </div>
+        <div class="seg" role="group" aria-label="Étendue">
+          <button aria-pressed="true">Mois</button>
+          <button aria-pressed="false">Trimestre</button>
+          <button aria-pressed="false">Année</button>
+        </div>
+        <div class="seg" role="group" aria-label="Mode de paiement">
+          <button aria-pressed="true">Tous</button>
+          <button aria-pressed="false">Virement</button>
+          <button aria-pressed="false">Chèque</button>
+          <button aria-pressed="false">Espèces</button>
+          <button aria-pressed="false">Carte</button>
+        </div>
+        <span class="spacer"></span>
+        <button class="btn outline"><i data-i="download"></i>Exporter le journal</button>
+      </div>
+
+      <div class="panel sum">
+        <div class="kpi"><div class="lbl">Encaissé en novembre 2026</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements · 1 remboursement déduit</div></div>
+        <div class="by">
+          <div class="bars">
+            <div class="b"><span class="mode"><i data-i="bank"></i>Virement</span><span class="track"><i style="width:100%"></i></span><span class="num">1 080,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cheque"></i>Chèque</span><span class="track"><i style="width:61%"></i></span><span class="num">660,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="cash"></i>Espèces</span><span class="track"><i style="width:39%"></i></span><span class="num">420,00 €</span></div>
+            <div class="b"><span class="mode"><i data-i="card"></i>Carte</span><span class="track"><i style="width:17%"></i></span><span class="num">180,00 €</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:120px">Reçu le</th><th style="width:22%">Patient</th><th>Facture</th><th>Mode</th><th>Référence</th><th class="num">Montant</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr><td class="mono s">20/11/2026</td><td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td><td class="mono"><a href="#">F-2026-0145</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">19/11/2026</td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono"><a href="#">F-2026-0146</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR ROUSSEL H</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr class="hover"><td class="mono s">16/11/2026</td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono"><a href="04-facture.html">F-2026-0144</a> <span class="sub" style="font-family:var(--font-ui)">· partiel</span></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 0004512</td><td class="num">120,00 €</td><td><div class="acts"><button class="icon-btn" title="Télécharger le reçu"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">13/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0143</a></td><td><span class="mode"><i data-i="cheque"></i>Chèque</span></td><td class="muted">n° 7731006</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">12/11/2026</td><td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td><td class="mono"><a href="#">F-2026-0142</a></td><td><span class="mode"><i data-i="card"></i>Carte</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">10/11/2026</td><td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td><td class="mono"><a href="#">AV-2026-0003</a> <span class="sub" style="font-family:var(--font-ui)">· remboursement</span></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">REMB BENALI S</td><td class="num">− 60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">09/11/2026</td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono"><a href="#">F-2026-0141</a></td><td><span class="mode"><i data-i="bank"></i>Virement</span></td><td class="muted">VIR RENAUD P</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono s">06/11/2026</td><td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td><td class="mono"><a href="#">F-2026-0140</a></td><td><span class="mode"><i data-i="cash"></i>Espèces</span></td><td class="muted">—</td><td class="num">60,00 €</td><td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+          </tbody>
+          <tfoot><tr><td colspan="5">Total de la période</td><td class="num">2 340,00 €</td><td></td></tr></tfoot>
+        </table>
+        <div class="foot"><span>8 paiements affichés sur 40</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Un paiement ne se crée pas ici : il s'enregistre depuis une facture. Le menu de ligne porte « Télécharger le reçu », « Ouvrir la facture » et « Annuler le paiement » (dialogue de confirmation partagé). Un remboursement est une ligne négative, rattachée à son avoir. La barre de répartition n'emploie que la couleur de marque : la longueur porte l'information, le nom et le montant sont écrits.</p>
+
+  <h2>Exporter le journal</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/paiements" data-sub="Paiements" style="--h: 620px">
+    <div class="mhead" data-tab="paiements"></div>
+    <div class="page"><div class="panel"><div class="skel"><i style="width:30%"></i><i></i><i style="width:88%"></i><i style="width:94%"></i><i style="width:76%"></i><i style="width:90%"></i><i style="width:82%"></i></div></div></div>
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Exporter le journal des paiements">
+      <header><h2>Exporter le journal</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body" style="gap:20px">
+        <div class="fgrid" style="margin-top:8px">
+          <div class="mf"><label>Du</label><span class="mono">01/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+          <div class="mf"><label>Au</label><span class="mono">30/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+        </div>
+        <div>
+          <div class="flabel">Format</div>
+          <div style="display:flex;gap:8px"><button class="pick" aria-pressed="true">Tableur (CSV)</button><button class="pick" aria-pressed="false">PDF</button></div>
+        </div>
+        <div>
+          <div class="flabel">Identité des patients</div>
+          <div class="rcards">
+            <div class="rcard on"><span class="radio on"></span><b>Numéro de facture seulement</b><span class="d">Aucun nom dans le fichier. Le numéro renvoie à la facture, que vous conservez.</span></div>
+            <div class="rcard"><span class="radio"></span><b>Nom complet</b><span class="d">À réserver à un destinataire tenu au secret.</span></div>
+          </div>
+        </div>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary"><i data-i="download"></i>Exporter</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Colonnes du fichier : date, numéro de facture ou d'avoir, mode, référence, montant ; le nom seulement si le praticien le demande. Le choix par défaut ne fait sortir aucun nom de patient de l'application. Le fichier est produit par l'API, comme les exports de dossier (fiche 19).</p>
+
+  <h2>Ce que l'écran affirme</h2>
+  <ul class="bullets">
+    <li><b>Le journal ne se retouche pas.</b> On n'y modifie pas un montant : on annule le paiement et on en saisit un autre ; les deux gestes restent visibles.</li>
+    <li><b>Les totaux viennent du serveur.</b> Total de la période et répartition par mode sont servis avec la page, pas additionnés sur les lignes affichées (la liste est paginée).</li>
+    <li><b>Le secret par défaut.</b> L'export sans nom est le choix présélectionné ; le nom complet est un choix explicite, expliqué.</li>
+    <li><b>Mobile.</b> Cartes d'une ligne (date, patient, mode, montant), total en tête, export dans le menu.</li>
+  </ul>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 06 Patient et points d'entrée</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+<style>
+  .pcard-head { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); }
+  .pcard-head .right { margin-left: auto; display: flex; gap: 16px; align-items: center; }
+  .entry { display: grid; gap: 10px; }
+  .entry .kicker { font: 600 12px/16px var(--font-ui); letter-spacing: 0.06em; text-transform: uppercase; color: var(--entry-session); }
+  .entry .line { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border-subtle); }
+  .entry .line .r { margin-left: auto; }
+  .frag { background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-2); padding: 16px 18px; }
+  .frag.top { border-top: 4px solid var(--entry-session); }
+</style>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>06 · Factures d'un patient et points d'entrée</h1>
+  <p class="lede">La facturation ne vit pas seulement dans son module : le praticien la croise à la clôture d'une séance, dans le détail d'un rendez-vous, dans la fiche d'un patient. Décision du 22 novembre 2026 : le dossier patient n'a pas d'onglet Facturation ; un lien ouvre la liste du module, filtrée sur ce patient.</p>
+
+  <h2>La liste du module, filtrée sur un patient</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?patient=7c1e" style="--h: 760px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel" style="margin-bottom:16px">
+        <div class="pcard-head">
+          <span class="av">MD</span>
+          <div><div class="strong">Marie D.</div><div class="s muted">Factures adressées à Marie Dubois, 14 rue Saint-Maur, 75011 Paris</div></div>
+          <div class="right"><a href="#">Modifier dans la fiche</a><a class="btn outline" href="#">Ouvrir le dossier</a></div>
+        </div>
+        <div class="kpis" style="margin:0;grid-template-columns:repeat(3,1fr)">
+          <div class="kpi"><div class="lbl">Reste dû</div><div class="val">60,00 €</div><div class="ctx">1 facture à régler · échéance le 20/12/2026</div></div>
+          <div class="kpi"><div class="lbl">À facturer</div><div class="val">0 <small>séance</small></div><div class="ctx">tout est facturé</div></div>
+          <div class="kpi"><div class="lbl">Tarif de la séance</div><div class="val">60,00 €</div><div class="ctx">repris de la fiche</div></div>
+        </div>
+      </div>
+
+      <div class="quick">
+        <button class="pick" aria-pressed="true"><i data-i="user"></i>Patient : Marie D.<i data-i="close"></i></button>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">À régler <span class="n">1</span></button>
+          <button aria-pressed="false">En retard</button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+        <button class="btn outline"><i data-i="download"></i>Exporter</button>
+      </div>
+
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr><th style="width:128px">Numéro</th><th>Émise le</th><th>Objet</th><th>Échéance</th><th class="num">Montant</th><th class="num">Reste dû</th><th>Statut</th><th style="width:1%"></th></tr></thead>
+          <tbody>
+            <tr class="hover"><td class="mono">F-2026-0147</td><td class="mono s">20/11/2026</td><td>1 séance <span class="sub">· 20 nov.</span></td><td class="mono s">20/12/2026</td><td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st due">À régler</span></td><td><div class="acts"><button class="btn sm outline">Encaisser</button><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td></tr>
+            <tr><td class="mono">F-2026-0143</td><td class="mono s">13/11/2026</td><td>1 séance <span class="sub">· 13 nov.</span></td><td class="muted">—</td><td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">chèque</span></td><td></td></tr>
+            <tr><td class="mono">F-2026-0140</td><td class="mono s">06/11/2026</td><td>1 séance <span class="sub">· 6 nov.</span></td><td class="muted">—</td><td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">espèces</span></td><td></td></tr>
+            <tr><td class="mono">F-2026-0133</td><td class="mono s">30/10/2026</td><td>4 séances <span class="sub">· octobre</span></td><td class="muted">—</td><td class="num">240,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">virement</span></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>4 factures affichées</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><span class="off">Suivant ›</span></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">C'est l'écran 01, avec <code>?patient=</code> dans l'adresse. Trois choses changent quand le filtre est posé : une puce « Patient : … » apparaît en tête des filtres (la croix l'enlève et rend la liste entière) ; le bandeau de chiffres du cabinet laisse la place à la carte du patient (reste dû, à facturer, tarif, destinataire des factures) ; la colonne Patient disparaît. « Nouvelle facture » ouvre alors l'éditeur avec ce patient déjà choisi. Le filtre ne suit pas vers « À facturer » ni « Paiements ».</p>
+
+  <h2>Les points d'entrée</h2>
+  <div class="three">
+    <div>
+      <div class="frag entry">
+        <b style="font: 600 16px/22px var(--font-ui)">Suivi</b>
+        <div class="fgrid" style="margin-top:6px">
+          <div class="mf"><label>Durée de séance</label>50<span class="suffix">min</span></div>
+          <div class="mf"><label>Tarif de la séance</label>60,00<span class="suffix">€</span></div>
+        </div>
+        <p class="hint">Vide : le tarif de la prestation par défaut s'applique (60,00 €).</p>
+        <div class="line"><i data-i="doc" class="muted"></i><div><div>Facturation</div><div class="s muted">Reste dû : 60,00 €</div></div><a class="r" href="#">Voir les factures <i data-i="right"></i></a></div>
+      </div>
+      <p class="notes"><b>Dans la fiche patient</b> (fiche 16, rubrique Suivi). Le champ Tarif, aujourd'hui un simple emplacement <code>[TARIF]</code>, devient le tarif appliqué aux séances de ce patient. La ligne « Facturation » est le seul chemin du dossier vers le module : elle ouvre la liste filtrée ci-dessus. L'adresse de facturation et un éventuel tiers destinataire se règlent dans la même rubrique.</p>
+    </div>
+    <div>
+      <div class="frag entry">
+        <b style="font: 600 16px/22px var(--font-ui)">Clore la séance</b>
+        <p class="muted">Marie D. · 50 min · cabinet</p>
+        <div class="line"><span class="box on"></span><div><div>Ajouter à « À facturer »</div><div class="s muted">Séance de psychothérapie · 60,00 €</div></div></div>
+        <div class="line"><span class="box"></span><div><div>Réglée en séance</div><div class="s muted">Crée la facture acquittée tout de suite</div></div></div>
+        <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:6px"><button class="btn outline">Annuler</button><button class="btn primary">Clore la séance</button></div>
+      </div>
+      <p class="notes"><b>À la clôture d'une séance</b> (panneau existant, deux lignes en plus). La première case est cochée par défaut si un tarif existe. « Réglée en séance » demande le mode de paiement, puis émet la facture acquittée dans le même geste.</p>
+    </div>
+    <div>
+      <div class="frag top entry">
+        <span class="kicker">Au cabinet · terminé</span>
+        <div style="display:flex;gap:12px;align-items:center"><span class="av">HR</span><div><div class="strong">Hélène R.</div><div class="s muted mono">jeu. 12/11/2026 · 10:00 – 10:50</div></div></div>
+        <div class="line"><i data-i="doc" class="muted"></i><div><div>Facturation</div><div class="s muted">Pas encore facturée · 60,00 €</div></div><a class="r btn sm outline" href="03-editeur.html">Facturer</a></div>
+      </div>
+      <p class="notes"><b>Dans l'agenda</b>, détail d'un rendez-vous terminé : une ligne « Facturation » dit où en est la séance (pas encore facturée, brouillon, <span class="mono">F-2026-0146</span> payée) et y mène. Un rendez-vous à venir, annulé ou non honoré n'a pas cette ligne : une absence ne se facture pas.</p>
+    </div>
+  </div>
+
+  <h2>Dans le dossier lui-même</h2>
+  <p>Rien d'autre. L'en-tête patient garde ses quatre onglets (Vue d'ensemble, Timeline, Graphe, Profil 360) ; la timeline, le graphe et la vue d'ensemble ne montrent ni facture ni montant. Dans la liste des patients, la colonne « Attention » reste clinique : un impayé n'y apparaît pas.</p>
+
+  <h2>Ce que ces écrans affirment</h2>
+  <ul class="bullets">
+    <li><b>Deux mondes étanches.</b> L'argent ne se mêle pas au clinique : pas d'onglet ni de statut de paiement dans le dossier, pas de facture dans la timeline, pas de note sur une facture. Le seul montant visible hors du module est la ligne « Facturation » de la fiche patient.</li>
+    <li><b>Un seul écran de factures.</b> Les factures d'un patient sont la liste du module, filtrée : mêmes lignes, mêmes statuts, mêmes actions, rien à apprendre deux fois, et aucun composant partagé à modifier.</li>
+    <li><b>Le moins de gestes possible au cabinet.</b> Le patient paie en sortant : une case à la clôture, un mode de paiement, la facture acquittée est prête.</li>
+  </ul>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

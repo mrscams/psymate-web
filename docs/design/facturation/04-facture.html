@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 04 Facture émise</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+<style>
+  .ed-head { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: var(--surface-raised); border-bottom: 1px solid var(--border-subtle); }
+  .ed-head h1 { font: 600 20px/28px var(--font-mono); }
+  .ed-head .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .side h2 { font: 600 16px/22px var(--font-ui); margin-bottom: 10px; }
+  .modes { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>04 · Facture émise</h1>
+  <p class="lede">La page d'une facture qui a son numéro. La feuille ne change plus ; tout ce qui vit autour d'elle (paiements, envois, avoir) se lit et se fait dans le rail de droite.</p>
+
+  <h2>La facture</h2>
+  <div class="frame"><div class="app" id="detail" data-url="psymate.app/facturation/F-2026-0144" data-sub="F-2026-0144" style="--h: 900px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>F-2026-0144</h1><span class="st part">Payée en partie</span>
+      <span class="muted">Léa M. · émise le 16 novembre 2026</span>
+      <div class="right">
+        <button class="btn outline"><i data-i="mail"></i>Envoyer</button>
+        <button class="btn outline"><i data-i="download"></i>Télécharger le PDF</button>
+        <button class="icon-btn" title="Plus : dupliquer, créer un avoir"><i data-i="more"></i></button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="split">
+        <div class="paper-wrap"><div class="paper" data-inv="f0144"></div></div>
+        <aside class="side">
+          <div class="panel"><div class="pad">
+            <h2>Règlement</h2>
+            <dl class="kv">
+              <dt>Total</dt><dd>240,00 €</dd>
+              <dt>Réglé</dt><dd>120,00 €</dd>
+            </dl>
+            <div class="progress" role="img" aria-label="120,00 € réglés sur 240,00 €"><i style="width:50%"></i></div>
+            <dl class="kv" style="margin-top:8px">
+              <div class="big" style="display:contents"><dt>Reste dû</dt><dd>120,00 €</dd></div>
+              <dt>Échéance</dt><dd class="mono">16/12/2026</dd>
+            </dl>
+            <button class="btn primary block" style="margin-top:14px">Enregistrer un paiement</button>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Paiements</h2>
+            <ul class="rows">
+              <li><i data-i="cheque" class="lg muted"></i><div><div>Chèque <span class="muted">n° 0004512</span></div><div class="s muted mono">16/11/2026</div></div><span class="r">120,00 €</span><button class="icon-btn" title="Reçu, annuler le paiement"><i data-i="more"></i></button></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Séances facturées</h2>
+            <ul class="rows">
+              <li><span class="mono s">05/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+              <li><span class="mono s">12/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+              <li><span class="mono s">19/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+              <li><span class="mono s">26/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Historique</h2>
+            <ul class="hist">
+              <li>Paiement de 120,00 € par chèque<span class="when">16/11/2026 · 18:05</span></li>
+              <li>Envoyée à lea.m@example.test<span class="when">16/11/2026 · 17:42</span></li>
+              <li>Émise sous le numéro F-2026-0144<span class="when">16/11/2026 · 17:41</span></li>
+              <li>Brouillon créé depuis « À facturer »<span class="when">16/11/2026 · 17:38</span></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Une facture émise n'a aucun champ : il n'y a rien à « modifier ». Le menu « Plus » porte Dupliquer (nouveau brouillon avec les mêmes lignes) et Créer un avoir. Payée, la même page affiche le tampon « Acquittée » sur la feuille et remplace le bouton primaire par « Télécharger la facture acquittée ».</p>
+
+  <h2>Enregistrer un paiement</h2>
+  <div class="frame"><div class="app" data-clone="#detail" data-url="psymate.app/facturation/F-2026-0144" data-sub="F-2026-0144" style="--h: 780px">
+    <div class="scrim"></div>
+    <div class="side-panel" role="dialog" aria-label="Enregistrer un paiement">
+      <header><h2>Enregistrer un paiement</h2><p>F-2026-0144 · Léa M. · reste dû 120,00 €</p><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body">
+        <div>
+          <div class="mf focus"><label>Montant reçu</label>120,00<span class="caretline"></span><span class="suffix">€</span></div>
+          <p class="hint">Le solde est proposé. Saisissez moins pour un paiement partiel.</p>
+        </div>
+        <div>
+          <div class="flabel">Mode de paiement</div>
+          <div class="modes" role="group" aria-label="Mode de paiement">
+            <button class="pick" aria-pressed="false"><i data-i="cash"></i>Espèces</button>
+            <button class="pick" aria-pressed="false"><i data-i="cheque"></i>Chèque</button>
+            <button class="pick" aria-pressed="true"><i data-i="bank"></i>Virement</button>
+            <button class="pick" aria-pressed="false"><i data-i="card"></i>Carte</button>
+            <button class="pick" aria-pressed="false">Autre</button>
+          </div>
+        </div>
+        <div class="fgrid">
+          <div class="mf"><label>Reçu le</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+          <div class="mf"><label>Référence (facultatif)</label><span class="ph">Libellé du virement</span></div>
+        </div>
+        <div class="mf area" style="min-height:64px"><label>Note pour vous (facultatif)</label><span class="ph">N'apparaît sur aucun document.</span></div>
+        <div class="banner ok" style="margin:0"><i data-i="check"></i><div>Après ce paiement, la facture sera <b>payée</b> et une facture acquittée sera disponible pour la mutuelle de la patiente.</div></div>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer le paiement</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Panneau latéral partagé de 480 px (<code>pm-side-panel</code>), comme le Profil 360 et le rendez-vous. Ouvert depuis la facture ou depuis « Encaisser » dans la liste, filtrée ou non sur un patient. Un montant supérieur au reste dû est refusé sur le champ (« Le reste dû est de 120,00 € »). Après l'enregistrement, la facture et le bandeau de chiffres sont relus, pas recalculés.</p>
+
+  <h2>Créer un avoir</h2>
+  <div class="frame"><div class="app" data-clone="#detail" data-url="psymate.app/facturation/F-2026-0144" data-sub="F-2026-0144" style="--h: 780px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Créer un avoir" style="width:560px">
+      <header><h2>Créer un avoir</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body">
+        <p class="muted">Un avoir annule tout ou partie de la facture F-2026-0144. La facture d'origine reste dans vos documents.</p>
+        <div class="rcards">
+          <div class="rcard"><span class="radio"></span><b>Annuler toute la facture</b><span class="d">4 séances · 240,00 €</span></div>
+          <div class="rcard on"><span class="radio on"></span><b>Annuler certaines lignes</b><span class="d">Cochez les séances facturées à tort.</span></div>
+        </div>
+        <ul class="rows" style="padding-left:28px">
+          <li><span class="box"></span><span class="mono s">05/10/2026</span>Séance de psychothérapie<span class="r">60,00 €</span></li>
+          <li><span class="box"></span><span class="mono s">12/10/2026</span>Séance de psychothérapie<span class="r">60,00 €</span></li>
+          <li><span class="box"></span><span class="mono s">19/10/2026</span>Séance de psychothérapie<span class="r">60,00 €</span></li>
+          <li><span class="box on"></span><span class="mono s">26/10/2026</span>Séance de psychothérapie<span class="r">60,00 €</span></li>
+        </ul>
+        <div class="mf"><label>Motif (figure sur l'avoir)</label>Séance annulée, facturée à tort<i data-i="down" class="suffix"></i></div>
+        <div class="banner neutral" style="margin:0"><i data-i="info"></i><div>L'avoir <span class="mono">AV-2026-0004</span> de <b>60,00 €</b> sera émis. Le reste dû passera de 120,00 € à 60,00 €. La séance du 26 octobre reviendra dans « À facturer ».</div></div>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary">Émettre l'avoir</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">L'avoir est un document à part, numéroté dans sa propre suite, non modifiable lui aussi. Si l'avoir dépasse ce qui reste dû (facture déjà payée), le résumé le dit : « 60,00 € sont à rembourser à la patiente », et le remboursement s'enregistre dans Paiements. Le bouton n'est pas rouge : émettre un avoir ne détruit rien.</p>
+
+  <h2>Envoyer par e-mail</h2>
+  <div class="frame"><div class="app" data-clone="#detail" data-url="psymate.app/facturation/F-2026-0144" data-sub="F-2026-0144" style="--h: 720px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Envoyer la facture" style="width:560px">
+      <header><h2>Envoyer la facture</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body" style="gap:20px">
+        <div class="mf" style="margin-top:8px"><label>À</label>lea.m@example.test</div>
+        <div class="mf"><label>Objet</label>Votre facture F-2026-0144</div>
+        <div class="mf area" style="min-height:118px"><label>Message</label><span>Bonjour,<br><br>Vous trouverez ci-joint la facture F-2026-0144 d'un montant de 240,00 €. Il reste 120,00 € à régler avant le 16 décembre 2026.<br><br>Claire Moreau</span></div>
+        <div><span class="chip"><i data-i="doc"></i>F-2026-0144.pdf</span></div>
+        <p class="hint" style="margin:0">Le message part de PsyMate à votre nom ; les réponses arrivent sur votre adresse. Il ne contient aucune information de suivi.</p>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary"><i data-i="mail"></i>Envoyer</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Le texte vient du modèle des réglages et reste modifiable avant l'envoi. Sans adresse dans la fiche du patient, le champ « À » est vide et obligatoire. L'envoi s'inscrit dans l'historique. Pour une facture en retard, le même dialogue s'ouvre avec le modèle de relance.</p>
+
+  <h2>Facture acquittée</h2>
+  <div class="two">
+    <div class="paper-wrap"><div class="paper" data-inv="f0146" style="min-height:560px"></div></div>
+    <div class="doc-card">
+      <h3>Ce que l'écran affirme</h3>
+      <ul class="bullets">
+        <li><b>La feuille ne bouge plus.</b> Après l'émission, seuls les paiements, les envois et un éventuel avoir s'ajoutent, tous datés dans l'historique.</li>
+        <li><b>Une seule action primaire.</b> « Enregistrer un paiement » tant qu'il reste quelque chose à encaisser ; ensuite « Télécharger la facture acquittée ».</li>
+        <li><b>La facture acquittée sert à la mutuelle.</b> Titre « Facture acquittée », tampon vert, mode et date du règlement : c'est le document que le patient transmet pour être remboursé.</li>
+        <li><b>Du document au dossier, pas l'inverse.</b> « Séances facturées » mène aux séances du dossier ; rien du dossier ne remonte sur la feuille.</li>
+        <li><b>Annuler un paiement</b> (erreur de saisie) se fait depuis sa ligne, avec le dialogue de confirmation partagé ; l'annulation reste visible dans l'historique.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

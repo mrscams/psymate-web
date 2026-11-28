@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 01 Factures</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>01 · Factures</h1>
+  <p class="lede">L'écran d'arrivée du module, ouvert par le carreau « Facture » du rail. Il répond à trois questions dans l'ordre : combien ai-je encaissé ce mois-ci, qui me doit encore quelque chose, que me reste-t-il à facturer.</p>
+
+  <h2>La liste</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation" style="--h: 900px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel kpis">
+        <div class="kpi"><div class="lbl">Encaissé en novembre</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements</div></div>
+        <div class="kpi"><div class="lbl">À encaisser</div><div class="val">420,00 €</div><div class="ctx">6 factures émises</div></div>
+        <div class="kpi"><div class="lbl">Dont en retard</div><div class="val">180,00 €</div><div class="ctx">3 factures · la plus ancienne : 34 jours</div></div>
+        <div class="kpi"><div class="lbl">À facturer</div><div class="val">7 <small>séances</small></div><div class="ctx">360,00 € · 1 sans tarif · <a href="02-a-facturer.html">Voir</a></div></div>
+      </div>
+
+      <div class="quick">
+        <div class="field search ph"><i data-i="search"></i>N° de facture ou patient…</div>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">Brouillons <span class="n">2</span></button>
+          <button aria-pressed="false">À régler <span class="n">3</span></button>
+          <button aria-pressed="false">En retard <span class="n">3</span></button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+        <button class="btn outline"><i data-i="download"></i>Exporter</button>
+      </div>
+
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr>
+            <th style="width:128px">Numéro</th><th style="width:16%">Patient</th><th>Émise le</th><th>Objet</th><th>Échéance</th><th class="num">Montant</th><th class="num">Reste dû</th><th>Statut</th><th style="width:1%"></th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td>
+              <td class="muted">—</td><td>2 séances <span class="sub">· 12 et 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">120,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td>
+              <td class="muted">—</td><td>1 séance <span class="sub">· 18 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0147</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">20/11/2026</td><td>1 séance <span class="sub">· 20 nov.</span></td><td class="mono s">20/12/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st due">À régler</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0146</td>
+              <td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td>
+              <td class="mono s">19/11/2026</td><td>1 séance en visio <span class="sub">· 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">virement</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0145</td>
+              <td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td>
+              <td class="mono s">17/11/2026</td><td>1 séance <span class="sub">· 17 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">espèces</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr class="hover">
+              <td class="mono">F-2026-0144</td>
+              <td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td>
+              <td class="mono s">16/11/2026</td><td>4 séances <span class="sub">· octobre</span></td><td class="mono s">16/12/2026</td>
+              <td class="num">240,00 €</td><td class="num strong">120,00 €</td><td><span class="st part">Payée en partie</span></td>
+              <td><div class="acts"><button class="btn sm outline">Encaisser</button><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0143</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">13/11/2026</td><td>1 séance <span class="sub">· 13 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">chèque</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">AV-2026-0003</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">10/11/2026</td><td>Avoir <span class="sub">· annule F-2026-0138</span></td><td class="muted">—</td>
+              <td class="num">− 60,00 €</td><td class="num muted">—</td><td><span class="st credit">Avoir</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0139</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">19/10/2026</td><td>1 séance <span class="sub">· 19 oct.</span></td><td class="mono s">18/11/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st late">En retard</span> <span class="sub">4 jours</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono void">F-2026-0138</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm muted">Samir B.</span></div></td>
+              <td class="mono s muted">12/10/2026</td><td class="muted">1 séance <span class="sub">· 12 oct.</span></td><td class="muted">—</td>
+              <td class="num muted">60,00 €</td><td class="num muted">—</td><td><span class="st void">Annulée</span> <span class="sub">AV-2026-0003</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>10 factures affichées</span><span><kbd>↑</kbd> <kbd>↓</kbd> choisir · <kbd>Entrée</kbd> ouvrir · <kbd>N</kbd> nouvelle facture</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Toute la ligne est un lien vers la facture (ou vers l'éditeur pour un brouillon). Les actions de ligne n'apparaissent qu'au survol et au focus, comme dans la liste des patients : « Encaisser » sur une facture qui a un reste dû, « Télécharger le PDF », puis le menu (Envoyer par e-mail, Dupliquer, Créer un avoir ; Supprimer pour un brouillon seulement). Les quatre chiffres du bandeau sont une projection servie par l'API : le client ne les calcule pas.</p>
+
+  <h2>Les statuts</h2>
+  <div class="tablewrap"><table class="crit">
+    <thead><tr><th>Statut</th><th>Quand</th><th>Ce que le praticien peut faire</th></tr></thead>
+    <tbody>
+      <tr><td><span class="st draft">Brouillon</span></td><td>Créée, pas encore émise. Pas de numéro.</td><td>Modifier, supprimer, émettre.</td></tr>
+      <tr><td><span class="st due">À régler</span></td><td>Émise, aucun paiement, échéance non dépassée.</td><td>Encaisser, envoyer, télécharger, créer un avoir. Plus aucune modification.</td></tr>
+      <tr><td><span class="st part">Payée en partie</span></td><td>Au moins un paiement, reste dû supérieur à zéro.</td><td>Encaisser le solde, créer un avoir sur le reste.</td></tr>
+      <tr><td><span class="st paid">Payée</span></td><td>Reste dû à zéro. Le PDF devient une facture acquittée.</td><td>Télécharger la facture acquittée (mutuelle), envoyer.</td></tr>
+      <tr><td><span class="st late">En retard</span></td><td>Échéance dépassée, reste dû supérieur à zéro. Décidé par le serveur.</td><td>Encaisser, relancer par e-mail.</td></tr>
+      <tr><td><span class="st void">Annulée</span></td><td>Un avoir l'a annulée en totalité. Elle reste dans la liste, numéro barré.</td><td>Consulter, ouvrir l'avoir.</td></tr>
+      <tr><td><span class="st credit">Avoir</span></td><td>Document qui annule tout ou partie d'une facture émise.</td><td>Consulter, télécharger.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="notes">« En retard » est en orange (<code>warning</code>), pas en rouge : le rouge reste réservé aux erreurs et aux actions destructrices, et un retard de paiement n'est pas une alerte clinique. Chaque statut porte une icône et un mot ; « À régler » et « Payée en partie » partagent la teinte d'information et se distinguent par l'icône.</p>
+
+  <h2>Les trois états</h2>
+  <div class="three">
+    <div>
+      <div class="panel">
+        <div class="state">
+          <i data-i="doc"></i>
+          <b>Aucune facture pour l'instant</b>
+          <p>Avant d'émettre la première, complétez ce qui doit figurer sur chaque facture.</p>
+        </div>
+        <ul class="todo" style="padding: 0 18px 14px">
+          <li><i data-i="check" class="ok"></i>Nom et adresse du cabinet<span class="r muted">repris du profil</span></li>
+          <li><i data-i="clock"></i>Numéro SIRET<a class="r" href="07-reglages.html">Renseigner</a></li>
+          <li><i data-i="clock"></i>Tarif d'une séance<a class="r" href="07-reglages.html">Renseigner</a></li>
+        </ul>
+      </div>
+      <p class="notes">Vide, première ouverture. Le bouton « Nouvelle facture » reste actif : un brouillon peut être préparé, c'est l'émission qui demande les réglages complets.</p>
+    </div>
+    <div>
+      <div class="panel"><div class="skel"><i style="width:40%"></i><i></i><i style="width:85%"></i><i style="width:92%"></i><i style="width:70%"></i><i style="width:88%"></i></div></div>
+      <p class="notes">Chargement : squelette de lignes (<code>pm-state</code>, <code>skeleton="row"</code>). Le bandeau de chiffres a son propre squelette et son propre état d'erreur.</p>
+    </div>
+    <div>
+      <div class="panel"><div class="state"><i data-i="alert"></i><b>Les factures n'ont pas pu être chargées</b><p>Vérifiez votre connexion, puis réessayez.</p><button class="btn outline">Réessayer</button></div></div>
+      <p class="notes">Erreur. Si la liste était déjà affichée, elle reste visible sous un bandeau avec « Réessayer », comme la liste des patients.</p>
+    </div>
+  </div>
+
+  <h2>Mobile</h2>
+  <div class="two">
+    <div class="phone">
+      <div class="m-appbar"><i data-i="doc" class="lg"></i>Facturation<span class="spacer"></span><span class="av sm">CM</span></div>
+      <div class="m-tabs"><a href="#" aria-current="page">Factures</a><a href="#">À facturer</a><a href="#">Paiements</a></div>
+      <div class="m-page">
+        <div class="panel" style="display:grid;grid-template-columns:1fr 1fr;margin-bottom:12px">
+          <div class="kpi"><div class="lbl">Encaissé en nov.</div><div class="val" style="font-size:20px;line-height:28px">2 340,00 €</div></div>
+          <div class="kpi"><div class="lbl">À encaisser</div><div class="val" style="font-size:20px;line-height:28px">420,00 €</div><div class="ctx">dont 180,00 € en retard</div></div>
+        </div>
+        <div class="seg" style="display:flex;margin-bottom:8px"><button aria-pressed="true" style="flex:1">Toutes</button><button aria-pressed="false" style="flex:1">À régler</button><button aria-pressed="false" style="flex:1">En retard</button></div>
+        <div class="m-row"><span class="av sm">NK</span><div><div class="strong">Nour K.</div><div class="s muted">2 séances · brouillon</div></div><div class="r"><div class="num">120,00 €</div><span class="st draft">Brouillon</span></div></div>
+        <div class="m-row"><span class="av sm">MD</span><div><div class="strong">Marie D.</div><div class="s muted mono">F-2026-0147 · 20/11</div></div><div class="r"><div class="num">60,00 €</div><span class="st due">À régler</span></div></div>
+        <div class="m-row"><span class="av sm">HR</span><div><div class="strong">Hélène R.</div><div class="s muted mono">F-2026-0146 · 19/11</div></div><div class="r"><div class="num">60,00 €</div><span class="st paid">Payée</span></div></div>
+        <div class="m-row"><span class="av sm">LM</span><div><div class="strong">Léa M.</div><div class="s muted mono">F-2026-0144 · 16/11</div></div><div class="r"><div class="num">reste 120,00 €</div><span class="st part">Payée en partie</span></div></div>
+        <div class="m-row"><span class="av sm">SB</span><div><div class="strong">Samir B.</div><div class="s muted mono">F-2026-0139 · 19/10</div></div><div class="r"><div class="num">60,00 €</div><span class="st late">En retard</span></div></div>
+      </div>
+      <div class="m-bottom"><button class="btn primary block">Nouvelle facture</button></div>
+    </div>
+    <div class="doc-card">
+      <h3>Ce que l'écran affirme</h3>
+      <ul class="bullets">
+        <li>Un brouillon n'a pas de numéro : la colonne dit « Brouillon », jamais un numéro provisoire.</li>
+        <li>Une facture annulée ne disparaît pas : elle reste à sa place, barrée, avec le numéro de son avoir.</li>
+        <li>« Reste dû » est la seule colonne en gras quand elle est supérieure à zéro : c'est elle qu'on lit en diagonale.</li>
+        <li>Les montants sont alignés à droite, en chiffres tabulaires ; numéros et dates en police à chasse fixe, comme les dates du reste de l'application.</li>
+        <li>Sous 600 px : cartes au lieu du tableau, deux chiffres au lieu de quatre, « Nouvelle facture » en bas d'écran, réglages dans le menu du compte.</li>
+      </ul>
+      <h3>Tokens employés</h3>
+      <p>Aucun nouveau. <code>info</code> / <code>info-bg</code> (à régler), <code>success</code> / <code>success-bg</code> (payée), <code>warning</code> / <code>warning-bg</code> (en retard), <code>surface-sunken</code> (brouillon, annulée), <code>primary</code> (action, onglet courant).</p>
+    </div>
+  </div>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

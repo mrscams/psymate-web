@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-28T09:53:43.297Z",
+  "task": "PROJET",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Facturation (jalon M15) : plan L, fiches 33 à 39, maquettes, G13 (Q67) et C13 portés sur main ; page de suivi étendue aux plans de jalon et aux prompts",
+  "notes": "Numéros revérifiés le 28 novembre 2026 : migration V18, contrat 0.17.0 (V16, V17 et 0.16.0 pris par M16). Décisions API Q83 à Q95 proposées par le plan, non relues par l'utilisateur. Habillage Fluent 2 pas encore sur main.",
+  "next": "Vague M15-A côté API (M15-01 à M15-05), M15-13 côté web",
+  "branch": "m15-13a-plan-facturation",
+  "checkout": "m15-plan"
+}
