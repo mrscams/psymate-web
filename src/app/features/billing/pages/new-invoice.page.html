@@ -1,0 +1,11 @@
+<div class="ed-head">
+  <a class="back" routerLink="/facturation" [attr.aria-label]="backLabel" [title]="backLabel">
+    <svg class="pm-flip-rtl" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M15 6l-6 6 6 6" />
+    </svg>
+  </a>
+  <h1 i18n="Titre de l'éditeur d'une nouvelle facture@@billing.editor.title">Nouvelle facture</h1>
+</div>
+<div class="content">
+  <pm-state kind="loading" skeleton="block" [lines]="4" />
+</div>

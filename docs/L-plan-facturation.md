@@ -254,7 +254,7 @@ create table invoice_event (
 create index invoice_event_by_invoice on invoice_event (invoice_id, at desc);
 ```
 
-Changements de E qui vont avec : E1 ajoute le module `billing` et ses dix tables ; E4 réserve `V18__billing.sql` (M15-05, vague M15-A, dépend de V01) ; E9 ajoute une ligne « `invoice` à l'état `draft`, ses `invoice_line` et ses `invoice_event` : suppression physique à la demande du praticien ; jamais une facture émise, un avoir, un paiement » ; `invoice_event` est append-only (`@Immutable`) ; `payment` ne se modifie que par `cancelled_at`.
+Changements de E qui vont avec : E1 ajoute le module `billing` et ses neuf tables ; E4 réserve `V18__billing.sql` (M15-05, vague M15-A, dépend de V01) ; E9 ajoute une ligne « `invoice` à l'état `draft`, ses `invoice_line` et ses `invoice_event` : suppression physique à la demande du praticien ; jamais une facture émise, un avoir, un paiement » ; `invoice_event` est append-only (`@Immutable`) ; `payment` ne se modifie que par `cancelled_at`.
 
 ## L5. Contrat d'API (cible `0.17.0`, tag `contract-v0.17.0` posé par M15-12)
 
@@ -398,7 +398,7 @@ Objectif :
 - A : A3 et A5 ajoutent le module billing et ses dépendances (identity, patients, clinical, events, shared ; personne ne dépend de billing).
 - C : C1 ajoute le jalon M15 (objectif, démontrable, effort indicatif 10 j) ; nouvelle section C14 avec le tableau des tâches M15-01 à M15-12 au format de C13, critères repris mot pour mot de L7.
 - D : D1, D3, D5 reçoivent les lignes, vagues et couloirs de L6.1, dont un nouveau couloir billing.
-- E : E1 ajoute billing et ses dix tables ; nouvelle section E3.15 avec le DDL de L4, identique octet pour octet ; E4 ajoute la ligne V18__billing.sql (M15-05, vague M15-A, dépend de V01) ; E9 reçoit la ligne des brouillons de L4.
+- E : E1 ajoute billing et ses neuf tables ; nouvelle section E3.15 avec le DDL de L4, identique octet pour octet ; E4 ajoute la ligne V18__billing.sql (M15-05, vague M15-A, dépend de V01) ; E9 reçoit la ligne des brouillons de L4.
 - CLAUDE.md : billing rejoint la liste des modules avec ses dépendances ; une ligne « La facturation vit dans le module billing (G Q83) : montants en centimes entiers (Q84), facture émise jamais modifiée ni supprimée, correction par avoir (Q88, Q91), rien de clinique sur une facture. Pour toute tâche M15, docs/L-plan-facturation-api.md fait foi (L4 DDL, L5 contrat). »
 - .claude/agents/backend-module-dev.md : ajoute « docs/L-plan-facturation-api.md pour toute tâche M15 » à sa liste de lecture.
 
@@ -515,7 +515,7 @@ Contexte : lis CLAUDE.md, ../psymate-web/docs/L-plan-facturation.md (L2.2 Q83, Q
 
 Objectif :
 - Module billing : package-info.java avec allowedDependencies = identity :: api, patients :: api, clinical :: api, events :: api, shared (les dépendances pas encore employées vont dans PENDING_MODULES ou ce que la règle demande). Dossiers par rôle. Aucun package api (personne ne dépend de billing).
-- V18__billing.sql : le DDL de L4, identique octet pour octet, les dix tables d'un coup. expected-schema-v01.yaml, TableOwnershipTests, FlywayMigrationIT et les listes d'architecture mis à jour ; les *IT de billing rejoignent la tranche core de tools/it-slices.txt.
+- V18__billing.sql : le DDL de L4, identique octet pour octet, les neuf tables d'un coup. expected-schema-v01.yaml, TableOwnershipTests, FlywayMigrationIT et les listes d'architecture mis à jour ; les *IT de billing rejoignent la tranche core de tools/it-slices.txt.
 - Entités et dépôts JPA pour billing_service et billing_patient seulement (les autres tables viennent avec leurs tâches).
 - Routes de L5.1 : GET et POST /api/me/billing-services, PATCH et DELETE /api/me/billing-services/{id}, GET et PUT /api/patients/{id}/billing-profile. Règles : montants en centimes entiers ; première prestation créée = défaut ; un seul défaut ; 50 prestations au plus ; DELETE archive ; 409 SERVICE_IS_DEFAULT ; propriété du patient par PatientOwnershipGuard ; 409 PATIENT_ARCHIVED en écriture ; champs inconnus refusés (UNKNOWN_FIELD) ; 422 par champ avec les codes de L5.1.
 - Contrat regénéré (make contract) ; version selon L6.3 règle 2. messages_fr.properties pour les textes d'erreur.
@@ -523,7 +523,7 @@ Objectif :
 Périmètre : src/main/java/com/psymate/billing/**, src/main/resources/db/migration/V18__billing.sql, messages_*.properties (clés billing.*), les tests de billing, les listes des tests d'architecture, expected-schema-v01.yaml, tools/it-slices.txt, contract/openapi.yaml, docs/generated/** (regénérés). Aucun autre module.
 
 Critères d'acceptation :
-- la base migrée contient les dix tables de L4 avec leurs contraintes ; FlywayMigrationIT et TableOwnershipTests verts ;
+- la base migrée contient les neuf tables de L4 avec leurs contraintes ; FlywayMigrationIT et TableOwnershipTests verts ;
 - ModularityTests reconnaît billing ; aucune dépendance interdite ; tools/verify-fast.sh --check vert ;
 - prestations : création, liste (défaut d'abord), modification, changement de défaut, archivage, limite de 50, 409 SERVICE_IS_DEFAULT, isolement entre praticiens (404 pour la prestation d'un autre) ;
 - profil de facturation : lecture d'un profil vide, écriture, effacement par null, 404 pour le patient d'un autre, 409 pour un patient archivé ;

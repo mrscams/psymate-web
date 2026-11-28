@@ -649,7 +649,7 @@ function rail(page: Page) {
     nav: page.getByRole('navigation', { name: 'Navigation' }),
     patients: host.getByRole('link', { name: 'Patients', exact: true }),
     agenda: host.getByRole('link', { name: 'Agenda', exact: true }),
-    invoice: host.getByRole('link', { name: 'Facture, à réaliser' }),
+    invoice: host.getByRole('link', { name: 'Facture', exact: true }),
   };
 }
 
@@ -661,7 +661,7 @@ async function rect(page: Page, selector: string) {
   });
 }
 
-test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page sans la décaler, Ctrl+B, Échap, Facture inerte', async ({
+test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page sans la décaler, Ctrl+B, Échap ; Facture reliée (M15-14)', async ({
   page,
   request,
 }) => {
@@ -695,16 +695,12 @@ test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page
   expect((await rect(page, 'pm-app-bar header')).x).toBe(0);
   expect((await rect(page, 'pm-app-bar header')).width).toBe(1440);
   expect((await rect(page, 'main#main')).x).toBeGreaterThanOrEqual(56);
-  // Facture : désactivé, sans lien ; un clic ne mène nulle part. Agenda est lié (fiche 15).
+  // Agenda (fiche 15) et Facture (module Facturation, M15-14, libellé inchangé) sont liés ; plus
+  // aucun carreau « à réaliser ».
   await expect(r.agenda).toHaveAttribute('href', '/fr/agenda');
-  for (const later of [r.invoice]) {
-    await expect(later).toHaveAttribute('aria-disabled', 'true');
-    await expect(later).not.toHaveAttribute('href');
-    await expect(later).toBeDisabled();
-    // Playwright attend qu'un élément aria-disabled s'active : le clic est forcé, au pointeur.
-    await later.click({ force: true });
-    await expect(page).toHaveURL(/\/fr\/patients$/);
-  }
+  await expect(r.invoice).toHaveAttribute('href', '/fr/facturation');
+  await expect(r.invoice).not.toHaveAttribute('aria-disabled');
+  await expect(r.host.getByText('à réaliser')).toHaveCount(0);
   await page.mouse.move(800, 600);
   await expect(r.panel).not.toHaveClass(/expanded/);
   await expectNoAxeViolations(page);
@@ -735,8 +731,7 @@ test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page
   // Transition de 120 ms sur la largeur : on attend la fin.
   await expect.poll(async () => (await r.panel.boundingBox())!.width).toBe(220);
   await expect(r.host.getByText('Patients', { exact: true })).toBeVisible();
-  await expect(r.host.getByText('à réaliser')).toHaveCount(1);
-  await expect(r.host.getByText('à réaliser').first()).toBeVisible();
+  await expect(r.host.getByText('Facture', { exact: true })).toBeVisible();
   expect(await rect(page, block)).toEqual(before.block);
   expect(await rect(page, 'main#main')).toEqual(before.main);
   await expectNoAxeViolations(page);
@@ -762,11 +757,15 @@ test('UX-S8 : rail de 56 px sous la barre, déplié à 220 px par-dessus la page
   // Échap dans le rail ne ferme rien d'autre : la séance est toujours ouverte, le bloc là.
   await expect(h.bar).toBeVisible();
 
-  // Tabulation : la barre, puis le rail (déplié au focus clavier : Patients, Agenda), puis le contenu.
+  // Tabulation : la barre, puis le rail (déplié au focus clavier : Patients, Agenda, Facture), puis
+  // le contenu.
   await page.keyboard.press('Control+b');
   await expect(r.patients).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(r.agenda).toBeFocused();
+  await expect(r.panel).toHaveClass(/expanded/);
+  await page.keyboard.press('Tab');
+  await expect(r.invoice).toBeFocused();
   await expect(r.panel).toHaveClass(/expanded/);
   await page.keyboard.press('Tab');
   await expect(r.panel).not.toHaveClass(/expanded/);
@@ -814,13 +813,13 @@ test('UX-S8 : à 390 px, pas de rail ; ☰ ouvre le tiroir de 280 px, Échap, �
   expect(box.y).toBe(0);
   expect(box.width).toBe(280);
   expect(box.height).toBe(844);
-  // Libellés d'emblée ; Patients et Agenda liés, Facture à réaliser, sans lien.
+  // Libellés d'emblée ; Patients, Agenda et Facture liés (M15-14).
   await expect(drawer.getByText('Patients', { exact: true })).toBeVisible();
-  await expect(drawer.getByText('à réaliser')).toHaveCount(1);
-  await expect(drawer.locator('a[href]')).toHaveCount(2);
-  await expect(drawer.getByRole('link', { name: 'Facture, à réaliser' })).toHaveAttribute(
-    'aria-disabled',
-    'true',
+  await expect(drawer.getByText('à réaliser')).toHaveCount(0);
+  await expect(drawer.locator('a[href]')).toHaveCount(3);
+  await expect(drawer.getByRole('link', { name: 'Facture', exact: true })).toHaveAttribute(
+    'href',
+    '/fr/facturation',
   );
   await expect(page.locator('.pm-nav-drawer-veil')).toBeVisible();
   await expectNoAxeViolations(page);

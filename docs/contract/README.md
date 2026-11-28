@@ -1,10 +1,10 @@
 # Contrat d'API PsyMate (copie pour le frontend)
 
 `openapi.yaml` est la copie du contrat OpenAPI 3 généré par `psymate-api` (springdoc) à partir des contrôleurs.
-Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 107 chemins, 123 opérations, 191 schémas, chaque opération avec son résumé, sa description (qui peut appeler, préconditions, limites, pagination), ses paramètres, ses réponses et la liste des codes d'erreur (`code`) à gérer ; `info.description` donne les conventions transverses (session, routes publiques, format d'erreur, débit, dates).
+Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 133 chemins, 157 opérations, 250 schémas, chaque opération avec son résumé, sa description (qui peut appeler, préconditions, limites, pagination), ses paramètres, ses réponses et la liste des codes d'erreur (`code`) à gérer ; `info.description` donne les conventions transverses (session, routes publiques, format d'erreur, débit, dates).
 
-- Source de vérité : `psymate-api/contract/openapi.yaml`, `main` (tag `contract-v0.15.0`, 22 novembre 2026 : prise de rendez-vous en ligne, M14 ; épinglé par `CONTRACT_TAG` depuis M14-10).
-- Le champ `info.version` vaut `0.15.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
+- Source de vérité : `psymate-api/contract/openapi.yaml`, `main` (tag `contract-v0.17.0`, 28 novembre 2026 : facturation, M15 ; épinglé par `CONTRACT_TAG` depuis M15-14).
+- Le champ `info.version` vaut `0.17.0` : c'est le **dernier tag posé**, pas un numéro de version du fichier.
   Les tags `contract-vX.Y.Z` du dépôt API marquent les jalons de contenu attendus par le frontend :
 
 | Tag | Couvre | Écrans web concernés |
@@ -23,6 +23,8 @@ Il décrit **toutes** les routes `/api/**` et `/api/public/**` du backend V1 : 1
 | `contract-v0.13.0` | rendez-vous invité (G Q60) : `patientId` facultatif, `guest { firstName, lastName, phone }` à la création et en PATCH, `AppointmentDto.guest`, `POST /api/appointments/{id}/attach-patient` ; purge à 6 mois ; `RecurrenceRequest.count` maximum 26 | 15b (« Nouvelle personne »), 15 (carte « Premier contact ») ; M13-04 : affichage seul |
 | `contract-v0.14.0` | Profil 360 (M13) : `GET/POST /api/patients/{id}/profile-items`, `PATCH/DELETE /api/patients/{id}/profile-items/{itemId}` (`PatientProfileDto`, `PatientProfileItemDto`), codes `PROFILE_ITEM_NOT_FOUND`, `PROFILE_ITEM_ARCHIVED`, `PROFILE_ITEM_LIMIT_REACHED` | 30 (onglet Profil 360, M13-06, M13-07) |
 | `contract-v0.15.0` | prise de rendez-vous en ligne (M14) : préférences `booking.*` (21 clés en tout, `BookingWindow`), `AppointmentDto.origin` (`practitioner` ou `online`), `guest.email` (lecture, création, PATCH), `GET /api/agenda/requests`, routes publiques `/api/public/booking/**` (fiche, créneaux, demande, vérification, gestion, annulation) | 14 (réglages, M14-11), 31 et 32 (pages publiques, M14-12, M14-13), 15 (demandes, M14-14) ; M14-10 : contrat, préférences et modèles seulement |
+| `contract-v0.16.0` | version arabe (M16) : `labelAr` des catalogues (émotions, types d'entrée et de lien, vocabulaire de l'annuaire), préférence `locale` = `ar`, champ `labelAr` de l'administration du vocabulaire | M16-25 (contrat et libellés arabes) |
+| `contract-v0.17.0` | facturation (M15) : réglages (`/api/me/billing-settings`, IBAN), prestations (`/api/me/billing-services`), profil et synthèse de facturation d'un patient (`/api/patients/{id}/billing-profile`, `/api/patients/{id}/billing`), séances à facturer (`/api/billing/billable-sessions/**`), factures et avoirs (`/api/invoices/**` : brouillon, émission, PDF, duplication, avoir, envoi), paiements (`/api/invoices/{id}/payments`, `/api/payments/**`, export, reçu), chiffres (`/api/billing/summary`) ; montants en centimes entiers | 33 à 39 (M15-14 : contrat et socle ; M15-15 à M15-22 : écrans) |
 
 Conventions du backend (voir `psymate-api/CLAUDE.md`) : JSON camelCase, erreurs RFC 9457 `application/problem+json` avec `code` et `errors[{field, code, message}]`, pagination par curseur (`nextCursor`) sauf annuaire public et recherche (page), dates UTC ISO 8601, session par cookie HttpOnly (`POST /api/auth/login`), `authorType` présent en lecture seulement.
 

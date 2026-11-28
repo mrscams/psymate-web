@@ -38,8 +38,10 @@ export const NAV_RAIL_SHORTCUT = 'ctrl+b';
 
 /**
  * Les carreaux, dans l'ordre (décision du 14 novembre 2026) : Patients, Agenda (lié depuis le
- * 15 novembre 2026 : rendu de la fiche 15 sans API, G Q25 à mettre à jour) et Facture, « à réaliser »,
- * sans route. Rien d'autre : ni séances, ni patients récents, ni Mon compte.
+ * 15 novembre 2026, G Q25 amendée) et Facture (lié le 28 novembre 2026 par M15-14 : module
+ * Facturation, G Q67 et Q68 ; libellé « Facture » inchangé, actif sur /facturation/**). Rien
+ * d'autre : ni séances, ni patients récents, ni Mon compte. Une entrée sans route s'affiche « à
+ * réaliser », sans lien.
  */
 export function navRailEntries(): readonly NavRailEntry[] {
   return [
@@ -57,9 +59,9 @@ export function navRailEntries(): readonly NavRailEntry[] {
     },
     {
       key: 'invoice',
-      label: $localize`:Carreau Facture du rail de navigation, à réaliser@@navRail.invoice:Facture`,
+      label: $localize`:Carreau Facture du rail de navigation, ouvre le module Facturation@@navRail.invoice:Facture`,
       icon: 'invoice',
-      route: null,
+      route: '/facturation',
     },
   ];
 }

@@ -37,6 +37,13 @@ export const routes: Routes = [
     canActivate: [authGuard, statusGuard],
     loadChildren: () => import('./features/agenda').then((m) => m.AGENDA_ROUTES),
   },
+  // Facturation (fiches 33 à 39, G Q67 et Q68, M15-14) : en-tête de module et ses quatre onglets,
+  // éditeur ; ouverte par le carreau « Facture » du rail.
+  {
+    path: 'facturation',
+    canActivate: [authGuard, statusGuard],
+    loadChildren: () => import('./features/billing').then((m) => m.BILLING_ROUTES),
+  },
   // Mon compte (fiche 00 §3) : dossier professionnel (M1-15), préférences (M1-16)…
   {
     path: 'mon-compte',
