@@ -23,6 +23,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CHECKOUT = path.resolve(HERE, '..', '..');
 const MAIN_ROOT = findMainRoot(CHECKOUT);
 const PROGRESS_DIR = 'docs/progress';
+// Dépôt voisin dont on lit aussi les événements et les plans de jalon (dossier frère de celui-ci).
+const SIBLING_NAME = 'psymate-api';
 const STATUSES = ['todo', 'in-progress', 'review', 'blocked', 'done', 'merged'];
 const STATUS_ALIASES = {
   'a-faire': 'todo',
@@ -157,6 +159,24 @@ function collectEvents() {
       if (fs.statSync(p).isDirectory()) roots.push(p);
     }
   }
+  // Dépôt voisin (psymate-api à côté de psymate-web) : ses événements sont lus aussi, pour que les
+  // tâches API d'un jalon commun (M14, M15…) aient leur état ici. Lecture seule ; absent, on l'ignore.
+  const siblingRoots = new Set();
+  const sibling = siblingRepo();
+  if (sibling) {
+    roots.push(sibling);
+    siblingRoots.add(sibling);
+    const swt = path.join(sibling, '.claude', 'worktrees');
+    if (fs.existsSync(swt)) {
+      for (const d of fs.readdirSync(swt)) {
+        const p = path.join(swt, d);
+        if (fs.statSync(p).isDirectory()) {
+          roots.push(p);
+          siblingRoots.add(p);
+        }
+      }
+    }
+  }
   const seen = new Map();
   for (const root of roots) {
     const dir = path.join(root, PROGRESS_DIR, 'events');
@@ -166,7 +186,14 @@ function collectEvents() {
       try {
         const e = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
         e.file = f;
-        e.source = root === MAIN_ROOT ? 'main' : path.basename(root);
+        e.source =
+          root === MAIN_ROOT
+            ? 'main'
+            : root === sibling
+              ? SIBLING_NAME
+              : siblingRoots.has(root)
+                ? `${SIBLING_NAME}/${path.basename(root)}`
+                : path.basename(root);
         seen.set(f, e);
       } catch (err) {
         console.error(`événement illisible ignoré : ${f} (${err.message})`);
@@ -282,7 +309,114 @@ function loadPlan() {
       if (!task.planned && before) task.planned = before;
     }
   }
+  loadMilestonePlans(tasks, isTaskRow, cells, clean);
   return [...tasks.values()].sort((a, b) => a.id.localeCompare(b.id));
+}
+
+// Plans de jalon (docs/<Lettre>-plan-*.md : J, K, L, M… ; ceux du dépôt voisin ensuite). On y lit :
+// - les tableaux de tâches à cinq colonnes (ID, titre, couloir, dépend de, parallèle avec), pour les
+//   tâches que docs/C-plan.md ne porte pas (tâches API d'un jalon commun) ;
+// - le prompt prêt à coller de chaque tâche : un titre « ### M15-05 — … » suivi d'un bloc ```text.
+function loadMilestonePlans(tasks, isTaskRow, cells, clean) {
+  const titles = new Map();
+  for (const { file, text, origin } of milestonePlanDocs()) {
+    const lines = text.split('\n');
+    const head = (lines[0] || '').match(/·\s*(.+?),\s*jalon\s+(M\d{1,2})/);
+    if (head && !titles.has(head[2]))
+      titles.set(head[2], `${head[2]} ${head[1].replace(/\s*\((web|API)\)/i, '')}`);
+    let side = /\(web\)/i.test(lines[0] || '')
+      ? 'web'
+      : /\(API\)/.test(lines[0] || '')
+        ? 'api'
+        : '';
+    let promptFor = '';
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const heading = line.match(/^#{1,4} (.+)$/);
+      if (heading) {
+        const p = heading[1].match(/^(M\d{1,2}-\d{2}[a-z]?) — /i);
+        promptFor = p ? p[1].toUpperCase() : '';
+        if (!p) {
+          if (/psymate-api|\bAPI\b/.test(heading[1])) side = 'api';
+          else if (/psymate-web|\bweb\b/i.test(heading[1])) side = 'web';
+        }
+        continue;
+      }
+      if (promptFor && /^```text\s*$/.test(line)) {
+        const body = [];
+        for (i++; i < lines.length && !/^```\s*$/.test(lines[i]); i++) body.push(lines[i]);
+        const id = promptFor;
+        promptFor = '';
+        if (!tasks.has(id))
+          tasks.set(id, {
+            id,
+            title: '',
+            scope: side,
+            milestone: id.split('-')[0],
+            milestoneTitle: '',
+          });
+        const task = tasks.get(id);
+        if (!task.prompt) {
+          task.prompt = body.join('\n').trim();
+          task.promptDoc = `${origin}docs/${file}`;
+        }
+        continue;
+      }
+      if (!isTaskRow(line)) continue;
+      const c = cells(line);
+      if (c.length < 4 || c.length >= 8) continue;
+      const id = c[0].toUpperCase();
+      const lane = clean(c[2]);
+      const dependsOn = clean(c[3]) === '—' ? '' : clean(c[3]);
+      if (!tasks.has(id)) {
+        tasks.set(id, {
+          id,
+          title: clean(c[1]),
+          scope: side ? `${side} / ${lane}` : lane,
+          dependsOn,
+          milestone: id.split('-')[0],
+          milestoneTitle: '',
+        });
+      }
+      const task = tasks.get(id);
+      if (!task.title) task.title = clean(c[1]);
+      if (!task.lane) task.lane = lane;
+      if (!task.dependsOn) task.dependsOn = dependsOn;
+      if (!task.scope) task.scope = side ? `${side} / ${lane}` : lane;
+    }
+  }
+  for (const task of tasks.values()) {
+    if (!task.milestoneTitle && titles.has(task.milestone))
+      task.milestoneTitle = titles.get(task.milestone);
+  }
+}
+
+function milestonePlanDocs() {
+  const docs = [];
+  const seen = new Set();
+  const sibling = siblingRepo();
+  const roots = [
+    [CHECKOUT, ''],
+    [MAIN_ROOT, ''],
+  ];
+  if (sibling) roots.push([sibling, `../${SIBLING_NAME}/`]);
+  for (const [root, origin] of roots) {
+    const dir = path.join(root, 'docs');
+    if (!fs.existsSync(dir)) continue;
+    for (const file of fs.readdirSync(dir).sort()) {
+      if (!/^[A-Z]-plan-.+\.md$/.test(file) || seen.has(file)) continue;
+      seen.add(file);
+      docs.push({ file, origin, text: fs.readFileSync(path.join(dir, file), 'utf8') });
+    }
+  }
+  return docs;
+}
+
+function siblingRepo() {
+  const p = path.join(MAIN_ROOT, '..', SIBLING_NAME);
+  return path.resolve(p) !== path.resolve(MAIN_ROOT) && fs.existsSync(path.join(p, PROGRESS_DIR))
+    ? path.resolve(p)
+    : null;
 }
 
 function readDoc(rel) {
@@ -297,7 +431,7 @@ function readDoc(rel) {
 
 function render(events, tasks) {
   const generatedAt = new Date().toISOString();
-  const data = { generatedAt, tasks, events, statuses: STATUSES };
+  const data = { generatedAt, tasks, events, statuses: STATUSES, sibling: SIBLING_NAME };
   const json = JSON.stringify(data).replace(/<\//g, '<\\/');
   return `<!doctype html>
 <html lang="fr">
@@ -345,6 +479,11 @@ function render(events, tasks) {
   tr.task { cursor: pointer; }
   tr.task:hover { background: var(--surface-2); }
   tr.detail td { background: var(--surface-2); font-size: .88rem; }
+  .has-prompt { margin-left: 6px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 999px; font-size: .72rem; color: var(--muted); white-space: nowrap; }
+  details.prompt { margin: 8px 0; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+  details.prompt summary { cursor: pointer; font-weight: 600; }
+  details.prompt pre { margin: 8px 0 0; max-height: 420px; overflow: auto; white-space: pre-wrap; font: .82rem/1.45 ui-monospace, Consolas, monospace; }
+  details.prompt button { margin-top: 8px; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); color: var(--text); font: inherit; cursor: pointer; }
   .pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 999px; font-size: .8rem; font-weight: 600; border: 1px solid; white-space: nowrap; }
   .pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
   .pill.todo { color: var(--todo); } .pill.in-progress { color: var(--in-progress); } .pill.review { color: var(--review); }
@@ -370,7 +509,7 @@ function render(events, tasks) {
 <body>
 <main>
   <h1>PsyMate · Avancement</h1>
-  <p class="sub">Généré le <span id="gen"></span> à partir de <span id="nev"></span> événement(s) · tâches de <code>docs/C-plan.md</code> ; côté web, lots et features de <code>docs/H-runbook-agents-frontend.md</code> ; côté API, vagues et couloirs de <code>D-orchestration-backend.md</code> D9.</p>
+  <p class="sub">Généré le <span id="gen"></span> à partir de <span id="nev"></span> événement(s) · tâches de <code>docs/C-plan.md</code> et des plans de jalon <code>docs/*-plan-*.md</code> (avec le prompt de chaque tâche : cliquer une ligne) ; côté web, lots et features de <code>docs/H-runbook-agents-frontend.md</code> ; côté API, vagues et couloirs de <code>D-orchestration-backend.md</code> D9.</p>
 
   <section class="tiles" id="tiles"></section>
 
@@ -476,7 +615,7 @@ function draw() {
   const tb = document.querySelector("#tasks tbody");
   tb.innerHTML = list.length ? list.map((r) => \`
     <tr class="task" data-id="\${r.id}">
-      <td class="mono">\${r.id}</td><td>\${esc(r.title)}<div class="muted" style="font-size:.8rem">\${esc(r.scope || "")}</div></td>
+      <td class="mono">\${r.id}</td><td>\${esc(r.title)}\${r.prompt ? '<span class="has-prompt">prompt</span>' : ""}<div class="muted" style="font-size:.8rem">\${esc(r.scope || "")}</div></td>
       <td class="opt">\${esc(r.lane || "")}</td><td class="opt">\${esc(r.wave || "")}</td>
       <td><span class="pill \${r.status}">\${LABEL[r.status]}</span></td>
       <td class="opt">\${esc(r.agent)}</td><td class="opt">\${fmt(r.at)}</td>
@@ -493,13 +632,21 @@ document.querySelector("#tasks tbody").addEventListener("click", (ev) => {
   tr.insertAdjacentHTML("afterend", \`<tr class="detail"><td colspan="8">
     \${r.dependsOn ? \`<p><b>Dépend de :</b> \${esc(r.dependsOn)}</p>\` : ""}\${r.planned ? \`<p><b>Plan (D9 ou lot H) :</b> \${esc(r.planned)}</p>\` : ""}
     \${r.criteria ? \`<p><b>Critères :</b> \${esc(r.criteria)}</p>\` : ""}\${r.tests ? \`<p><b>Tests :</b> \${esc(r.tests)}</p>\` : ""}
+    \${r.prompt ? \`<details class="prompt"><summary>Prompt à coller (\${esc(r.promptDoc || "plan du jalon")})</summary><button type="button" class="copy" data-id="\${r.id}">Copier le prompt</button><pre>\${esc(r.prompt)}</pre></details>\` : ""}
     <div class="journal">\${hist}</div></td></tr>\`);
+});
+
+document.querySelector("#tasks tbody").addEventListener("click", async (ev) => {
+  const b = ev.target.closest("button.copy"); if (!b) return;
+  const r = rows.find((x) => x.id === b.dataset.id);
+  try { await navigator.clipboard.writeText(r.prompt); b.textContent = "Copié"; }
+  catch { const pre = b.parentElement.querySelector("pre"); getSelection().selectAllChildren(pre); b.textContent = "Sélectionné : Ctrl+C"; }
 });
 
 // Journal global, du plus récent au plus ancien
 const j = document.getElementById("journal");
 const evs = DATA.events.slice().reverse();
-j.innerHTML = evs.length ? evs.map((e) => \`<div class="ev \${e.status}"><div class="head"><b class="mono">\${esc(e.task)}</b><span class="pill \${e.status}">\${LABEL[e.status]}</span><span>\${fmt(e.at)}</span><span>\${esc(e.agent)}</span>\${e.branch ? \`<span class="mono">\${esc(e.branch)}</span>\` : ""}\${e.pr ? \`<a href="\${esc(e.pr)}" target="_blank" rel="noopener">PR</a>\` : ""}\${e.source && e.source !== "main" ? \`<span title="événement lu dans le worktree \${esc(e.source)}, pas encore fusionné">worktree \${esc(e.source)}</span>\` : ""}</div><p>\${esc(e.summary)}</p>\${e.notes ? \`<div class="notes">\${esc(e.notes)}</div>\` : ""}\${e.next ? \`<div class="next">\${esc(e.next)}</div>\` : ""}</div>\`).join("") : '<div class="empty">Aucun événement enregistré.</div>';
+j.innerHTML = evs.length ? evs.map((e) => \`<div class="ev \${e.status}"><div class="head"><b class="mono">\${esc(e.task)}</b><span class="pill \${e.status}">\${LABEL[e.status]}</span><span>\${fmt(e.at)}</span><span>\${esc(e.agent)}</span>\${e.branch ? \`<span class="mono">\${esc(e.branch)}</span>\` : ""}\${e.pr ? \`<a href="\${esc(e.pr)}" target="_blank" rel="noopener">PR</a>\` : ""}\${e.source && e.source !== "main" ? (e.source.startsWith(DATA.sibling) ? \`<span title="événement lu dans le dépôt voisin">\${esc(e.source)}</span>\` : \`<span title="événement lu dans le worktree \${esc(e.source)}, pas encore fusionné">worktree \${esc(e.source)}</span>\`) : ""}</div><p>\${esc(e.summary)}</p>\${e.notes ? \`<div class="notes">\${esc(e.notes)}</div>\` : ""}\${e.next ? \`<div class="next">\${esc(e.next)}</div>\` : ""}</div>\`).join("") : '<div class="empty">Aucun événement enregistré.</div>';
 
 draw();
 </script>

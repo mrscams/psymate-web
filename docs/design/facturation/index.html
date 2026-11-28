@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · maquettes du module</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>Module Facturation · maquettes</h1>
+  <p class="lede">Proposition complète pour le carreau « Facture » du rail, aujourd'hui marqué « à réaliser ». Sept pages de maquettes dans l'habillage Fluent 2 de l'application (mêmes tokens, mêmes composants, clair, sombre et doux : le sélecteur est en haut à droite). 22 novembre 2026.</p>
+
+  <div class="banner neutral"><i data-i="info"></i><div>Ce sont des maquettes : rien n'a été changé dans <code>src/</code>, et le contrat OpenAPI ne porte encore aucune route de facturation. Le périmètre a été tranché le 22 novembre 2026 : les huit décisions sont en bas de cette page.</div></div>
+
+  <h2>Le parcours</h2>
+  <div class="flow">
+    <div class="step"><b>Séance terminée</b><span>Clôture dans le dossier ou rendez-vous terminé dans l'agenda.</span></div><span class="arrow"><i data-i="right"></i></span>
+    <div class="step"><b>À facturer</b><span>La séance attend. Le praticien choisit quoi facturer, et quand.</span></div><span class="arrow"><i data-i="right"></i></span>
+    <div class="step"><b><span class="st draft">Brouillon</span></b><span>Modifiable, sans numéro. Enregistré tout seul.</span></div><span class="arrow"><i data-i="right"></i></span>
+    <div class="step"><b><span class="st due">À régler</span></b><span>Émise : numéro attribué, plus de modification.</span></div><span class="arrow"><i data-i="right"></i></span>
+    <div class="step"><b><span class="st paid">Payée</span></b><span>Paiement enregistré, facture acquittée pour la mutuelle.</span></div>
+  </div>
+  <p class="notes">Deux chemins de côté : un paiement partiel (<span class="st part">Payée en partie</span>), une échéance dépassée (<span class="st late">En retard</span>). Une erreur après l'émission se corrige par un <span class="st credit">Avoir</span>, jamais en modifiant la facture.</p>
+
+  <h2>Les écrans</h2>
+  <div class="three">
+    <a class="doc-card link" href="01-factures.html"><b>01 · Factures</b><p>La liste, le bandeau de chiffres, les filtres par statut, les trois états, la version mobile.</p><span class="mono">/facturation</span></a>
+    <a class="doc-card link" href="02-a-facturer.html"><b>02 · À facturer</b><p>Les séances terminées sans facture, par patient ; sélection et création de brouillons en lot.</p><span class="mono">/facturation/a-facturer</span></a>
+    <a class="doc-card link" href="03-editeur.html"><b>03 · Nouvelle facture</b><p>L'éditeur d'un brouillon avec l'aperçu de la feuille, la confirmation d'émission, les refus.</p><span class="mono">/facturation/brouillons/:id</span></a>
+    <a class="doc-card link" href="04-facture.html"><b>04 · Facture émise</b><p>La feuille et son rail ; enregistrer un paiement, créer un avoir, envoyer par e-mail, facture acquittée.</p><span class="mono">/facturation/:numero</span></a>
+    <a class="doc-card link" href="05-paiements.html"><b>05 · Paiements</b><p>Le journal des encaissements, la répartition par mode, l'export pour le comptable.</p><span class="mono">/facturation/paiements</span></a>
+    <a class="doc-card link" href="06-dossier-patient.html"><b>06 · Patient et points d'entrée</b><p>La liste filtrée sur un patient ; la fiche patient, la clôture de séance, l'agenda.</p><span class="mono">/facturation?patient=:id</span></a>
+    <a class="doc-card link" href="07-reglages.html"><b>07 · Réglages</b><p>Identité, TVA, numérotation, prestations et tarifs, règlement, modèles d'e-mail.</p><span class="mono">/facturation/reglages</span></a>
+  </div>
+
+  <p class="notes">Chaque écran a sa fiche dans <code>docs/design/</code> : <code>33-facturation-factures.md</code> (liste et cadre du module), <code>34-facturation-a-facturer.md</code>, <code>35-facturation-editeur.md</code>, <code>36-facturation-facture-emise.md</code>, <code>37-facturation-paiements.md</code>, <code>38-facturation-dossier-patient.md</code>, <code>39-facturation-reglages.md</code>. Chaque fiche liste ce qu'elle spécifie sans que la maquette le dessine.</p>
+
+  <h2>Les règles de conception</h2>
+  <div class="tablewrap"><table class="crit">
+    <thead><tr><th style="width:24%">Règle</th><th>Ce que cela donne à l'écran</th></tr></thead>
+    <tbody>
+      <tr><td><b>Rien de clinique sur un document comptable</b></td><td>Une ligne de facture porte une date et une désignation (« Séance de psychothérapie »). Jamais le titre d'une séance, une note, un ressenti, un diagnostic. L'export du journal sort sans nom par défaut.</td></tr>
+      <tr><td><b>Rien de comptable dans le clinique</b></td><td>Aucun statut de paiement dans l'en-tête patient, la liste des patients, la timeline ou le graphe. L'argent se voit dans le module ; le dossier n'y mène que par un lien de la fiche patient.</td></tr>
+      <tr><td><b>Une facture émise ne change plus</b></td><td>Brouillon : tout se modifie. Émise : aucun champ, pas de bouton « Modifier », pas de suppression. La correction passe par un avoir. Les deux gestes irréversibles (émettre, émettre un avoir) ont une confirmation qui dit le numéro attribué.</td></tr>
+      <tr><td><b>Le serveur juge</b></td><td>Numéro, date d'émission, total, reste dû, statut « en retard », chiffres du bandeau : tout vient de l'API. Le client vérifie la forme (montant, patient choisi) ; 409 et 422 sont traités par l'écran, sur le champ concerné.</td></tr>
+      <tr><td><b>Relire après écrire</b></td><td>Après un paiement, une émission ou un avoir : la facture, la liste, « À facturer » et le bandeau sont relus, pas recalculés localement.</td></tr>
+      <tr><td><b>L'habillage de l'application, rien d'autre</b></td><td>Barre de 48 px, rail de 56 px avec le carreau Facture actif, en-tête de module identique à l'en-tête patient, onglets Fluent, tableaux, puces, panneau latéral de 480 px, dialogues : tous existent déjà. Aucun token nouveau.</td></tr>
+      <tr><td><b>Un statut, une icône et un mot</b></td><td>La couleur ne porte jamais seule l'information. « En retard » est orange, pas rouge : le rouge reste aux erreurs et aux actions destructrices.</td></tr>
+      <tr><td><b>Le PDF est en clair</b></td><td>La feuille reste blanche dans les trois thèmes, comme les exports produits par l'API.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Ce que le module demande au reste du projet</h2>
+  <div class="two">
+    <div class="doc-card">
+      <h3>Côté web</h3>
+      <ul class="bullets">
+        <li>Une feature <code>billing</code>, chargée à la demande, avec son <code>index.ts</code> ; routes <code>/facturation/**</code>.</li>
+        <li>Rail : le carreau Facture reçoit sa route (composant partagé, donc une tâche de socle dédiée).</li>
+        <li>En-tête patient : inchangé. Les factures d'un patient sont la liste du module, filtrée (<code>?patient=</code>).</li>
+        <li>Deux lignes dans le panneau de clôture de séance, une ligne dans le détail d'un rendez-vous, le champ Tarif et la ligne « Facturation » de la fiche patient : trois petites tâches dans leurs features.</li>
+        <li>Aucune dépendance npm : le PDF est produit par l'API ; l'aperçu est du HTML.</li>
+      </ul>
+    </div>
+    <div class="doc-card">
+      <h3>Côté contrat</h3>
+      <ul class="bullets">
+        <li>Réglages de facturation (lecture, écriture) ; prestations et tarifs.</li>
+        <li>Séances à facturer (projection), avec « ne pas facturer ».</li>
+        <li>Factures : brouillon (créer, modifier, supprimer), émettre, lire, lister par statut et par patient, PDF.</li>
+        <li>Paiements : enregistrer, annuler, lister, totaux par période et par mode, export.</li>
+        <li>Avoirs : émettre (total ou partiel), lire, PDF.</li>
+        <li>Envoi par e-mail d'une facture ; projection des chiffres du bandeau.</li>
+        <li>Tarif et adresse de facturation sur le patient.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Décisions du 22 novembre 2026</h2>
+  <p>Le périmètre a été tranché par le propriétaire du produit le 22 novembre 2026. Les maquettes et les fiches 33 à 39 sont alignées sur ces huit décisions ; elles sont inscrites dans <code>G-decisions.md</code>, en Q67.</p>
+  <div class="tablewrap"><table class="crit">
+    <thead><tr><th style="width:26%">Question</th><th>Décision</th><th style="width:30%">Ce que cela change</th></tr></thead>
+    <tbody>
+      <tr><td>Pour quels praticiens, dans quel pays ?</td><td><b>France ; psychologues et coachs</b> qui émettent leurs propres factures.</td><td>Trois régimes de TVA dans les réglages (exonération des soins, franchise en base, assujetti).</td></tr>
+      <tr><td>Psychiatres : feuilles de soins, télétransmission, tiers payant ?</td><td><b>Hors périmètre.</b> Le module émet des factures et des notes d'honoraires.</td><td>Aucun écran, aucune place réservée dans le modèle.</td></tr>
+      <tr><td>Paiement en ligne (lien de paiement, carte) ?</td><td><b>Non.</b> Le praticien enregistre un paiement reçu par ailleurs.</td><td>« Carte » reste un mode de paiement parmi d'autres ; aucun prestataire.</td></tr>
+      <tr><td>Envoi de la facture par e-mail au patient ?</td><td><b>Oui</b>, depuis l'application, au nom du praticien, sans contenu clinique.</td><td>Premier e-mail que PsyMate adresse à un patient : adresse d'expédition et consentement à cadrer côté API.</td></tr>
+      <tr><td>Où ranger les réglages ?</td><td><b>Quatrième onglet du module.</b></td><td>Pas de page dans Mon compte ; écran 07 tel que dessiné.</td></tr>
+      <tr><td>Un onglet Facturation dans le dossier patient ?</td><td><b>Non.</b> Un lien de la fiche patient ouvre la liste du module filtrée sur ce patient.</td><td>L'en-tête patient n'est pas touché ; l'écran 06 a été redessiné (liste filtrée, carte du patient).</td></tr>
+      <tr><td>Rendez-vous non honoré : le facturer ?</td><td><b>Jamais.</b></td><td>La prestation « Séance non honorée » et l'entrée de menu correspondante ont été retirées des écrans 02 et 07.</td></tr>
+      <tr><td>Libellé du carreau du rail</td><td><b>« Facture », inchangé.</b> Le titre de la page est « Facturation ».</td><td>Aucun texte existant ni traduction ne change.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="notes">Les mentions légales dessinées (articles du Code général des impôts, facture acquittée, numérotation continue, avoir) sont celles d'usage pour un cabinet en France ; elles sont à faire relire par un expert-comptable avant d'être écrites dans le contrat. Tous les noms, numéros et montants sont fictifs.</p>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>

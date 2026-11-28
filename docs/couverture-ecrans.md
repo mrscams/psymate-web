@@ -38,6 +38,18 @@ Colonne « Arabe » (M16-29, 23 novembre 2026) : la spec de `e2e/arabe/` qui ouv
 
 Hors V1, fiche conservée mais rien à implémenter : 23 Signalements (V1.1, G Q26). L'agenda (15, 15b), hors V1 à l'origine (G Q25), est entré en V1 le 15 novembre 2026 : écrans rendus sur données de démonstration, API en cours, synchronisation Google toujours hors V1.
 
+Ajout du 22 novembre 2026 : le module Facturation a ses fiches et ses maquettes. Son périmètre a été tranché par l'utilisateur le même jour (G Q67, huit points, rappelés en tête de la fiche 33). Aucune tâche ne lui est rattachée et le contrat n'a aucune route de facturation.
+
+| N° | Écran | Fiche | Maquette | Tâches web |
+| --- | --- | --- | --- | --- |
+| 33 | Facturation · Factures et cadre du module | `33-facturation-factures.md` | `facturation/01-factures.html` + captures | aucune : en attente du contrat |
+| 34 | Facturation · À facturer | `34-facturation-a-facturer.md` | `facturation/02-a-facturer.html` + capture | idem |
+| 35 | Facturation · Nouvelle facture | `35-facturation-editeur.md` | `facturation/03-editeur.html` + captures | idem |
+| 36 | Facturation · Facture émise (paiement, avoir, envoi) | `36-facturation-facture-emise.md` | `facturation/04-facture.html` + captures | idem |
+| 37 | Facturation · Paiements | `37-facturation-paiements.md` | `facturation/05-paiements.html` + captures | idem |
+| 38 | Facturation · Factures d'un patient et points d'entrée | `38-facturation-dossier-patient.md` | `facturation/06-dossier-patient.html` + capture | idem ; le carreau du rail serait une tâche de socle |
+| 39 | Facturation · Réglages | `39-facturation-reglages.md` | `facturation/07-reglages.html` + capture | idem |
+
 ## 2. Ce qui manque
 
 Classé par urgence : **bloquant** = une tâche d'un lot proche ne peut pas démarrer sans ; **avant son lot** = à produire avant la tâche concernée, mais rien ne presse ; **peut attendre** = fin de V1.

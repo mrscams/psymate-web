@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Facturation · 02 À facturer</title>
+<link rel="stylesheet" href="facturation.css">
+<script src="maquette.js"></script>
+<style>
+  .grp-head { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle); }
+  .grp-head .tot { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .sess td { height: 44px; }
+  .sess td:first-child { width: 42px; padding-left: 14px; }
+  .rail-box li { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border-subtle); }
+  .rail-box li:last-child { border-bottom: 0; }
+  .rail-box .r { margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="doc">
+  <nav class="doc-nav" aria-label="Maquettes"></nav>
+
+  <h1>02 · À facturer</h1>
+  <p class="lede">Les séances terminées qui n'ont pas encore de facture. Elles arrivent ici toutes seules, à la clôture d'une séance ou quand un rendez-vous de l'agenda est terminé ; rien n'est facturé sans un geste du praticien. C'est l'écran de la fin de semaine ou de la fin de mois.</p>
+
+  <h2>Choisir, puis créer les brouillons</h2>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/a-facturer" data-sub="À facturer" style="--h: 1040px">
+    <div class="mhead" data-tab="a-facturer"></div>
+    <div class="page" style="padding-bottom: 240px">
+      <div class="quick">
+        <label class="check"><span class="box mixed"></span>Tout sélectionner</label>
+        <div class="seg" role="group" aria-label="Regroupement" style="margin-left:8px">
+          <button aria-pressed="true">Par patient</button>
+          <button aria-pressed="false">Par date</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Séances</span>
+        <div class="field">Jusqu'au 22 novembre 2026 <i data-i="calendar" class="caret"></i></div>
+      </div>
+
+      <div class="split" style="grid-template-columns: minmax(0,1fr) 300px">
+        <div>
+          <!-- Hélène R. : deux séances, toutes sélectionnées -->
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box on"></span><span class="av sm">HR</span>
+              <div><div class="strong">Hélène R.</div><div class="s muted">60,00 € la séance</div></div>
+              <div class="tot"><span class="muted">2 séances</span><span class="strong num">120,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr class="sel"><td><span class="box on"></span></td><td class="mono s" style="width:150px">jeu. 05/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr class="sel"><td><span class="box on"></span></td><td class="mono s">jeu. 12/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <!-- Léa M. : trois séances, facturée au mois -->
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box on"></span><span class="av sm">LM</span>
+              <div><div class="strong">Léa M.</div><div class="s muted">60,00 € la séance · dernière facture : F-2026-0144, octobre</div></div>
+              <div class="tot"><span class="muted">3 séances</span><span class="strong num">180,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr class="sel"><td><span class="box on"></span></td><td class="mono s" style="width:150px">lun. 02/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr class="sel"><td><span class="box on"></span></td><td class="mono s">lun. 09/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr class="sel"><td><span class="box on"></span></td><td class="mono s">lun. 16/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <!-- Camille B. : tarif manquant -->
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box"></span><span class="av sm">CB</span>
+              <div><div class="strong">Camille B.</div><div class="s" style="color:var(--warning)"><i data-i="alert"></i> Aucun tarif pour ce patient ni pour une séance de couple</div></div>
+              <div class="tot"><span class="muted">1 séance</span><a href="07-reglages.html" class="btn sm ghost">Renseigner le tarif</a></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr><td><span class="box"></span></td><td class="mono s" style="width:150px">sam. 21/11/2026</td><td>Séance de couple <span class="sub">· cabinet · 75 min</span></td><td class="num muted">à fixer</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <!-- Paul R. : une séance, menu de ligne ouvert -->
+          <div class="panel" style="position:relative">
+            <div class="grp-head">
+              <span class="box"></span><span class="av sm">PR</span>
+              <div><div class="strong">Paul R.</div><div class="s muted">60,00 € la séance · 1 brouillon en cours</div></div>
+              <div class="tot"><span class="muted">1 séance</span><span class="strong num">60,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr class="hover"><td><span class="box"></span></td><td class="mono s" style="width:150px">mer. 04/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus" style="background:var(--surface-sunken)"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+            <div class="menu" style="right: 12px; top: 96px">
+              <div><i data-i="edit"></i>Changer le tarif de cette séance</div>
+              <div><i data-i="external"></i>Ouvrir la séance dans le dossier</div>
+              <hr>
+              <div><i data-i="voided"></i>Ne pas facturer</div>
+            </div>
+          </div>
+        </div>
+
+        <aside>
+          <div class="panel rail-box"><div class="pad">
+            <h2>Ce qui sera créé</h2>
+            <p class="s muted" style="margin:4px 0 10px">Une facture par patient, en brouillon. Vous les relisez avant de les émettre.</p>
+            <ul>
+              <li><span class="av sm">HR</span>Hélène R.<span class="r num">120,00 €</span></li>
+              <li><span class="av sm">LM</span>Léa M.<span class="r num">180,00 €</span></li>
+            </ul>
+            <hr class="hair">
+            <dl class="kv"><dt>2 brouillons · 5 séances</dt><dd class="strong">300,00 €</dd></dl>
+          </div></div>
+          <div class="panel"><div class="pad">
+            <h2>Écartées</h2>
+            <p class="s muted" style="margin-top:4px">2 séances marquées « ne pas facturer » ce mois-ci. <a href="#">Les afficher</a></p>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+    <div class="floatbar">
+      <span class="strong">5 séances sélectionnées</span><span class="muted">2 patients · 300,00 €</span>
+      <span class="spacer"></span>
+      <button class="btn ghost">Tout désélectionner</button>
+      <button class="btn primary">Créer 2 brouillons</button>
+    </div>
+  </div></div>
+  <p class="notes">Le tarif affiché est celui du patient (fiche patient, champ Tarif) et, à défaut, celui de la prestation dans les réglages. Une séance sans tarif ne peut pas être sélectionnée : la ligne dit pourquoi et mène au réglage. « Ne pas facturer » sort la séance de la liste sans la supprimer ; elle reste retrouvable sous « Écartées ».</p>
+
+  <h2>Après la création</h2>
+  <div class="two">
+    <div>
+      <div class="banner ok"><i data-i="check"></i><div><b>2 brouillons créés.</b> Hélène R. (120,00 €) et Léa M. (180,00 €). Relisez-les, puis émettez-les.</div><a class="act" href="01-factures.html">Voir les brouillons</a></div>
+      <p class="notes">Toast de confirmation (surface de carte, ombre 8, niveau porté par l'icône). Les séances quittent la liste ; l'onglet passe de 7 à 2.</p>
+    </div>
+    <div>
+      <div class="panel"><div class="state"><i data-i="check"></i><b>Tout est facturé</b><p>Les prochaines séances terminées apparaîtront ici.</p></div></div>
+      <p class="notes">État vide. Pas de badge sur l'onglet quand le compteur est à zéro.</p>
+    </div>
+  </div>
+
+  <h2>Ce que l'écran affirme</h2>
+  <ul class="bullets">
+    <li><b>Rien d'automatique.</b> Une séance terminée n'émet jamais de facture : elle se présente ici, le praticien décide. Créer depuis cet écran produit des brouillons, pas des factures émises.</li>
+    <li><b>Une facture par patient.</b> Sélectionner des séances de plusieurs patients crée autant de brouillons ; le bouton l'annonce (« Créer 2 brouillons ») et le rail liste ce qui va naître.</li>
+    <li><b>Le serveur dit ce qui est à facturer.</b> La liste est une lecture ; après la création elle est relue, pas corrigée localement.</li>
+    <li><b>Aucune donnée clinique.</b> La ligne montre la date, la modalité et la durée de la séance ; ni titre, ni note, ni ressenti.</li>
+  </ul>
+
+  <div class="pager"></div>
+</div>
+</body>
+</html>
