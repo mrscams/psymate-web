@@ -94,7 +94,7 @@ Chaque état que la première version de cette fiche spécifiait sans le dessine
 - `04-facture-10.png` : dialogue d'envoi sur une facture en retard, modèle de relance (`template: reminder`).
 - `04-facture-11.png` : version sous 900 px (rail sous la feuille).
 
-Non dessiné : le geste qui enregistre un remboursement sur un avoir : ni cette fiche ni L5 ne disent d'où il part (L5 : `POST /api/invoices/{id}/payments` sur un avoir dont `refundDue > 0`) ; seule la page d'avoir après remboursement est dessinée. Choix du couloir web (M15-14, à reprendre par M15-18) : sur la page d'un avoir dont `refundDue` est positif, la carte *Règlement* porte le bouton plein « Enregistrer un remboursement », qui ouvre le même panneau (montant prérempli avec `refundDue`, modes sans filtre des réglages) ; le serveur range le paiement en `kind: refund`.
+Non dessiné : le geste qui enregistre un remboursement sur un avoir : ni cette fiche ni L5 ne disent d'où il part (L5 : `POST /api/invoices/{id}/payments` sur un avoir dont `refundDue > 0`) ; seule la page d'avoir après remboursement est dessinée. Proposition du couloir web (M15-14), non relue par l'utilisateur, à confirmer ou remplacer par M15-18 : sur la page d'un avoir dont `refundDue` est positif, la carte *Règlement* porte le bouton plein « Enregistrer un remboursement », qui ouvre le même panneau (montant prérempli avec `refundDue`, modes sans filtre des réglages) ; le serveur range le paiement en `kind: refund`.
 
 Les libellés que la fiche ne donnait pas et que la maquette propose sont signalés dans la note de chaque cadre (« libellé proposé ») ; une tâche d'écran les reprend tels quels ou les corrige dans sa PR. **Maquettes complétées par M15-13 sans relecture de l'utilisateur.**
 

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ApplicationRef } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
 
 import { SessionStore } from '../../../core/auth';
@@ -148,6 +149,9 @@ describe('PractitionersPage', () => {
     await settle(fixture);
     expect(suspend).toHaveBeenLastCalledWith('acc-1', 'Diplôme falsifié signalé par l’université.');
     expect(accounts).toHaveBeenCalledTimes(2);
+    // La boîte se ferme : son dernier rendu dépend de l'ordre des fichiers de la suite (isolate: false).
+    // Un tick rend l'état final de la boîte (erreur effacée) avant de le lire.
+    TestBed.inject(ApplicationRef).tick();
     expect(dialog.querySelector('.error')).toBeNull();
   });
 
