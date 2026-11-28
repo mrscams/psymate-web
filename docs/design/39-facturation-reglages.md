@@ -1,17 +1,19 @@
 # Écran 39 · Facturation · Réglages
 
-> **Périmètre tranché le 22 novembre 2026 (G Q67, rappelée en fiche 33).** Même réserve que la fiche 33 : aucune route au contrat. Décisions qui portent sur cette fiche : les réglages sont le quatrième onglet du module, pas une page de Mon compte ; trois régimes de TVA (France, psychologues et coachs) ; aucune prestation « séance non honorée ». Les mentions de TVA et la règle de numérotation sont celles d'usage pour un cabinet en France et sont à faire relire par un expert-comptable avant d'être écrites au contrat. Cadre du module et règles communes : fiche 33.
+> **Périmètre tranché le 22 novembre 2026 (G Q67, rappelée en fiche 33).** Contrat visé : L5 de `docs/L-plan-facturation.md` (`contract-v0.17.0`, posé par M15-12) ; la section « Route & API » le suit depuis M15-13. Le contrat fusionné (`docs/api-reference.md`, tiré par M15-14) l'emporte : l'écran note tout écart dans sa PR et corrige la fiche. Décisions qui portent sur cette fiche : les réglages sont le quatrième onglet du module, pas une page de Mon compte ; trois régimes de TVA (France, psychologues et coachs) ; aucune prestation « séance non honorée ». Les mentions de TVA et la règle de numérotation sont celles d'usage pour un cabinet en France et sont à faire relire par un expert-comptable avant d'être écrites au contrat. Cadre du module et règles communes : fiche 33.
 
-> Spécification pour agents. Maquette : `facturation/07-reglages.html` ; capture : `facturation/captures/07-reglages-1.png` (et `-dark`). Habillage : celui de l'application, par les tokens de `src/theme/tokens.css` (les maquettes sont dessinées avec les valeurs Fluent 2, G Q59, qui ne sont pas encore sur `main` : on en reprend les noms de tokens, jamais une valeur). Les valeurs d'exemple (ADELI, SIRET, IBAN) sont volontairement factices.
+> Spécification pour agents. Maquette : `facturation/07-reglages.html` ; captures : `facturation/captures/07-reglages-1.png` à `-8.png`, variantes `-dark` (liste en fin de fiche). Habillage : celui de l'application, par les tokens de `src/theme/tokens.css` (depuis M15-13, les maquettes en reprennent les valeurs ; un écran emploie les noms de tokens, jamais une valeur écrite en dur). Les valeurs d'exemple (ADELI, SIRET, IBAN) sont volontairement factices.
 
 ## Objectif
 Fixer une fois ce qui figure sur toutes les factures et ce que le module propose par défaut : qui émet, sous quel régime de TVA, à quels tarifs, avec quelles modalités de règlement. On y passe à la première facture, puis quand un tarif change.
 
-## Route & API attendue
+## Route & API
 - Route : `/facturation/reglages`, quatrième onglet du module (au bout de la ligne d'onglets). Ancre de rubrique dans l'URL : `#identite | tva | numerotation | prestations | reglement | emails`.
-- `GET /api/me/billing-settings` → `{ identity: { name, title, professionalId: { kind: adeli | rpps, value }, siret?, address, email, phone? }, vat: { regime: health_exempt | franchise | liable, rate?, vatNumber? }, numbering: { invoicePrefix, creditNotePrefix, nextInvoiceNumber, locked }, payment: { dueTerm, chequePayee?, acceptedModes[], showBankDetails, ibanMasked? }, footerNote?, emailTemplates: { invoice: { subject, body }, reminder: { subject, body } }, missing: [] }`. `name`, `title` et `professionalId` sont en lecture seule : ils viennent du dossier professionnel (fiche 13).
-- `PUT /api/me/billing-settings` (les rubriques modifiables) ; `PUT /api/me/billing-settings/iban` `{ iban, currentPassword }`.
-- `GET /api/me/billing-services` ; `POST`, `PATCH /{id}`, `DELETE /{id}` (retrait logique) → `{ id, label, durationMin?, price, isDefault }`.
+- `GET /api/me/billing-settings` → `{ identity: { name, title, professionalNumber }, siret, addressLines, displayEmail, displayPhone, vat: { regime: health_exempt | franchise | liable, rateBp?, vatNumber?, mention }, numbering: { invoicePrefix, creditNotePrefix, nextInvoiceNumber, nextCreditNoteNumber, locked }, payment: { dueTerm: on_receipt | days_15 | days_30, chequePayee, acceptedModes[], showBankDetails, ibanLast4? }, footerNote, emailTemplates: { invoice: { subject, body }, reminder: { subject, body } }, missing: [] }`. `identity` est en lecture seule : il vient du dossier professionnel (fiche 13). Sans réglages en base : valeurs par défaut, adresse et e-mail proposés depuis le dossier. `missing` liste ce qui empêche d'émettre : `siret`, `addressLines`, `service`. Le taux est en points de base (2000 = 20 %).
+- `PUT /api/me/billing-settings` (les champs modifiables) ; `422` : `SIRET_INVALID` (14 chiffres et clé de Luhn), `VAT_RATE_REQUIRED`, `VAT_NUMBER_REQUIRED` (régime `liable`), `OUT_OF_RANGE`, `INVALID_VALUE` ; `409 NUMBERING_LOCKED` si un préfixe change après une première émission.
+- `PUT /api/me/billing-settings/iban` `{ iban, currentPassword }` → `204` ; `422 IBAN_INVALID` (format et clé mod 97), `403 PASSWORD_INVALID`. `DELETE` de la même route efface l'IBAN (mot de passe dans le corps).
+- `GET /api/me/billing-services` → `{ services: [{ id, label, durationMin?, price, isDefault }] }` (non archivées, la prestation par défaut d'abord puis par libellé) ; `POST` `{ label, durationMin?, price, isDefault? }` → `201` (la première créée devient la prestation par défaut ; 50 au plus, `422 SERVICE_LIMIT_REACHED`) ; `PATCH /{id}` (fusion partielle ; `isDefault: true` retire le défaut de l'autre) ; `DELETE /{id}` (retrait logique, `204`, idempotent ; `409 SERVICE_IS_DEFAULT` s'il reste d'autres prestations).
+- **Écarts avec la première version de cette fiche** (L5.5) : montants en centimes ; `identity` ne porte que `{ name, title, professionalNumber }` (pas de nature ADELI ou RPPS : l'étiquette du champ verrouillé reste « N° ADELI ou RPPS ») ; SIRET, adresse (`addressLines`), e-mail (`displayEmail`) et téléphone (`displayPhone`) affichés sont au premier niveau ; `vat.rate` devient `vat.rateBp` et la mention est fournie par l'API (`vat.mention`, affichée telle quelle) ; `nextCreditNoteNumber` s'ajoute ; `ibanMasked` devient `ibanLast4` (l'écran masque tout le reste) ; l'IBAN peut aussi être retiré (`DELETE`, mot de passe) ; nouveaux codes `OUT_OF_RANGE`, `INVALID_VALUE`, `SERVICE_LIMIT_REACHED`. Les modèles d'e-mail s'enregistrent par `PUT /api/me/billing-settings` : le panneau d'un modèle alimente donc la barre d'enregistrement de la page (il ne s'enregistre pas seul, à la différence des prestations).
 
 ## Structure
 Trois colonnes : sommaire (200 px, collant), formulaire (carte), aperçu (360 px, collant).
@@ -25,7 +27,7 @@ Trois colonnes : sommaire (200 px, collant), formulaire (carte), aperçu (360 px
    Le texte de la mention est fourni par l'application : ce n'est pas un champ libre.
 4. **Numérotation** : aide « Les numéros se suivent sans trou, dans l'ordre d'émission. Le format ne se change plus après la première facture émise. » Préfixes Factures (`F-AAAA-`) et Avoirs (`AV-AAAA-`), modifiables tant qu'aucune facture n'est émise, verrouillés ensuite ; « Prochain numéro : F-2026-0148 · la suite repart à 0001 chaque 1ᵉʳ janvier ». Aucun champ ne permet de choisir le prochain numéro.
 5. **Prestations et tarifs** : aide « Les désignations proposées dans une facture. Le tarif d'un patient, s'il est renseigné dans sa fiche, passe avant. » Tableau Désignation sur la facture · Durée · Tarif · Par défaut (bouton radio) · modifier. Lien « Ajouter une prestation ». Prestations de départ proposées à la première ouverture : Séance (à nommer selon la profession), Première consultation. Aucune prestation « séance non honorée » : un rendez-vous non honoré ne se facture pas.
-6. **Règlement** : Échéance par défaut (À réception, 15 jours, 30 jours) ; Chèques à l'ordre de ; *Modes de paiement acceptés* (puces à choix multiple : Virement, Chèque, Espèces, Carte) ; interrupteur « Afficher mes coordonnées bancaires sur les factures », qui révèle l'IBAN masqué (« FR76 •••• … •12 ») et « Modifier » ; *Mention au bas de chaque facture* (facultatif, 500 caractères au plus).
+6. **Règlement** : Échéance par défaut (À réception, 15 jours, 30 jours) ; Chèques à l'ordre de ; *Modes de paiement acceptés* (puces à choix multiple : Virement, Chèque, Espèces, Carte) ; interrupteur « Afficher mes coordonnées bancaires sur les factures », qui révèle l'IBAN masqué (ses quatre derniers caractères seulement, `ibanLast4`) et « Modifier » ; *Mention au bas de chaque facture* (facultatif, 500 caractères au plus).
 7. **E-mails** : deux lignes, *Envoi d'une facture* et *Relance d'une facture en retard*, chacune avec son objet en aperçu et « Modifier » (panneau latéral : Objet, Message, variables `{numéro}`, `{montant}`, `{reste dû}`, `{échéance}`).
 8. **Barre d'enregistrement** (pied de la carte) : à gauche « Modifications non enregistrées : {champs} », à droite « Annuler » et « Enregistrer » (plein). Un seul enregistrement pour la page, comme les autres pages de Mon compte.
 9. **Aperçu** : une facture d'exemple réduite, en clair dans les trois thèmes, qui reflète les valeurs saisies (identité, mention de TVA, modalités), avant même l'enregistrement. Légende : « Aperçu sur une facture d'exemple ».
@@ -45,7 +47,7 @@ Sous 900 px : le sommaire devient une rangée défilante au-dessus du formulaire
 ## Tokens
 - Champ verrouillé : fond `surface-ground`, icône cadenas `text-secondary`, pas d'opacité.
 - Carte de choix sélectionnée : `primary-tint`, bord `primary`. Puce de mode choisie : `primary-tint`, bord `primary`, texte `primary-hover`.
-- Interrupteur : piste 40 × 20, pastille 14 px (fiche `fluent2.md` §5).
+- Interrupteur : piste 40 × 20, pastille 14 px, comme les interrupteurs de l'application.
 - « Retirer » une prestation : contour neutre, texte `danger`.
 - Aperçu : valeurs claires fixes.
 
@@ -54,8 +56,11 @@ Sous 900 px : le sommaire devient une rangée défilante au-dessus du formulaire
 - Un champ verrouillé est `readonly`, décrit par « Se modifie dans votre dossier professionnel », et reste atteignable au clavier.
 - Les trois cartes de TVA forment un groupe de boutons radio ; la mention est lue comme description de chaque choix.
 - La barre d'enregistrement annonce les modifications en attente (`role="status"`).
-- L'IBAN masqué est lu « IBAN se terminant par 12 ».
+- L'IBAN masqué est lu « IBAN se terminant par » suivi de ses quatre derniers caractères.
 - axe-core : 0 violation, thèmes clair et sombre.
+
+## Version arabe
+Règles de `docs/design/arabe.md` dès la première tâche (M16-24 est couverte par M15-15 à M15-20) : propriétés CSS logiques seulement ; montants, numéros de facture et d'avoir, dates en chiffres, SIRET, IBAN, adresses e-mail en `dir="ltr"` (chiffres latins, `--font-mono` gardé pour numéros et dates tout en chiffres) ; dates et montants par la locale de formatage de `core/i18n` (`data/money.ts`), jamais `LOCALE_ID` ; libellés dans `messages.fr.xlf`, `messages.en.xlf` et `messages.ar.xlf` (termes : `arabe-glossaire.md`) ; flèches et chevrons retournés, colonnes des tableaux dans le sens de lecture, montants alignés du côté de fin ; rendu de `/fr/` et `/en/` inchangé. Ici : SIRET, IBAN, numéro de TVA, préfixes et prochain numéro, téléphone et e-mail affichés en `dir="ltr"` ; adresse du cabinet, ordre des chèques, mention au bas des factures, désignations des prestations, objet et message des modèles d'e-mail en `dir="auto"` ; le sommaire passe à droite ; les variables `{numéro}`, `{montant}`, `{reste dû}`, `{échéance}` gardent leur nom français. La mention de TVA vient de l'API, en français. La feuille de facture (aperçu et PDF) reste en français et de gauche à droite dans les trois langues (conteneur `lang="fr" dir="ltr"`, G Q70) ; seul l'habillage autour est traduit et retourné.
 
 ## Critères d'acceptation
 - [ ] Nom, titre et numéro professionnel sont affichés verrouillés, avec les valeurs du dossier professionnel.
@@ -69,8 +74,21 @@ Sous 900 px : le sommaire devient une rangée défilante au-dessus du formulaire
 - [ ] Quitter avec des modifications non enregistrées demande confirmation.
 - [ ] axe-core 0 violation.
 
-## Spécifié ici, pas dessiné dans la maquette
-Les champs révélés par « Assujettie à la TVA » ; les préfixes encore modifiables (la maquette les montre verrouillés, après une première facture) ; le panneau d'un modèle d'e-mail ; le dialogue de modification de l'IBAN ; le dialogue « Quitter sans enregistrer ? » ; la version sous 900 px. Le panneau de prestation est dessiné hors cadre, sans le voile. À dessiner avant de développer ces parties.
+## États dessinés (captures)
+Chaque état que la première version de cette fiche spécifiait sans le dessiner l'a été par M15-13 (28 novembre 2026), dans `facturation/07-reglages.html`, section « États spécifiés par la fiche ». Captures dans `facturation/captures/`, en clair et en sombre (suffixe `-dark`) :
+
+- `07-reglages-1.png` : la page.
+- `07-reglages-2.png` : TVA « Assujettie » : Taux et N° de TVA intracommunautaire, `422 VAT_NUMBER_REQUIRED` sous le champ.
+- `07-reglages-3.png` : numérotation avant la première facture émise : préfixes modifiables (`numbering.locked` faux).
+- `07-reglages-4.png` : panneau d'un modèle d'e-mail (Objet, Message, variables).
+- `07-reglages-5.png` : dialogue « Modifier l'IBAN » (nouvel IBAN, mot de passe du compte, `403 PASSWORD_INVALID`, « Retirer l'IBAN » pour le `DELETE`).
+- `07-reglages-6.png` : même dialogue, `422 IBAN_INVALID` sous l'IBAN.
+- `07-reglages-7.png` : dialogue partagé « Quitter sans enregistrer ? ».
+- `07-reglages-8.png` : version sous 900 px (sommaire en rangée défilante, aperçu sous la carte).
+
+Non dessiné : le panneau de prestation avec son voile (il répète le panneau dessiné hors cadre) ; le toast de `409 NUMBERING_LOCKED` (la fiche ne donne pas son texte) ; la mention et l'aperçu du régime assujetti (la mention vient de l'API, `vat.mention`, et son texte n'est écrit nulle part).
+
+Les libellés que la fiche ne donnait pas et que la maquette propose sont signalés dans la note de chaque cadre (« libellé proposé ») ; une tâche d'écran les reprend tels quels ou les corrige dans sa PR. **Maquettes complétées par M15-13 sans relecture de l'utilisateur.**
 
 ## Hors périmètre
 Logo et couleurs sur la facture ; plusieurs cabinets ou plusieurs entités de facturation ; numérotation personnalisée ou reprise d'une suite existante ; plusieurs taux de TVA ; plusieurs comptes bancaires ; langue de la facture par patient ; signature d'e-mail riche.

@@ -12,6 +12,18 @@
   .ed-head .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
   .side h2 { font: 600 16px/22px var(--font-ui); margin-bottom: 10px; }
   .modes { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* États spécifiés par la fiche 36 (section ajoutée) : uniquement des tokens. */
+  .paper .stamp.void { color: var(--text-secondary); }
+  .paper .p-reason { margin: -8px 0 18px; }
+  .paper .p-reason .p-k { display: inline; margin-inline-end: 8px; }
+  .rows li.cancelled .x, .rows li.cancelled .r { text-decoration: line-through; color: var(--text-secondary); }
+  .rows li .what .ref { white-space: nowrap; }
+  .kv dd a { font-variant-numeric: tabular-nums; }
+  .tpl { display: flex; }
+  .tpl button { flex: 1; }
+  .app.narrow .split { grid-template-columns: minmax(0, 1fr); }
+  .app.narrow .ed-head { flex-wrap: wrap; row-gap: 8px; }
+  .app.narrow .paper-wrap { padding: 20px 16px; }
 </style>
 </head>
 <body>
@@ -171,6 +183,311 @@
       </ul>
     </div>
   </div>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Facture payée</h3>
+  <div class="frame"><div class="app" id="paid" data-url="psymate.app/facturation/F-2026-0146" data-sub="F-2026-0146" style="--h: 1000px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>F-2026-0146</h1><span class="st paid">Payée</span>
+      <span class="muted">Hélène R. · émise le 19 novembre 2026</span>
+      <div class="right">
+        <button class="btn outline"><i data-i="mail"></i>Envoyer</button>
+        <button class="btn outline"><i data-i="download"></i>Télécharger le PDF</button>
+        <button class="icon-btn" title="Plus : dupliquer, créer un avoir"><i data-i="more"></i></button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="split">
+        <div class="paper-wrap"><div class="paper" data-inv="f0146"></div></div>
+        <aside class="side">
+          <div class="panel"><div class="pad">
+            <h2>Règlement</h2>
+            <dl class="kv">
+              <dt>Total</dt><dd>60,00 €</dd>
+              <dt>Réglé</dt><dd>60,00 €</dd>
+            </dl>
+            <div class="progress" role="img" aria-label="60,00 € réglés sur 60,00 €"><i style="width:100%"></i></div>
+            <dl class="kv" style="margin-top:8px">
+              <div class="big" style="display:contents"><dt>Reste dû</dt><dd>0,00 €</dd></div>
+              <dt>Échéance</dt><dd class="mono">19/12/2026</dd>
+            </dl>
+            <button class="btn primary block" style="margin-top:14px"><i data-i="download"></i>Télécharger la facture acquittée</button>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Paiements</h2>
+            <ul class="rows">
+              <li><i data-i="bank" class="lg muted"></i><div class="what"><div>Virement <span class="muted ref">VIR ROUSSEL H</span></div><div class="s muted mono">19/11/2026</div></div><span class="r">60,00 €</span><button class="icon-btn" title="Reçu, annuler le paiement"><i data-i="more"></i></button></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Séances facturées</h2>
+            <ul class="rows">
+              <li><span class="mono s">19/11/2026</span><span class="muted">visio</span><a class="r" href="#">Ouvrir</a></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Historique</h2>
+            <ul class="hist">
+              <li>Paiement de 60,00 € par virement<span class="when">19/11/2026 · 20:14</span></li>
+              <li>Envoyée à helene.r@example.test<span class="when">19/11/2026 · 18:31</span></li>
+              <li>Émise sous le numéro F-2026-0146<span class="when">19/11/2026 · 18:30</span></li>
+              <li>Brouillon créé depuis « À facturer »<span class="when">19/11/2026 · 18:27</span></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 36, Structure 2 et 3 : la feuille devient « Facture acquittée » (lignes « Réglée le … » et « Réglé par … le … », tampon « Acquittée » en <code>success</code>) ; dans <i>Règlement</i>, la barre est pleine et l'action pleine devient « Télécharger la facture acquittée », qui appelle <code>GET /api/invoices/{id}/pdf?variant=receipted</code> (L5.3 ; <code>409 INVOICE_NOT_PAID</code> si elle ne l'est plus, après une annulation de paiement faite ailleurs : relecture). « Créer un avoir » reste dans le menu <i>Plus</i> : sur une facture payée, il mène au cas « à rembourser » ci-dessous. La feuille est dessinée par le web à partir de <code>GET /api/invoices/by-number/{number}</code> (L5.5 : pas de route d'aperçu). Échéance : <code>dueOn</code>, illustrée à 30 jours comme les autres factures des maquettes.</p>
+
+  <h3>Facture annulée par un avoir</h3>
+  <div class="frame"><div class="app" id="void" data-url="psymate.app/facturation/F-2026-0138" data-sub="F-2026-0138" style="--h: 1000px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>F-2026-0138</h1><span class="st void">Annulée</span>
+      <span class="muted">Samir B. · émise le 12 octobre 2026</span>
+      <div class="right">
+        <button class="btn outline"><i data-i="download"></i>Télécharger le PDF</button>
+        <button class="icon-btn" title="Plus : dupliquer"><i data-i="more"></i></button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="split">
+        <div class="paper-wrap"><div class="paper">
+          <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div>
+            <div class="p-title"><b>Facture</b><span class="mono">N° F-2026-0138</span></div></div>
+          <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b>Samir Benali</b><span>5 rue Bichat</span><span>75010 Paris</span></div>
+            <dl><dt>Date</dt><dd>12 octobre 2026</dd><dt>Échéance</dt><dd>11 novembre 2026</dd></dl></div>
+          <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead>
+            <tbody><tr><td class="mono">12/10/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr></tbody></table>
+          <div class="p-tot"><div class="big"><span>Total</span><span class="num">60,00 €</span></div></div>
+          <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p><p>Règlement par virement, chèque ou espèces, à l'ordre de Claire Moreau.</p></div>
+          <span class="stamp void">Annulée par AV-2026-0003</span>
+          <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+        </div></div>
+        <aside class="side">
+          <div class="panel"><div class="pad">
+            <h2>Règlement</h2>
+            <dl class="kv">
+              <dt>Total</dt><dd>60,00 €</dd>
+              <dt>Réglé</dt><dd>60,00 €</dd>
+            </dl>
+            <div class="progress" role="img" aria-label="60,00 € réglés sur 60,00 €"><i style="width:100%"></i></div>
+            <dl class="kv" style="margin-top:8px">
+              <dt>Avoir <a href="#credit" class="mono">AV-2026-0003</a></dt><dd>− 60,00 €</dd>
+              <div class="big" style="display:contents"><dt>Reste dû</dt><dd>0,00 €</dd></div>
+              <dt>Échéance</dt><dd class="mono">11/11/2026</dd>
+            </dl>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Paiements</h2>
+            <ul class="rows">
+              <li><i data-i="cash" class="lg muted"></i><div class="what"><div>Espèces</div><div class="s muted mono">20/10/2026</div></div><span class="r">60,00 €</span><button class="icon-btn" title="Reçu, annuler le paiement"><i data-i="more"></i></button></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Séances facturées</h2>
+            <ul class="rows">
+              <li><span class="mono s">12/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Historique</h2>
+            <ul class="hist">
+              <li>Avoir AV-2026-0003 émis, facture annulée<span class="when">10/11/2026 · 16:12</span></li>
+              <li>Paiement de 60,00 € en espèces<span class="when">20/10/2026 · 10:30</span></li>
+              <li>Émise sous le numéro F-2026-0138<span class="when">12/10/2026 · 19:05</span></li>
+              <li>Brouillon créé depuis « À facturer »<span class="when">12/10/2026 · 19:02</span></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 36, Structure 2 : tampon « Annulée par AV-… » sur la feuille ; statut <code>void</code> (L5.3), libellé « Annulée » de la fiche 33. <i>Règlement</i> sans bouton (« Annulée ou avoir : pas de bouton »). La ligne « Avoir AV-2026-0003 » vient de <code>creditNotes[]</code> et <code>credited</code> (L5.3) ; la fiche ne nomme pas cette ligne, libellé le plus court retenu, lien vers l'avoir. En-tête : pas d'« Envoyer », et <i>Plus</i> ne porte que Dupliquer (créer un avoir répondrait <code>409 INVOICE_VOID</code>) ; actions d'une facture annulée reprises du tableau des statuts de la maquette 01 (« Consulter, ouvrir l'avoir »), la fiche 36 ne les liste pas. Historique : événements <code>credit_note_issued</code> et <code>voided</code> réunis sur une ligne (même instant). Mêmes personnes et montants que la liste (01) et le journal (05). L'adresse du destinataire est une donnée d'illustration (<code>recipient.addressLines</code>).</p>
+
+  <h3>Avoir</h3>
+  <div class="frame"><div class="app" id="credit" data-url="psymate.app/facturation/AV-2026-0003" data-sub="AV-2026-0003" style="--h: 1000px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>AV-2026-0003</h1><span class="st credit">Avoir</span>
+      <span class="muted">Samir B. · émis le 10 novembre 2026</span>
+      <div class="right">
+        <button class="btn outline"><i data-i="download"></i>Télécharger le PDF</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="split">
+        <div class="paper-wrap"><div class="paper">
+          <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div>
+            <div class="p-title"><b>Avoir</b><span class="mono">N° AV-2026-0003</span></div></div>
+          <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b>Samir Benali</b><span>5 rue Bichat</span><span>75010 Paris</span></div>
+            <dl><dt>Date</dt><dd>10 novembre 2026</dd><dt>Annule la facture</dt><dd class="mono">F-2026-0138</dd></dl></div>
+          <p class="p-reason"><span class="p-k">Motif</span>Séance annulée, facturée à tort</p>
+          <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead>
+            <tbody><tr><td class="mono">12/10/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">− 60,00 €</td></tr></tbody></table>
+          <div class="p-tot"><div class="big"><span>Total</span><span class="num">− 60,00 €</span></div></div>
+          <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p></div>
+          <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+        </div></div>
+        <aside class="side">
+          <div class="panel"><div class="pad">
+            <h2>Règlement</h2>
+            <dl class="kv">
+              <dt>Total</dt><dd>− 60,00 €</dd>
+              <dt>Remboursé</dt><dd>60,00 €</dd>
+              <div class="big" style="display:contents"><dt>À rembourser</dt><dd>0,00 €</dd></div>
+            </dl>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Facture annulée</h2>
+            <ul class="rows">
+              <li><span class="mono">F-2026-0138</span><a class="r" href="#void">Ouvrir</a></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Paiements</h2>
+            <ul class="rows">
+              <li><i data-i="bank" class="lg muted"></i><div class="what"><div>Virement <span class="muted ref">REMB BENALI S</span></div><div class="s muted"><span class="mono">10/11/2026</span> · remboursement</div></div><span class="r">− 60,00 €</span></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Historique</h2>
+            <ul class="hist">
+              <li>Remboursement de 60,00 € par virement<span class="when">10/11/2026 · 16:40</span></li>
+              <li>Émis sous le numéro AV-2026-0003, annule F-2026-0138<span class="when">10/11/2026 · 16:12</span></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Route <code>/facturation/AV-2026-0003</code>, même lecture <code>GET /api/invoices/by-number/{number}</code> avec <code>kind: credit_note</code>. Fiche 36, Interactions : l'avoir montre sa feuille et, dans le rail, la facture qu'il annule (<code>cancels: { id, number }</code>, L5.3 : seul le numéro est connu, d'où une ligne sans statut ni montant) ; ni paiement ni avoir : pas d'« Enregistrer un paiement », pas de « Créer un avoir », pas de menu <i>Plus</i>. En-tête réduit à « Télécharger le PDF » (actions d'un avoir dans le tableau des statuts de la maquette 01 : « Consulter, télécharger »). Motif sur la feuille, depuis <code>reasonCode</code> (L5.5, pas de libellé libre) : <code>session_cancelled</code> « Séance annulée, facturée à tort », <code>wrong_amount</code> « Erreur de montant », <code>wrong_recipient</code> « Erreur de destinataire », <code>other</code> : le texte de <code>reasonText</code>. Remboursement : L5.4, un <code>POST /api/invoices/{id}/payments</code> sur un avoir dont <code>refundDue &gt; 0</code> crée un paiement de nature <code>refund</code>, plafonné à <code>refundDue</code> ; il est montré ici après coup (« − 60,00 € », comme dans le journal 05), sans menu de ligne, que la fiche ne prévoit pas pour un remboursement. Avant lui, la même carte affichait « À rembourser 60,00 € » et « Aucun paiement enregistré ». Libellés « Remboursé » et « À rembourser » : <code>refundDue</code> (L5.3), la fiche n'en donne pas d'autre que « … sont à rembourser ». Le geste qui enregistre ce remboursement n'est décrit ni par la fiche ni par L5 : non dessiné.</p>
+
+  <h3>Paiement annulé dans le rail (facture en retard)</h3>
+  <div class="frame"><div class="app" id="late" data-url="psymate.app/facturation/F-2026-0139" data-sub="F-2026-0139" style="--h: 1000px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>F-2026-0139</h1><span class="st late">En retard</span>
+      <span class="muted">Samir B. · émise le 19 octobre 2026</span>
+      <div class="right">
+        <button class="btn outline"><i data-i="mail"></i>Envoyer</button>
+        <button class="btn outline"><i data-i="download"></i>Télécharger le PDF</button>
+        <button class="icon-btn" title="Plus : dupliquer, créer un avoir"><i data-i="more"></i></button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="split">
+        <div class="paper-wrap"><div class="paper">
+          <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div>
+            <div class="p-title"><b>Facture</b><span class="mono">N° F-2026-0139</span></div></div>
+          <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b>Samir Benali</b><span>5 rue Bichat</span><span>75010 Paris</span></div>
+            <dl><dt>Date</dt><dd>19 octobre 2026</dd><dt>Échéance</dt><dd>18 novembre 2026</dd></dl></div>
+          <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead>
+            <tbody><tr><td class="mono">19/10/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr></tbody></table>
+          <div class="p-tot"><div class="big"><span>Total</span><span class="num">60,00 €</span></div></div>
+          <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p><p>Règlement par virement, chèque ou espèces, à l'ordre de Claire Moreau.</p></div>
+          <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+        </div></div>
+        <aside class="side">
+          <div class="panel"><div class="pad">
+            <h2>Règlement</h2>
+            <dl class="kv">
+              <dt>Total</dt><dd>60,00 €</dd>
+              <dt>Réglé</dt><dd>0,00 €</dd>
+            </dl>
+            <div class="progress" role="img" aria-label="0 euro réglé sur 60"><i style="width:0%"></i></div>
+            <dl class="kv" style="margin-top:8px">
+              <div class="big" style="display:contents"><dt>Reste dû</dt><dd>60,00 €</dd></div>
+              <dt>Échéance</dt><dd class="mono">18/11/2026</dd>
+            </dl>
+            <button class="btn primary block" style="margin-top:14px">Enregistrer un paiement</button>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Paiements</h2>
+            <ul class="rows">
+              <li class="cancelled"><i data-i="cash" class="lg muted"></i><div class="what"><div class="x">Espèces</div><div class="s muted mono x">21/11/2026</div><div class="s muted">Annulé le <span class="mono">21/11/2026</span></div></div><span class="r">60,00 €</span></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Séances facturées</h2>
+            <ul class="rows">
+              <li><span class="mono s">19/10/2026</span><span class="muted">cabinet</span><a class="r" href="#">Ouvrir</a></li>
+            </ul>
+          </div></div>
+
+          <div class="panel"><div class="pad">
+            <h2>Historique</h2>
+            <ul class="hist">
+              <li>Paiement de 60,00 € en espèces annulé<span class="when">21/11/2026 · 09:12</span></li>
+              <li>Paiement de 60,00 € en espèces<span class="when">21/11/2026 · 09:05</span></li>
+              <li>Émise sous le numéro F-2026-0139<span class="when">19/10/2026 · 19:10</span></li>
+              <li>Brouillon créé depuis « À facturer »<span class="when">19/10/2026 · 19:06</span></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 36, Structure 3 et Interactions : un paiement annulé (<code>POST /api/payments/{id}/cancel</code>, puis relecture) reste dans <i>Paiements</i>, barré, et le reste dû remonte ; l'historique ajoute « annulation d'un paiement » (<code>payment_cancelled</code>). La date d'annulation vient de <code>Payment.cancelledAt</code> (L5.4) ; la fiche ne donne pas de libellé, « Annulé le … » retenu, sous la ligne barrée et sans être barré. La ligne annulée n'a plus de menu : la fiche ne dit pas si « Télécharger le reçu » reste offert. Statut <i>En retard</i> : <code>overdue: true</code> (L5.3), mêmes facture, échéance et montant que la liste 01 (en retard de 4 jours au 22 novembre).</p>
+
+  <h3>Créer un avoir : montant à rembourser</h3>
+  <div class="frame"><div class="app" data-clone="#paid" data-url="psymate.app/facturation/F-2026-0146?panneau=avoir" data-sub="F-2026-0146" style="--h: 1000px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Créer un avoir" style="width:560px">
+      <header><h2>Créer un avoir</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body">
+        <p class="muted">Un avoir annule tout ou partie de la facture F-2026-0146. La facture d'origine reste dans vos documents.</p>
+        <div class="rcards">
+          <div class="rcard on"><span class="radio on"></span><b>Annuler toute la facture</b><span class="d">1 séance · 60,00 €</span></div>
+          <div class="rcard"><span class="radio"></span><b>Annuler certaines lignes</b><span class="d">Cochez les séances facturées à tort.</span></div>
+        </div>
+        <div class="mf"><label>Motif (figure sur l'avoir)</label>Erreur de destinataire<i data-i="down" class="suffix"></i></div>
+        <div class="banner warn" style="margin:0"><i data-i="alert"></i><div>L'avoir <span class="mono">AV-2026-0004</span> de <b>60,00 €</b> sera émis et la facture sera annulée. Le reste dû restera de 0,00 €. La séance du 19 novembre reviendra dans « À facturer ». <b>60,00 € sont à rembourser</b> à la patiente.</div></div>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary">Émettre l'avoir</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 36, Structure 5 : l'avoir dépasse le reste dû (facture payée), l'encart de conséquence passe sur <code>warning-bg</code> et dit « … sont à rembourser » ; il porte aussi le numéro réservé (<code>expectedNumber</code>), le montant, le nouveau reste dû et la séance qui revient dans « À facturer ». Après <code>201</code>, la réponse porte <code>refundDue</code> (L5.3) : 60,00 € sur l'avoir, à enregistrer comme remboursement (voir l'avoir ci-dessus). Avoir total : la facture deviendra <i>Annulée</i>. Motif <code>wrong_recipient</code> ; « Autre » révélerait un champ de texte (<code>reasonText</code>, <code>422 REASON_TEXT_REQUIRED</code> s'il est vide). Le bouton reste plein, pas rouge. Numéro AV-2026-0004 : le même prochain numéro que le dialogue d'avoir de F-2026-0144 (les deux cadres sont deux alternatives).</p>
+
+  <h3>Envoyer : modèle de relance</h3>
+  <div class="frame"><div class="app" data-clone="#late" data-url="psymate.app/facturation/F-2026-0139?panneau=envoi" data-sub="F-2026-0139" style="--h: 1000px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Envoyer la facture" style="width:560px">
+      <header><h2>Envoyer la facture</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body" style="gap:20px">
+        <div>
+          <div class="flabel">Modèle</div>
+          <div class="seg tpl" role="group" aria-label="Modèle"><button aria-pressed="false">Envoi d'une facture</button><button aria-pressed="true">Relance d'une facture en retard</button></div>
+        </div>
+        <div class="mf"><label>À</label>samir.b@example.test</div>
+        <div class="mf"><label>Objet</label>Rappel : facture F-2026-0139</div>
+        <div class="mf area" style="min-height:118px"><label>Message</label><span>Bonjour,<br><br>La facture F-2026-0139 d'un montant de 60,00 €, à régler avant le 18 novembre 2026, n'est pas encore réglée. Il reste 60,00 € à régler. Vous la trouverez ci-jointe.<br><br>Claire Moreau</span></div>
+        <div><span class="chip"><i data-i="doc"></i>F-2026-0139.pdf</span></div>
+        <p class="hint" style="margin:0">Le message part de PsyMate à votre nom ; les réponses arrivent sur votre adresse. Il ne contient aucune information de suivi.</p>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary"><i data-i="mail"></i>Envoyer</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 36, Structure 6 : « Facture en retard : le modèle de relance est proposé ». Le dialogue s'ouvre sur le modèle <code>reminder</code> des réglages (<code>emailTemplates.reminder</code>, L5.1 ; objet « Rappel : facture {numéro} » de la maquette 07) et l'envoie avec <code>template: reminder</code> (L5.3). Le choix entre les deux modèles, nommés comme dans les réglages (fiche 39), est la lecture de « proposé » : la fiche ne le dessine pas. Le corps du message est une illustration construite avec les variables de la fiche 39 ({numéro}, {montant}, {échéance}, {reste dû}) ; le texte réel est celui des réglages. Erreurs : <code>422 EMAIL_INVALID</code> sous « À », <code>429</code> par l'intercepteur, <code>502</code>/<code>503</code> dans le dialogue.</p>
+
+  <h3>Sous 900 px : le rail sous la feuille</h3>
+  <div class="frame"><div class="app narrow" data-clone="#detail" data-url="psymate.app/facturation/F-2026-0144" data-sub="F-2026-0144" style="width:860px; --h: 1900px">
+  </div></div>
+  <p class="notes">Fiche 36, « version sous 900 px (rail sous la feuille) » : même page que la facture F-2026-0144 en haut, à 860 px ; les quatre cartes du rail passent sous la feuille, dans le même ordre (<i>Règlement</i> d'abord, donc l'action pleine juste après la feuille). La barre de la facture passe sur deux lignes ; aucune action n'est retirée. La feuille garde sa largeur fixe (rendu du PDF).</p>
 
   <div class="pager"></div>
 </div>

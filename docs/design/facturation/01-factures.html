@@ -6,6 +6,17 @@
 <title>Facturation · 01 Factures</title>
 <link rel="stylesheet" href="facturation.css">
 <script src="maquette.js"></script>
+<style>
+  /* États ajoutés (menu de ligne, erreur du bandeau) : tokens seulement. */
+  .table .icon-btn.on, #m-emise tr.hover .acts .icon-btn:last-child { background: var(--surface-sunken); color: var(--text-primary); }
+  #suppr .menu { display: none; }
+  #suppr .icon-btn.on { background: none; color: var(--text-secondary); }
+  .kpi-err { display: flex; align-items: center; gap: 12px; min-height: 86px; padding: 14px 18px; margin-bottom: 16px; }
+  .kpi-err > .ic { width: 20px; height: 20px; color: var(--text-secondary); }
+  .kpi-err > div { display: grid; gap: 2px; }
+  .kpi-err b { font-weight: 600; }
+  .kpi-err .btn { margin-inline-start: auto; }
+</style>
 </head>
 <body>
 <div class="doc">
@@ -15,7 +26,7 @@
   <p class="lede">L'écran d'arrivée du module, ouvert par le carreau « Facture » du rail. Il répond à trois questions dans l'ordre : combien ai-je encaissé ce mois-ci, qui me doit encore quelque chose, que me reste-t-il à facturer.</p>
 
   <h2>La liste</h2>
-  <div class="frame"><div class="app" data-url="psymate.app/facturation" style="--h: 900px">
+  <div class="frame"><div class="app" id="liste" data-url="psymate.app/facturation" style="--h: 900px">
     <div class="mhead" data-tab="factures"></div>
     <div class="page">
       <div class="panel kpis">
@@ -38,7 +49,6 @@
         <span class="spacer"></span>
         <span class="muted">Période</span>
         <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
-        <button class="btn outline"><i data-i="download"></i>Exporter</button>
       </div>
 
       <div class="panel">
@@ -123,7 +133,7 @@
       </div>
     </div>
   </div></div>
-  <p class="notes">Toute la ligne est un lien vers la facture (ou vers l'éditeur pour un brouillon). Les actions de ligne n'apparaissent qu'au survol et au focus, comme dans la liste des patients : « Encaisser » sur une facture qui a un reste dû, « Télécharger le PDF », puis le menu (Envoyer par e-mail, Dupliquer, Créer un avoir ; Supprimer pour un brouillon seulement). Les quatre chiffres du bandeau sont une projection servie par l'API : le client ne les calcule pas.</p>
+  <p class="notes">Toute la ligne est un lien vers la facture (ou vers l'éditeur pour un brouillon). Les actions de ligne n'apparaissent qu'au survol et au focus, comme dans la liste des patients : « Encaisser » sur une facture qui a un reste dû, « Télécharger le PDF », puis le menu (Envoyer par e-mail, Dupliquer, Créer un avoir ; Supprimer pour un brouillon seulement). Les quatre chiffres du bandeau sont une projection servie par l'API : le client ne les calcule pas. Exporter : aucune route au contrat (L5), hors M15 ; la barre de filtres n'a donc pas de bouton « Exporter ».</p>
 
   <h2>Les statuts</h2>
   <div class="tablewrap"><table class="crit">
@@ -199,6 +209,284 @@
       <p>Aucun nouveau. <code>info</code> / <code>info-bg</code> (à régler), <code>success</code> / <code>success-bg</code> (payée), <code>warning</code> / <code>warning-bg</code> (en retard), <code>surface-sunken</code> (brouillon, annulée), <code>primary</code> (action, onglet courant).</p>
     </div>
   </div>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Menu de ligne ouvert · facture émise</h3>
+  <div class="frame"><div class="app" id="m-emise" data-clone="#liste" data-url="psymate.app/facturation" style="--h: 900px">
+    <div class="menu" role="menu" aria-label="Plus d'actions sur F-2026-0144" style="right: 26px; top: 627px">
+      <div role="menuitem"><i data-i="mail"></i>Envoyer par e-mail</div>
+      <div role="menuitem"><i data-i="copy"></i>Dupliquer</div>
+      <div role="menuitem"><i data-i="undo"></i>Créer un avoir</div>
+    </div>
+  </div></div>
+  <p class="notes">Menu « Plus » de la ligne F-2026-0144 (fiche 33, Interactions) : Envoyer par e-mail (panneau d'envoi de la fiche 36, <code>POST /api/invoices/{id}/send</code>), Dupliquer (<code>POST /api/invoices/{id}/duplicate</code>, un brouillon avec les mêmes lignes sans leurs séances), Créer un avoir (dialogue de la fiche 36, <code>POST /api/invoices/{id}/credit-notes</code>). Pas de « Supprimer » : une facture émise ne se supprime pas. « Encaisser » et « Télécharger le PDF » restent dans la ligne, hors du menu.</p>
+
+  <h3>Menu de ligne ouvert · brouillon</h3>
+  <div class="frame"><div class="app" id="m-brouillon" data-url="psymate.app/facturation" style="--h: 900px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel kpis">
+        <div class="kpi"><div class="lbl">Encaissé en novembre</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements</div></div>
+        <div class="kpi"><div class="lbl">À encaisser</div><div class="val">420,00 €</div><div class="ctx">6 factures émises</div></div>
+        <div class="kpi"><div class="lbl">Dont en retard</div><div class="val">180,00 €</div><div class="ctx">3 factures · la plus ancienne : 34 jours</div></div>
+        <div class="kpi"><div class="lbl">À facturer</div><div class="val">7 <small>séances</small></div><div class="ctx">360,00 € · 1 sans tarif · <a href="02-a-facturer.html">Voir</a></div></div>
+      </div>
+      <div class="quick">
+        <div class="field search ph"><i data-i="search"></i>N° de facture ou patient…</div>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">Brouillons <span class="n">2</span></button>
+          <button aria-pressed="false">À régler <span class="n">3</span></button>
+          <button aria-pressed="false">En retard <span class="n">3</span></button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr>
+            <th style="width:128px">Numéro</th><th style="width:16%">Patient</th><th>Émise le</th><th>Objet</th><th>Échéance</th><th class="num">Montant</th><th class="num">Reste dû</th><th>Statut</th><th style="width:1%"></th>
+          </tr></thead>
+          <tbody>
+            <tr class="hover">
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td>
+              <td class="muted">—</td><td>2 séances <span class="sub">· 12 et 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">120,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn on" title="Plus" aria-expanded="true"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td>
+              <td class="muted">—</td><td>1 séance <span class="sub">· 18 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0147</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">20/11/2026</td><td>1 séance <span class="sub">· 20 nov.</span></td><td class="mono s">20/12/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st due">À régler</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0146</td>
+              <td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td>
+              <td class="mono s">19/11/2026</td><td>1 séance en visio <span class="sub">· 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">virement</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0145</td>
+              <td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td>
+              <td class="mono s">17/11/2026</td><td>1 séance <span class="sub">· 17 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">espèces</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0144</td>
+              <td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td>
+              <td class="mono s">16/11/2026</td><td>4 séances <span class="sub">· octobre</span></td><td class="mono s">16/12/2026</td>
+              <td class="num">240,00 €</td><td class="num strong">120,00 €</td><td><span class="st part">Payée en partie</span></td>
+              <td><div class="acts"><button class="btn sm outline">Encaisser</button><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0143</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">13/11/2026</td><td>1 séance <span class="sub">· 13 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">chèque</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">AV-2026-0003</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">10/11/2026</td><td>Avoir <span class="sub">· annule F-2026-0138</span></td><td class="muted">—</td>
+              <td class="num">− 60,00 €</td><td class="num muted">—</td><td><span class="st credit">Avoir</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0139</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">19/10/2026</td><td>1 séance <span class="sub">· 19 oct.</span></td><td class="mono s">18/11/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st late">En retard</span> <span class="sub">4 jours</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono void">F-2026-0138</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm muted">Samir B.</span></div></td>
+              <td class="mono s muted">12/10/2026</td><td class="muted">1 séance <span class="sub">· 12 oct.</span></td><td class="muted">—</td>
+              <td class="num muted">60,00 €</td><td class="num muted">—</td><td><span class="st void">Annulée</span> <span class="sub">AV-2026-0003</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>10 factures affichées</span><span><kbd>↑</kbd> <kbd>↓</kbd> choisir · <kbd>Entrée</kbd> ouvrir · <kbd>N</kbd> nouvelle facture</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+    <div class="menu" role="menu" aria-label="Plus d'actions sur le brouillon de Nour K." style="right: 26px; top: 367px">
+      <div role="menuitem"><i data-i="copy"></i>Dupliquer</div>
+      <hr>
+      <div role="menuitem" class="danger"><i data-i="trash"></i>Supprimer</div>
+    </div>
+  </div></div>
+  <p class="notes">Menu « Plus » d'un brouillon (fiche 33 : « pour un brouillon, Supprimer »). Dans la ligne : « Télécharger le PDF » (L5 : <code>GET /api/invoices/{id}/pdf</code> rend un brouillon à la demande, avec filigrane) ; pas d'« Encaisser », un brouillon n'a pas de reste dû. Dans le menu, « Envoyer par e-mail » et « Créer un avoir » sont absents : L5 répond <code>409 INVOICE_NOT_ISSUED</code> à l'envoi d'un document non émis et un avoir ne corrige qu'une facture émise (fiche 33, règles communes). Ce retrait est une lecture de L5, la fiche ne le dit pas en toutes lettres. « Supprimer » en <code>danger</code>, séparé par un filet, ouvre le dialogue ci-dessous.</p>
+
+  <h3>Suppression d'un brouillon</h3>
+  <div class="frame"><div class="app" id="suppr" data-clone="#m-brouillon" data-url="psymate.app/facturation" style="--h: 900px">
+    <div class="scrim"></div>
+    <div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="suppr-t" aria-describedby="suppr-d">
+      <header><h2 id="suppr-t">Supprimer le brouillon ?</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body"><p id="suppr-d">Le brouillon de Nour K. (2 séances, 120,00 €) sera supprimé. Ses séances reviennent dans « À facturer ».</p></div>
+      <footer><button class="btn outline">Annuler</button><button class="btn danger">Supprimer</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Dialogue de confirmation partagé (<code>shared/ui/confirm-destructive</code>, fiche 29 : titre, description, bouton <code>danger</code>, sans mot à retaper). « Supprimer » appelle <code>DELETE /api/invoices/{id}</code> (L5, brouillon seulement, <code>204</code>, ses séances reviennent à <code>pending</code>) ; puis la liste, le bandeau et le compteur de l'onglet « À facturer » sont relus. Le titre reprend le bouton « Supprimer le brouillon » de l'éditeur ; la phrase sur les séances vient de la fiche 35 (« les séances reviennent dans « À facturer » ») ; le nombre de séances et le total viennent de la ligne (<code>subject.sessionCount</code>, <code>total</code>).</p>
+
+  <h3>Vide sous filtre</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation?q=F-2026-02" style="--h: 560px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel kpis">
+        <div class="kpi"><div class="lbl">Encaissé en novembre</div><div class="val">2 340,00 €</div><div class="ctx">39 paiements</div></div>
+        <div class="kpi"><div class="lbl">À encaisser</div><div class="val">420,00 €</div><div class="ctx">6 factures émises</div></div>
+        <div class="kpi"><div class="lbl">Dont en retard</div><div class="val">180,00 €</div><div class="ctx">3 factures · la plus ancienne : 34 jours</div></div>
+        <div class="kpi"><div class="lbl">À facturer</div><div class="val">7 <small>séances</small></div><div class="ctx">360,00 € · 1 sans tarif · <a href="02-a-facturer.html">Voir</a></div></div>
+      </div>
+      <div class="quick">
+        <div class="field search"><i data-i="search"></i>F-2026-02</div>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">Brouillons <span class="n">2</span></button>
+          <button aria-pressed="false">À régler <span class="n">3</span></button>
+          <button aria-pressed="false">En retard <span class="n">3</span></button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel">
+        <div class="state">
+          <i data-i="search"></i>
+          <b>Aucune facture pour ce filtre</b>
+          <button class="btn outline">Tout afficher</button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Vide sous filtre (fiche 33, Interactions) : « Aucune facture pour ce filtre » et « Tout afficher », qui retire les filtres de la barre (<code>?q=</code>, <code>?statut=</code>, <code>?depuis=</code>) et relit la liste. Le bandeau de chiffres ne dépend pas des filtres : il reste affiché. Ici la recherche <code>q</code> (deux caractères au moins, L5) ne trouve aucun numéro. La fiche ne donne pas de phrase d'explication : il n'y en a pas.</p>
+
+  <h3>Erreur du bandeau de chiffres seul</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation" style="--h: 870px">
+    <div class="mhead" data-tab="factures"></div>
+    <div class="page">
+      <div class="panel kpi-err" role="alert">
+        <i data-i="alert"></i>
+        <div><b>Les chiffres n'ont pas pu être chargés</b><span class="muted">Vérifiez votre connexion, puis réessayez.</span></div>
+        <button class="btn outline">Réessayer</button>
+      </div>
+      <div class="quick">
+        <div class="field search ph"><i data-i="search"></i>N° de facture ou patient…</div>
+        <div class="seg" role="group" aria-label="Statut">
+          <button aria-pressed="true">Toutes</button>
+          <button aria-pressed="false">Brouillons <span class="n">2</span></button>
+          <button aria-pressed="false">À régler <span class="n">3</span></button>
+          <button aria-pressed="false">En retard <span class="n">3</span></button>
+          <button aria-pressed="false">Payées</button>
+          <button aria-pressed="false">Avoirs</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Période</span>
+        <div class="field">Depuis octobre 2026 <i data-i="down" class="caret"></i></div>
+      </div>
+      <div class="panel">
+        <table class="table nw">
+          <thead><tr>
+            <th style="width:128px">Numéro</th><th style="width:16%">Patient</th><th>Émise le</th><th>Objet</th><th>Échéance</th><th class="num">Montant</th><th class="num">Reste dû</th><th>Statut</th><th style="width:1%"></th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">NK</span><span class="nm">Nour K.</span></div></td>
+              <td class="muted">—</td><td>2 séances <span class="sub">· 12 et 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">120,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="muted">Brouillon</td>
+              <td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td>
+              <td class="muted">—</td><td>1 séance <span class="sub">· 18 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">—</td><td><span class="st draft">Brouillon</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0147</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">20/11/2026</td><td>1 séance <span class="sub">· 20 nov.</span></td><td class="mono s">20/12/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st due">À régler</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0146</td>
+              <td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td>
+              <td class="mono s">19/11/2026</td><td>1 séance en visio <span class="sub">· 19 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">virement</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0145</td>
+              <td><div class="who"><span class="av sm">TM</span><span class="nm">Théo M.</span></div></td>
+              <td class="mono s">17/11/2026</td><td>1 séance <span class="sub">· 17 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">espèces</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0144</td>
+              <td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td>
+              <td class="mono s">16/11/2026</td><td>4 séances <span class="sub">· octobre</span></td><td class="mono s">16/12/2026</td>
+              <td class="num">240,00 €</td><td class="num strong">120,00 €</td><td><span class="st part">Payée en partie</span></td>
+              <td><div class="acts"><button class="btn sm outline">Encaisser</button><button class="icon-btn" title="Télécharger le PDF"><i data-i="download"></i></button><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0143</td>
+              <td><div class="who"><span class="av sm">MD</span><span class="nm">Marie D.</span></div></td>
+              <td class="mono s">13/11/2026</td><td>1 séance <span class="sub">· 13 nov.</span></td><td class="muted">—</td>
+              <td class="num">60,00 €</td><td class="num muted">0,00 €</td><td><span class="st paid">Payée</span> <span class="sub">chèque</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">AV-2026-0003</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">10/11/2026</td><td>Avoir <span class="sub">· annule F-2026-0138</span></td><td class="muted">—</td>
+              <td class="num">− 60,00 €</td><td class="num muted">—</td><td><span class="st credit">Avoir</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono">F-2026-0139</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm">Samir B.</span></div></td>
+              <td class="mono s">19/10/2026</td><td>1 séance <span class="sub">· 19 oct.</span></td><td class="mono s">18/11/2026</td>
+              <td class="num">60,00 €</td><td class="num strong">60,00 €</td><td><span class="st late">En retard</span> <span class="sub">4 jours</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+            <tr>
+              <td class="mono void">F-2026-0138</td>
+              <td><div class="who"><span class="av sm">SB</span><span class="nm muted">Samir B.</span></div></td>
+              <td class="mono s muted">12/10/2026</td><td class="muted">1 séance <span class="sub">· 12 oct.</span></td><td class="muted">—</td>
+              <td class="num muted">60,00 €</td><td class="num muted">—</td><td><span class="st void">Annulée</span> <span class="sub">AV-2026-0003</span></td>
+              <td><div class="acts"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="foot"><span>10 factures affichées</span><span><kbd>↑</kbd> <kbd>↓</kbd> choisir · <kbd>Entrée</kbd> ouvrir · <kbd>N</kbd> nouvelle facture</span><span class="pg"><span class="off">‹ Précédent</span><span aria-hidden="true">·</span><a href="#">Suivant ›</a></span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Le bandeau est un bloc de données à part (fiche 33, Structure 1 : « son squelette et son erreur ne bloquent pas la liste ») : <code>GET /api/billing/summary</code> a échoué, <code>GET /api/invoices</code> a répondu. L'erreur prend la place des quatre cellules, avec son propre « Réessayer » qui ne relit que le bandeau ; la liste, ses filtres et sa pagination restent utilisables. La fiche ne donne pas de libellé : la phrase reprend celle de l'erreur de la liste (« Les factures n'ont pas pu être chargées », « Vérifiez votre connexion, puis réessayez. »).</p>
 
   <div class="pager"></div>
 </div>

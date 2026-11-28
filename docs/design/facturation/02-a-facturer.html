@@ -14,6 +14,33 @@
   .rail-box li { display: flex; gap: 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border-subtle); }
   .rail-box li:last-child { border-bottom: 0; }
   .rail-box .r { margin-left: auto; }
+  /* États spécifiés par la fiche (section du bas) */
+  .box.off { border-color: var(--text-disabled); background: var(--surface-sunken); }
+  .bydate td { height: 44px; }
+  .bydate td:first-child { width: 42px; padding-inline-start: 14px; }
+  .ecart li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 10px 0; border-bottom: 1px solid var(--border-subtle); }
+  .ecart li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .ecart li .btn { grid-column: 1 / -1; justify-self: start; margin-inline-start: -10px; }
+  .pop { position: absolute; z-index: 4; width: 340px; padding: 16px; display: grid; gap: 14px; background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-16); }
+  .pop .acts-row { display: flex; justify-content: flex-end; gap: 10px; }
+  .toast { position: absolute; inset-inline-start: 24px; bottom: 20px; z-index: 3; display: flex; align-items: flex-start; gap: 10px; max-width: 620px; padding: 10px 14px; background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-8); }
+  .toast > .ic { margin-top: 2px; color: var(--warning); }
+  .grp-ro .grp-head .strong + .chip { margin-inline-start: 8px; }
+  /* Un seul écran de base (sans sélection), décliné par les cadres qui le reprennent. */
+  .ecart-open, .rate-pop, .grp-ro, .toast-ro { display: none; }
+  .v-ecart .ecart-closed { display: none; }
+  .v-ecart .ecart-open { display: block; }
+  .v-rate .rate-pop { display: grid; }
+  .v-rate .pr-more { background: var(--surface-sunken); }
+  .v-rate .pr-row td { background: color-mix(in srgb, var(--primary-tint) 45%, transparent); }
+  .v-ro .grp-ro { display: block; }
+  .v-ro .toast-ro { display: flex; }
+  .m-grp { background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); margin-bottom: 12px; }
+  .m-grp .gh { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); }
+  .m-grp .gh .r { margin-inline-start: auto; text-align: right; }
+  .m-grp .m-row { padding: 10px 12px; }
+  .m-grp .m-row.sel { background: var(--primary-tint); }
+  .m-grp .m-row:last-child { border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
 </style>
 </head>
 <body>
@@ -144,6 +171,232 @@
     <li><b>Le serveur dit ce qui est à facturer.</b> La liste est une lecture ; après la création elle est relue, pas corrigée localement.</li>
     <li><b>Aucune donnée clinique.</b> La ligne montre la date, la modalité et la durée de la séance ; ni titre, ni note, ni ressenti.</li>
   </ul>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Vue « Par date »</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/a-facturer?vue=date" data-sub="À facturer" style="--h: 760px">
+    <div class="mhead" data-tab="a-facturer"></div>
+    <div class="page" style="padding-bottom: 120px">
+      <div class="quick">
+        <label class="check"><span class="box mixed"></span>Tout sélectionner</label>
+        <div class="seg" role="group" aria-label="Regroupement" style="margin-left:8px">
+          <button aria-pressed="false">Par patient</button>
+          <button aria-pressed="true">Par date</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Séances</span>
+        <div class="field">Jusqu'au 22 novembre 2026 <i data-i="calendar" class="caret"></i></div>
+      </div>
+
+      <div class="split" style="grid-template-columns: minmax(0,1fr) 300px">
+        <div class="panel">
+          <table class="table bydate"><tbody>
+            <tr class="sel"><td><span class="box on"></span></td><td style="width:180px"><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono s" style="width:150px">lun. 02/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr><td><span class="box"></span></td><td><div class="who"><span class="av sm">PR</span><span class="nm">Paul R.</span></div></td><td class="mono s">mer. 04/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono s">jeu. 05/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono s">lun. 09/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td><div class="who"><span class="av sm">HR</span><span class="nm">Hélène R.</span></div></td><td class="mono s">jeu. 12/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr class="sel"><td><span class="box on"></span></td><td><div class="who"><span class="av sm">LM</span><span class="nm">Léa M.</span></div></td><td class="mono s">lun. 16/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            <tr><td><span class="box off"></span></td><td><div class="who"><span class="av sm">CB</span><span class="nm">Camille B.</span></div></td><td class="mono s">sam. 21/11/2026</td><td>Séance de couple <span class="sub">· cabinet · 75 min</span></td><td class="num muted">à fixer</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+          </tbody></table>
+        </div>
+
+        <aside>
+          <div class="panel rail-box"><div class="pad">
+            <h2>Ce qui sera créé</h2>
+            <p class="s muted" style="margin:4px 0 10px">Une facture par patient, en brouillon. Vous les relisez avant de les émettre.</p>
+            <ul>
+              <li><span class="av sm">HR</span>Hélène R.<span class="r num">120,00 €</span></li>
+              <li><span class="av sm">LM</span>Léa M.<span class="r num">180,00 €</span></li>
+            </ul>
+            <hr class="hair">
+            <dl class="kv"><dt>2 brouillons · 5 séances</dt><dd class="strong">300,00 €</dd></dl>
+          </div></div>
+          <div class="panel"><div class="pad">
+            <h2>Écartées</h2>
+            <p class="s muted" style="margin-top:4px">2 séances marquées « ne pas facturer » ce mois-ci. <a href="#">Les afficher</a></p>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+    <div class="floatbar">
+      <span class="strong">5 séances sélectionnées</span><span class="muted">2 patients · 300,00 €</span>
+      <span class="spacer"></span>
+      <button class="btn ghost">Tout désélectionner</button>
+      <button class="btn primary">Créer 2 brouillons</button>
+    </div>
+  </div></div>
+  <p class="notes">Fiche 34, Structure 5 : mêmes lignes (44 px, case, date à chasse fixe, prestation, modalité et durée, montant, menu), sans regroupement, le patient en première colonne après la case ; même sélection que le premier cadre, rail et barre flottante inchangés. Route <code>?vue=date</code>. Écart : L5.2 rend les séances groupées par patient (groupes par nom affiché) et n'a pas de paramètre de vue ; l'ordre par date est donc refait par le client à partir de <code>occurredOn</code>, alors que la fiche veut « l'ordre de l'API ». La fiche ne dit pas où se place, dans cette vue, l'avertissement « Aucun tarif… » porté par l'en-tête de groupe : la ligne de Camille B. garde « à fixer » et une case inactive, sans avertissement.</p>
+
+  <h3>Rail avant toute sélection</h3>
+  <div class="frame"><div class="app" id="base-vide" data-url="psymate.app/facturation/a-facturer" data-sub="À facturer" style="--h: 900px">
+    <div class="mhead" data-tab="a-facturer"></div>
+    <div class="page">
+      <div class="quick">
+        <label class="check"><span class="box"></span>Tout sélectionner</label>
+        <div class="seg" role="group" aria-label="Regroupement" style="margin-left:8px">
+          <button aria-pressed="true">Par patient</button>
+          <button aria-pressed="false">Par date</button>
+        </div>
+        <span class="spacer"></span>
+        <span class="muted">Séances</span>
+        <div class="field">Jusqu'au 22 novembre 2026 <i data-i="calendar" class="caret"></i></div>
+      </div>
+
+      <div class="split" style="grid-template-columns: minmax(0,1fr) 300px">
+        <div>
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box"></span><span class="av sm">HR</span>
+              <div><div class="strong">Hélène R.</div><div class="s muted">60,00 € la séance</div></div>
+              <div class="tot"><span class="muted">2 séances</span><span class="strong num">120,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr><td><span class="box"></span></td><td class="mono s" style="width:150px">jeu. 05/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr><td><span class="box"></span></td><td class="mono s">jeu. 12/11/2026</td><td>Séance <span class="sub">· visio · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box"></span><span class="av sm">LM</span>
+              <div><div class="strong">Léa M.</div><div class="s muted">60,00 € la séance · dernière facture : F-2026-0144, octobre</div></div>
+              <div class="tot"><span class="muted">3 séances</span><span class="strong num">180,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr><td><span class="box"></span></td><td class="mono s" style="width:150px">lun. 02/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr><td><span class="box"></span></td><td class="mono s">lun. 09/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+              <tr><td><span class="box"></span></td><td class="mono s">lun. 16/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel">
+            <div class="grp-head">
+              <span class="box off"></span><span class="av sm">CB</span>
+              <div><div class="strong">Camille B.</div><div class="s" style="color:var(--warning)"><i data-i="alert"></i> Aucun tarif pour ce patient ni pour une séance de couple</div></div>
+              <div class="tot"><span class="muted">1 séance</span><a href="07-reglages.html" class="btn sm ghost">Renseigner le tarif</a></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr><td><span class="box off"></span></td><td class="mono s" style="width:150px">sam. 21/11/2026</td><td>Séance de couple <span class="sub">· cabinet · 75 min</span></td><td class="num muted">à fixer</td><td style="width:1%"><button class="icon-btn" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+          </div>
+
+          <div class="panel" style="position:relative">
+            <div class="grp-head">
+              <span class="box"></span><span class="av sm">PR</span>
+              <div><div class="strong">Paul R.</div><div class="s muted">60,00 € la séance · 1 brouillon en cours</div></div>
+              <div class="tot"><span class="muted">1 séance</span><span class="strong num">60,00 €</span><button class="btn sm outline">Facturer</button></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr class="pr-row"><td><span class="box"></span></td><td class="mono s" style="width:150px">mer. 04/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><button class="icon-btn pr-more" title="Plus"><i data-i="more"></i></button></td></tr>
+            </tbody></table>
+            <!-- Changement de tarif d'une séance (montré par le cadre « Changer le tarif ») -->
+            <div class="pop rate-pop" role="dialog" aria-label="Changer le tarif de cette séance" style="right: 12px; top: 100px">
+              <div><div class="strong">Changer le tarif de cette séance</div><div class="s muted">Paul R. · <span class="mono">mer. 04/11/2026</span></div></div>
+              <div class="mf"><label>Prestation</label>Séance<i data-i="down" class="suffix"></i></div>
+              <div>
+                <div class="mf focus"><label>Montant</label>50,00<span class="caretline"></span><span class="suffix">€</span></div>
+                <p class="hint">Tarif calculé : 60,00 €. <a href="#">Revenir au tarif calculé</a></p>
+              </div>
+              <div class="acts-row"><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></div>
+            </div>
+          </div>
+
+          <!-- Groupe d'un patient archivé (montré par le cadre « Groupe en lecture seule ») -->
+          <div class="panel grp-ro" role="region" aria-label="Samir B., patient archivé">
+            <div class="grp-head">
+              <span class="box off"></span><span class="av sm">SB</span>
+              <div><div><span class="strong">Samir B.</span><span class="chip">Patient archivé</span></div><div class="s muted">60,00 € la séance</div></div>
+              <div class="tot"><span class="muted">1 séance</span><span class="strong num">60,00 €</span></div>
+            </div>
+            <table class="table sess"><tbody>
+              <tr><td><span class="box off"></span></td><td class="mono s" style="width:150px">mar. 10/11/2026</td><td>Séance <span class="sub">· cabinet · 50 min</span></td><td class="num">60,00 €</td><td style="width:1%"><span class="icon-btn" aria-hidden="true"></span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+
+        <aside>
+          <div class="panel rail-box"><div class="pad">
+            <h2>Ce qui sera créé</h2>
+            <p class="s muted" style="margin:4px 0 10px">Une facture par patient, en brouillon. Vous les relisez avant de les émettre.</p>
+            <hr class="hair">
+            <p class="muted">Sélectionnez des séances pour préparer leurs factures.</p>
+          </div></div>
+          <div class="panel ecart-closed"><div class="pad">
+            <h2>Écartées</h2>
+            <p class="s muted" style="margin-top:4px">2 séances marquées « ne pas facturer » ce mois-ci. <a href="#">Les afficher</a></p>
+          </div></div>
+          <!-- Liste « Écartées » dépliée (montrée par le cadre « Écartées dépliée ») -->
+          <div class="panel ecart-open"><div class="pad">
+            <h2>Écartées</h2>
+            <p class="s muted" style="margin-top:4px">2 séances marquées « ne pas facturer » ce mois-ci. <a href="#">Les masquer</a></p>
+            <ul class="ecart" style="margin-top:8px">
+              <li><span class="strong">Théo M.</span><span class="num">60,00 €</span><span class="s muted" style="grid-column:1 / -1"><span class="mono">ven. 13/11/2026</span> · Séance · visio · 50 min</span><button class="btn sm ghost"><i data-i="undo"></i>Remettre à facturer</button></li>
+              <li><span class="strong">Nour K.</span><span class="num">60,00 €</span><span class="s muted" style="grid-column:1 / -1"><span class="mono">mar. 03/11/2026</span> · Séance · cabinet · 50 min</span><button class="btn sm ghost"><i data-i="undo"></i>Remettre à facturer</button></li>
+            </ul>
+          </div></div>
+        </aside>
+      </div>
+    </div>
+    <!-- Toast 409 PATIENT_ARCHIVED (montré par le cadre « Groupe en lecture seule ») -->
+    <div class="toast toast-ro" role="status"><i data-i="alert"></i><div>Samir B. est archivé : ses séances ne peuvent pas être facturées.</div></div>
+  </div></div>
+  <p class="notes">Fiche 34, Structure 3 : tant que rien n'est coché, le rail dit « Sélectionnez des séances pour préparer leurs factures. » ; ni liste, ni total ; la barre flottante n'existe pas (elle n'apparaît qu'à la première case cochée) ; « Tout sélectionner » est vide. Les cases de Camille B. sont inactives (sans tarif).</p>
+
+  <h3>Liste « Écartées » dépliée</h3>
+  <div class="frame"><div class="app v-ecart" data-clone="#base-vide" data-url="psymate.app/facturation/a-facturer" data-sub="À facturer" style="--h: 900px"></div></div>
+  <p class="notes">Fiche 34, Structure 3 : « Les afficher » déplie la liste dans le rail, chaque ligne avec « Remettre à facturer » (<code>POST /api/billing/billable-sessions/{sessionEntryId}/restore</code>, <code>204</code>, idempotent ; puis la liste et le compteur de l'onglet sont relus). Liste : <code>GET /api/billing/billable-sessions/dismissed</code> (L5.2), une ligne par séance : patient, date, prestation, modalité, durée, montant. « Les masquer » (replier la liste) n'est pas nommé par la fiche : libellé neutre. Écarts : la fiche compte les séances écartées « ce mois-ci », L5.2 rend celles des 90 derniers jours (<code>dismissedCount</code>) ; L5.2 dit « même forme sans regroupement » sans dire où est le patient de chaque séance (la ligne en a besoin). <code>409 SESSION_ALREADY_INVOICED</code> sur <code>/restore</code> : toast et relecture, comme ailleurs dans la fiche.</p>
+
+  <h3>Changer le tarif d'une séance</h3>
+  <div class="frame"><div class="app v-rate" data-clone="#base-vide" data-url="psymate.app/facturation/a-facturer" data-sub="À facturer" style="--h: 1150px"></div></div>
+  <p class="notes">Fiche 34, Interactions : menu de la séance → « Changer le tarif de cette séance ». <code>PATCH /api/billing/billable-sessions/{sessionEntryId}</code> <code>{ amount?, serviceId? }</code> (L5.2) : la prestation (liste de <code>GET /api/me/billing-services</code>) et le montant de cette séance seulement ; <code>null</code> rend le tarif calculé (« Revenir au tarif calculé » envoie <code>{ amount: null, serviceId: null }</code>). Puis la liste est relue (total du groupe, rail). La fiche ne donne aucun libellé pour ce champ : « Prestation », « Montant », « Tarif calculé : … », « Revenir au tarif calculé », « Annuler », « Enregistrer » sont des libellés neutres. Petite fenêtre ancrée sous la ligne (rayon <code>md</code>, ombre 16, comme le menu), sans voile.</p>
+
+  <h3>Groupe en lecture seule (patient archivé)</h3>
+  <div class="frame"><div class="app v-ro" data-clone="#base-vide" data-url="psymate.app/facturation/a-facturer" data-sub="À facturer" style="--h: 1100px"></div></div>
+  <p class="notes">Fiche 34, Interactions : <code>409 PATIENT_ARCHIVED</code> (à « Facturer » ou « Créer n brouillons », L5.3) → toast, le groupe passe en lecture seule ; il l'est d'emblée quand <code>group.patient.archived</code> est vrai (L5.2). Lecture seule : cases inactives, ni « Facturer », ni menu de séance. La puce « Patient archivé » reprend le libellé de la fiche 38 ; le texte du toast n'est pas donné par la fiche : phrase neutre.</p>
+
+  <h3>Sous 600 px</h3>
+  <div class="phone">
+    <div class="m-appbar"><i data-i="doc" class="lg"></i>Facturation<span class="spacer"></span><span class="av sm">CM</span></div>
+    <div class="m-tabs"><a href="#">Factures</a><a href="#" aria-current="page">À facturer <span class="badge">7</span></a><a href="#">Paiements</a></div>
+    <div class="m-page">
+      <div class="seg" style="display:flex;margin-bottom:8px"><button aria-pressed="true" style="flex:1">Par patient</button><button aria-pressed="false" style="flex:1">Par date</button></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <label class="check"><span class="box mixed"></span>Tout sélectionner</label>
+        <span class="spacer"></span>
+        <div class="field">Jusqu'au 22/11/2026 <i data-i="calendar" class="caret"></i></div>
+      </div>
+
+      <div class="m-grp">
+        <div class="gh"><span class="box on"></span><span class="av sm">HR</span><div><div class="strong">Hélène R.</div><div class="s muted">60,00 € la séance</div></div><div class="r"><div class="strong num">120,00 €</div><div class="s muted">2 séances</div></div></div>
+        <div class="m-row sel"><span class="box on"></span><div><div class="mono s">jeu. 05/11/2026</div><div class="s muted">Séance · visio · 50 min</div></div><span class="r num">60,00 €</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row sel"><span class="box on"></span><div><div class="mono s">jeu. 12/11/2026</div><div class="s muted">Séance · visio · 50 min</div></div><span class="r num">60,00 €</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row" style="justify-content:flex-end"><button class="btn sm outline">Facturer</button></div>
+      </div>
+
+      <div class="m-grp">
+        <div class="gh"><span class="box on"></span><span class="av sm">LM</span><div><div class="strong">Léa M.</div><div class="s muted">60,00 € la séance</div></div><div class="r"><div class="strong num">180,00 €</div><div class="s muted">3 séances</div></div></div>
+        <div class="m-row sel"><span class="box on"></span><div><div class="mono s">lun. 02/11/2026</div><div class="s muted">Séance · cabinet · 50 min</div></div><span class="r num">60,00 €</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row sel"><span class="box on"></span><div><div class="mono s">lun. 09/11/2026</div><div class="s muted">Séance · cabinet · 50 min</div></div><span class="r num">60,00 €</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row sel"><span class="box on"></span><div><div class="mono s">lun. 16/11/2026</div><div class="s muted">Séance · cabinet · 50 min</div></div><span class="r num">60,00 €</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row" style="justify-content:flex-end"><button class="btn sm outline">Facturer</button></div>
+      </div>
+
+      <div class="m-grp">
+        <div class="gh"><span class="box off"></span><span class="av sm">CB</span><div><div class="strong">Camille B.</div><div class="s" style="color:var(--warning)"><i data-i="alert"></i> Aucun tarif pour ce patient ni pour une séance de couple</div></div></div>
+        <div class="m-row"><span class="box off"></span><div><div class="mono s">sam. 21/11/2026</div><div class="s muted">Séance de couple · cabinet · 75 min</div></div><span class="r num muted">à fixer</span><button class="icon-btn" title="Plus"><i data-i="more"></i></button></div>
+        <div class="m-row" style="justify-content:flex-end"><a href="07-reglages.html" class="btn sm ghost">Renseigner le tarif</a></div>
+      </div>
+
+      <p class="s muted">2 séances marquées « ne pas facturer » ce mois-ci. <a href="#">Les afficher</a></p>
+    </div>
+    <div class="m-bottom" role="status">
+      <div style="display:flex;gap:8px;align-items:baseline;margin-bottom:8px"><span class="strong">5 séances sélectionnées</span><span class="spacer"></span><span class="muted">2 patients · 300,00 €</span></div>
+      <div style="display:flex;gap:8px"><button class="btn outline" style="flex:1">Tout désélectionner</button><button class="btn primary" style="flex:1">Créer 2 brouillons</button></div>
+    </div>
+  </div>
+  <p class="notes">Sous 600 px : une carte par patient, une ligne par séance (case, date, prestation, modalité et durée, montant, menu) ; « Par patient · Par date » sur toute la largeur. La barre flottante devient la barre du bas (mêmes textes, même rôle <code>status</code>). La fiche ne dit pas ce que devient le rail : la barre du bas porte déjà le nombre de patients et le total ; « Écartées » passe sous la liste ; la liste nominative « Ce qui sera créé » n'est pas reprise. « Facturer » et « Renseigner le tarif » passent au pied de la carte du groupe (la fiche ne les place pas à cette largeur).</p>
 
   <div class="pager"></div>
 </div>

@@ -2,7 +2,7 @@
 
 ## Ce que c'est
 Frontend de PsyMate, suivi clinique pour psychologues, psychiatres et coachs. Angular 22 standalone, zoneless, signaux, Angular Material 22 (M3), @ngrx/signals, pnpm. Parle uniquement à psymate-api par le contrat OpenAPI épinglé (CONTRACT_TAG).
-Documents de référence dans docs/ : README.md (ordre de lecture), B-ux.md, C-plan.md (C2, C6, C9, C10, C14), G-decisions.md, Etude-couleurs-Nordique.md, design/*.md (une fiche par écran), handbook/architecture-frontend.html, contract/openapi.yaml + api-reference.md, couverture-ecrans.md.
+Documents de référence dans docs/ : README.md (ordre de lecture), B-ux.md, C-plan.md (C2, C6, C9, C10, C13, C14), G-decisions.md, Etude-couleurs-Nordique.md, design/*.md (une fiche par écran), handbook/architecture-frontend.html, contract/openapi.yaml + api-reference.md, couverture-ecrans.md.
 G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 
 ## Commandes (utilise uniquement celles-ci)
@@ -17,7 +17,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - pnpm progress:log --task <ID> --agent frontend-feature-dev --status <done|review|blocked|merged> --summary "…" [--pr … --notes … --next …] : enregistre l'avancement (skill progress-log) ; pnpm progress : regénère docs/progress/index.html
 
 ## Architecture (règles non négociables, handbook §11)
-- Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, profile360, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
+- Une feature par contexte (auth, patients, patient-shell, overview, timeline, graph, entries, search, capture, profile360, agenda, billing, account, public, admin), lazy, avec un index.ts public. Aucun import de l'intérieur d'une autre feature. admin n'importe jamais une feature patient.
 - src/app/api est généré au tag CONTRACT_TAG et jamais édité. Seuls les fichiers data/*.api.ts l'importent. Changer de tag = une PR dédiée.
 - Six couches : page → composant UI → store → service de données → client généré → transport. Une couche ne parle qu'à celle du dessous.
 - Standalone, zoneless, OnPush, signaux. Pas de store RxJS maison ; RxJS seulement pour HTTP et événements DOM.
@@ -31,6 +31,7 @@ G l'emporte sur tout autre document ; le contrat l'emporte sur une fiche.
 - authorType en lecture seule, place réservée, jamais dessiné (A11). Agenda (G Q25 amendée le 15 nov. 2026) : feature `agenda`, rendu sur données de démonstration tant que le contrat ne porte pas l'agenda, aucune synchronisation Google. Signalements : aucune route (G Q26).
 - Profil 360 : feature profile360, fiche 30, docs/J-plan-profil-360-web.md ; titre et détail seulement, relecture après écriture.
 - Prise de rendez-vous en ligne : pages publiques dans public, réglages dans account, demandes dans agenda ; fiches 31 et 32, docs/K-plan-prise-de-rendez-vous.md ; rien du demandeur dans le navigateur (G Q62).
+- Facturation : feature billing, fiches 33 à 39, docs/L-plan-facturation.md ; montants en centimes venus de l'API, jamais additionnés à l'écran (G Q69).
 - Version arabe : docs/M-plan-version-arabe.md (jalon M16, G14 : Q71 tranchée, Q72 à Q81 proposées) ; propriétés logiques seulement, dir="auto" sur tout contenu saisi, locale de formatage de core/i18n, jamais LOCALE_ID dans Intl. Règles : docs/design/arabe.md ; termes : docs/design/arabe-glossaire.md. Aucune tâche M16 ne change le rendu de /fr/ ni de /en/ (hors contenu saisi en arabe, aligné par dir="auto") ; aucun sélecteur ne propose l'arabe avant M16-29.
 
 ## Conventions

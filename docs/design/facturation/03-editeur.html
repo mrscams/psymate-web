@@ -26,6 +26,30 @@
   .add { display: flex; gap: 14px; margin-top: 10px; }
   .who-card { display: flex; gap: 12px; align-items: center; }
   .sticky { position: sticky; top: 16px; }
+  /* États spécifiés par la fiche 35 (dessinés le 28 nov. 2026). */
+  .reveal { display: grid; gap: 20px; margin-top: 18px; padding-inline-start: 14px; border-inline-start: 2px solid var(--border-subtle); }
+  .paper .p-to .p-for { margin-top: 6px; color: var(--text-primary); }
+  .lines tr.focus-row .mf.focus { background: var(--surface-raised); }
+  .lines td .mf .ph { color: var(--text-disabled); }
+  .saved-err { display: inline-flex; align-items: center; gap: 6px; color: var(--danger); font: 600 12px/16px var(--font-ui); }
+  .add .off { color: var(--text-disabled); cursor: default; }
+  .add .off:hover { text-decoration: none; }
+  .addlist { position: absolute; z-index: 4; inset-inline-start: 44px; width: 460px; background: var(--surface-raised); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); box-shadow: var(--shadow-16); }
+  .addlist > header { padding: 10px 14px; border-block-end: 1px solid var(--border-subtle); }
+  .addlist > header b { display: block; font: 600 14px/20px var(--font-ui); }
+  .addlist > header span { font-size: 12px; line-height: 16px; color: var(--text-secondary); }
+  .addlist ul { padding: 4px; }
+  .addlist li { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 8px 10px; border-radius: var(--radius-md); }
+  .addlist li.on { background: var(--surface-ground); }
+  .addlist li .sub { display: block; font-size: 12px; line-height: 16px; color: var(--text-secondary); }
+  .paper .p-empty { color: var(--text-secondary); }
+  .paper .p-none td { color: var(--text-secondary); text-align: center; padding: 18px 0; }
+  .ed-head.wrap { flex-wrap: wrap; row-gap: 10px; }
+  .ed-head.wrap .right { margin-left: 0; margin-inline-start: auto; }
+  .ed.narrow { grid-template-columns: minmax(0, 1fr); }
+  .ed.narrow .panel + .panel { margin-top: 0; }
+  .fold { display: flex; align-items: center; gap: 10px; padding: 12px 18px; }
+  .fold .btn { margin-inline-start: auto; }
 </style>
 </head>
 <body>
@@ -110,7 +134,7 @@
       <footer><button class="btn outline">Annuler</button><button class="btn primary">Émettre</button></footer>
     </div>
   </div></div>
-  <p class="notes">Seule confirmation du module avec l'avoir : ce sont les deux gestes qu'on ne défait pas. Le numéro annoncé est celui que le serveur réserve ; si un autre appareil a émis entre-temps (409), le dialogue se met à jour avec le nouveau numéro et redemande la confirmation.</p>
+  <p class="notes">Seule confirmation du module avec l'avoir : ce sont les deux gestes qu'on ne défait pas. Le numéro annoncé est celui que le serveur réserve ; si un autre appareil a émis entre-temps (409), le dialogue se met à jour avec le nouveau numéro et redemande la confirmation. La case « Envoyer aussi par e-mail » n'est pas un champ de l'émission : le web appelle <code>POST /api/invoices/{id}/issue</code>, puis <code>POST /api/invoices/{id}/send</code> si elle est cochée (L5.5).</p>
 
   <h2>Quand l'émission est refusée</h2>
   <div class="two">
@@ -132,10 +156,378 @@
   <h2>Ce que l'écran affirme</h2>
   <ul class="bullets">
     <li><b>Deux temps, bien séparés.</b> Le brouillon se corrige librement et s'enregistre seul ; l'émission est un geste unique, nommé, confirmé.</li>
-    <li><b>La feuille est la vérité.</b> L'aperçu est le rendu du PDF, en clair même en thème sombre, avec le tampon « Brouillon » tant qu'il n'y a pas de numéro.</li>
+    <li><b>La feuille est la vérité.</b> L'aperçu est la feuille telle que le PDF la montrera, dessinée en HTML par le web depuis la facture lue (G Q70, pas de route d'aperçu), en clair même en thème sombre, avec le tampon « Brouillon » tant qu'il n'y a pas de numéro.</li>
     <li><b>« Déjà réglée » en un geste.</b> Le cas le plus courant en cabinet (le patient paie à la fin de la séance) ne demande pas de passer par le panneau de paiement.</li>
     <li><b>Le serveur juge.</b> Numéro, date d'émission, mentions obligatoires et total sont fixés par l'API à l'émission ; le client ne fait que vérifier la forme.</li>
   </ul>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>Facture adressée à une autre personne</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="--h: 1130px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1><span class="st draft">Brouillon</span>
+      <span class="muted s" role="status">Enregistré à 14:34</span>
+      <div class="right">
+        <button class="btn danger-outline">Supprimer le brouillon</button>
+        <button class="btn outline"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="ed">
+        <div class="panel">
+          <section class="sect">
+            <h2>Patient</h2>
+            <div class="mf"><label>Patient</label><span class="who-card"><span class="av sm">NK</span>Nour Khalil</span><i data-i="down" class="suffix"></i></div>
+            <p class="hint">Adresse de facturation : 8 avenue Parmentier, 75011 Paris · <a href="#">Modifier dans la fiche</a></p>
+            <label class="check" style="margin-top:12px"><span class="switch on"></span>Adresser la facture à une autre personne <span class="muted">(parent, employeur, organisme)</span></label>
+            <div class="reveal">
+              <div class="mf"><label>Nom du destinataire</label>Karim Khalil</div>
+              <div class="mf area focus" style="min-height:64px"><label>Adresse du destinataire</label><span>8 avenue Parmentier<br>75011 Paris<span class="caretline"></span></span></div>
+            </div>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations <span class="muted">2 lignes</span></h2>
+            <table class="lines">
+              <thead><tr><th style="width:104px">Date</th><th>Désignation</th><th style="width:44px">Qté</th><th style="width:92px">Prix unitaire</th><th style="width:76px" class="num">Montant</th><th style="width:32px"></th></tr></thead>
+              <tbody>
+                <tr><td><div class="mf mono s">12/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr><td><div class="mf mono s">19/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr class="tot"><td colspan="4">Total</td><td class="num" colspan="2" style="padding-right:40px">120,00 €</td></tr>
+              </tbody>
+            </table>
+            <div class="add"><a href="#"><i data-i="plus"></i> Ajouter une séance</a><a href="#"><i data-i="plus"></i> Ligne libre</a><a href="#"><i data-i="plus"></i> Remise</a></div>
+          </section>
+
+          <section class="sect">
+            <h2>Date et règlement</h2>
+            <div class="fgrid">
+              <div class="mf"><label>Date de la facture</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+              <div class="mf"><label>Échéance</label>À réception<i data-i="down" class="suffix"></i></div>
+            </div>
+            <label class="check" style="margin-top:16px"><span class="box"></span>Déjà réglée <span class="muted">· le patient a payé en séance</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Mention au bas de la facture <span class="muted">facultatif</span></h2>
+            <div class="mf area"><span class="ph">Par exemple : facture établie pour remboursement par votre mutuelle.</span></div>
+            <div class="banner neutral" style="margin:14px 0 0"><i data-i="lock"></i><div>Rien de clinique n'est repris sur la facture : seules la date et la désignation de la prestation y figurent.</div></div>
+          </section>
+        </div>
+
+        <div class="sticky">
+          <div class="paper-wrap"><div class="paper">
+            <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div><div class="p-title"><b>Facture</b><span class="mono">N° attribué à l'émission</span></div></div>
+            <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b>Karim Khalil</b><span>8 avenue Parmentier</span><span>75011 Paris</span><span class="p-for">Pour : Nour Khalil</span></div><dl><dt>Date</dt><dd>22 novembre 2026</dd><dt>Échéance</dt><dd>à réception</dd></dl></div>
+            <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead><tbody>
+              <tr><td class="mono">12/11/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr>
+              <tr><td class="mono">19/11/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr>
+            </tbody></table>
+            <div class="p-tot"><div class="big"><span>Total</span><span class="num">120,00 €</span></div></div>
+            <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p><p>Règlement par virement, chèque ou espèces.</p></div>
+            <span class="stamp draft">Brouillon</span>
+            <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+          </div></div>
+          <p class="notes" style="text-align:center">Aperçu. Le numéro est attribué à l'émission.</p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Interrupteur « Adresser la facture à une autre personne » activé : il révèle Nom et Adresse du destinataire (fiche 35, Structure 2). Chaque champ est enregistré à sa sortie par <code>PATCH /api/invoices/{id}</code> <code>{ recipient: { name, addressLines } }</code> (L5.3). La feuille porte le destinataire sous « Adressée à » et garde le patient en dessous, « Pour : Nour Khalil » : c'est <code>Invoice.recipient.patientName</code>, présent seulement quand le destinataire n'est pas le patient (L5.3). Le tiers enregistré dans le profil de facturation du patient (<code>thirdPartyName</code>, <code>thirdPartyAddress</code>, L5.1) préremplit ces champs. « Karim Khalil » est un nom fictif ajouté pour l'exemple ; les libellés « Nom du destinataire » et « Adresse du destinataire » reprennent les mots de la fiche.</p>
+
+  <h3>« Déjà réglée » cochée</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="--h: 1000px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1><span class="st draft">Brouillon</span>
+      <span class="muted s" role="status">Enregistré à 14:32</span>
+      <div class="right">
+        <button class="btn danger-outline">Supprimer le brouillon</button>
+        <button class="btn outline"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="ed">
+        <div class="panel">
+          <section class="sect">
+            <h2>Patient</h2>
+            <div class="mf"><label>Patient</label><span class="who-card"><span class="av sm">NK</span>Nour Khalil</span><i data-i="down" class="suffix"></i></div>
+            <p class="hint">Adresse de facturation : 8 avenue Parmentier, 75011 Paris · <a href="#">Modifier dans la fiche</a></p>
+            <label class="check" style="margin-top:12px"><span class="switch"></span>Adresser la facture à une autre personne <span class="muted">(parent, employeur, organisme)</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations <span class="muted">2 lignes</span></h2>
+            <table class="lines">
+              <thead><tr><th style="width:104px">Date</th><th>Désignation</th><th style="width:44px">Qté</th><th style="width:92px">Prix unitaire</th><th style="width:76px" class="num">Montant</th><th style="width:32px"></th></tr></thead>
+              <tbody>
+                <tr><td><div class="mf mono s">12/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr><td><div class="mf mono s">19/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr class="tot"><td colspan="4">Total</td><td class="num" colspan="2" style="padding-right:40px">120,00 €</td></tr>
+              </tbody>
+            </table>
+            <div class="add"><a href="#"><i data-i="plus"></i> Ajouter une séance</a><a href="#"><i data-i="plus"></i> Ligne libre</a><a href="#"><i data-i="plus"></i> Remise</a></div>
+          </section>
+
+          <section class="sect">
+            <h2>Date et règlement</h2>
+            <div class="fgrid">
+              <div class="mf"><label>Date de la facture</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+              <div class="mf"><label>Échéance</label>À réception<i data-i="down" class="suffix"></i></div>
+            </div>
+            <label class="check" style="margin-top:16px"><span class="box on"></span>Déjà réglée <span class="muted">· le patient a payé en séance</span></label>
+            <div class="reveal">
+              <div class="fgrid three">
+                <div class="mf"><label>Mode de paiement</label><i data-i="cash"></i>Espèces<i data-i="down" class="suffix"></i></div>
+                <div class="mf"><label>Reçu le</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+                <div class="mf"><label>Référence (facultatif)</label></div>
+              </div>
+            </div>
+            <p class="hint">La facture sera émise acquittée.</p>
+          </section>
+
+          <section class="sect">
+            <h2>Mention au bas de la facture <span class="muted">facultatif</span></h2>
+            <div class="mf area"><span class="ph">Par exemple : facture établie pour remboursement par votre mutuelle.</span></div>
+            <div class="banner neutral" style="margin:14px 0 0"><i data-i="lock"></i><div>Rien de clinique n'est repris sur la facture : seules la date et la désignation de la prestation y figurent.</div></div>
+          </section>
+        </div>
+
+        <div class="sticky">
+          <div class="paper-wrap"><div class="paper" data-inv="draft"></div></div>
+          <p class="notes" style="text-align:center">Aperçu. Le numéro est attribué à l'émission.</p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Case « Déjà réglée » cochée : elle révèle Mode de paiement et Reçu le (fiche 35, Structure 2). Ces valeurs partent avec l'émission : <code>POST /api/invoices/{id}/issue</code> <code>{ expectedNumber, alreadyPaid: { mode, receivedOn, reference? } }</code> (L5.3) ; la facture est alors émise <i>Payée</i> et un paiement entre au journal. La liste des modes est celle des réglages (<code>issuer.acceptedModes</code>, L5.3) ; Reçu le vaut aujourd'hui par défaut, une date future est refusée (<code>422</code> par champ, sous le champ). « Référence (facultatif) » est le champ <code>reference</code> de L5, absent de la fiche : libellé neutre ajouté ici. L'aperçu ne change pas avant l'émission : le tampon « Acquittée » n'apparaît que sur la facture émise (fiche 36). Écart : la fiche fait relire <code>alreadyPaid</code> dans <code>GET /api/invoices/{id}</code>, L5 ne le porte que dans le corps de <code>/issue</code> ; l'état de la case n'est donc pas enregistré avec le brouillon.</p>
+
+  <h3>« Ajouter une séance » : séances non facturées de ce patient</h3>
+  <div class="frame"><div class="app" data-clone="#editeur" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="--h: 1010px">
+    <div class="addlist" role="dialog" aria-label="Séances non facturées de Nour Khalil" style="top: 475px">
+      <header><b>Séances non facturées</b><span>Nour Khalil · 2 séances</span></header>
+      <ul>
+        <li class="on"><span class="mono s">jeu. 29/10/2026</span><span>Séance de psychothérapie<span class="sub">cabinet · 50 min</span></span><span class="num">60,00 €</span></li>
+        <li><span class="mono s">jeu. 05/11/2026</span><span>Séance de psychothérapie<span class="sub">cabinet · 50 min</span></span><span class="num">60,00 €</span></li>
+      </ul>
+    </div>
+  </div></div>
+  <p class="notes">« Ajouter une séance » ouvre la liste des séances non facturées de ce patient (fiche 35, Structure 2) : <code>GET /api/billing/billable-sessions?patientId=</code> (L5.2), état <code>pending</code> seulement, par date. Chaque ligne montre <code>occurredOn</code>, <code>serviceLabel</code>, <code>modality</code> et <code>durationMin</code>, et <code>amount</code> quand un tarif existe ; rien d'autre de la séance (ni titre, ni note). Choisir une séance l'ajoute aux lignes par <code>PATCH /api/invoices/{id}</code> <code>{ lines }</code> (remplacement complet, la nouvelle ligne avec son <code>sessionEntryId</code>), puis la liste se referme ; la forme de cette liste (une liste déroulante sous le lien, un choix par clic) est un dessin proposé, la fiche ne la précise pas. Les dates du 29 octobre et du 5 novembre sont fictives. Une séance déjà facturée entre-temps renvoie <code>409 SESSION_ALREADY_INVOICED</code> : la ligne est signalée avec « Retirer la ligne » (fiche 35, Interactions).</p>
+
+  <h3>Ligne de remise</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="--h: 990px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1><span class="st draft">Brouillon</span>
+      <span class="muted s" role="status">Enregistré à 14:36</span>
+      <div class="right">
+        <button class="btn danger-outline">Supprimer le brouillon</button>
+        <button class="btn outline"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="ed">
+        <div class="panel">
+          <section class="sect">
+            <h2>Patient</h2>
+            <div class="mf"><label>Patient</label><span class="who-card"><span class="av sm">NK</span>Nour Khalil</span><i data-i="down" class="suffix"></i></div>
+            <p class="hint">Adresse de facturation : 8 avenue Parmentier, 75011 Paris · <a href="#">Modifier dans la fiche</a></p>
+            <label class="check" style="margin-top:12px"><span class="switch"></span>Adresser la facture à une autre personne <span class="muted">(parent, employeur, organisme)</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations <span class="muted">3 lignes</span></h2>
+            <table class="lines">
+              <thead><tr><th style="width:104px">Date</th><th>Désignation</th><th style="width:44px">Qté</th><th style="width:92px">Prix unitaire</th><th style="width:76px" class="num">Montant</th><th style="width:32px"></th></tr></thead>
+              <tbody>
+                <tr><td><div class="mf mono s">12/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr><td><div class="mf mono s">19/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr class="focus-row"><td><div class="mf mono s"><span class="ph">—</span></div></td><td><div class="mf">Remise</div></td><td><div class="mf">1</div></td><td><div class="mf focus">− 10,00<span class="suffix">€</span></div></td><td class="num">− 10,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr class="tot"><td colspan="4">Total</td><td class="num" colspan="2" style="padding-right:40px">110,00 €</td></tr>
+              </tbody>
+            </table>
+            <div class="add"><a href="#"><i data-i="plus"></i> Ajouter une séance</a><a href="#"><i data-i="plus"></i> Ligne libre</a><a href="#"><i data-i="plus"></i> Remise</a></div>
+            <p class="hint">Remise : un montant déduit du total, saisi comme un prix unitaire négatif.</p>
+          </section>
+
+          <section class="sect">
+            <h2>Date et règlement</h2>
+            <div class="fgrid">
+              <div class="mf"><label>Date de la facture</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+              <div class="mf"><label>Échéance</label>À réception<i data-i="down" class="suffix"></i></div>
+            </div>
+            <label class="check" style="margin-top:16px"><span class="box"></span>Déjà réglée <span class="muted">· le patient a payé en séance</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Mention au bas de la facture <span class="muted">facultatif</span></h2>
+            <div class="mf area"><span class="ph">Par exemple : facture établie pour remboursement par votre mutuelle.</span></div>
+            <div class="banner neutral" style="margin:14px 0 0"><i data-i="lock"></i><div>Rien de clinique n'est repris sur la facture : seules la date et la désignation de la prestation y figurent.</div></div>
+          </section>
+        </div>
+
+        <div class="sticky">
+          <div class="paper-wrap"><div class="paper">
+            <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div><div class="p-title"><b>Facture</b><span class="mono">N° attribué à l'émission</span></div></div>
+            <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b>Nour Khalil</b><span>8 avenue Parmentier</span><span>75011 Paris</span></div><dl><dt>Date</dt><dd>22 novembre 2026</dd><dt>Échéance</dt><dd>à réception</dd></dl></div>
+            <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead><tbody>
+              <tr><td class="mono">12/11/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr>
+              <tr><td class="mono">19/11/2026</td><td>Séance de psychothérapie</td><td class="num">1</td><td class="num">60,00 €</td><td class="num">60,00 €</td></tr>
+              <tr><td class="mono"></td><td>Remise</td><td class="num">1</td><td class="num">− 10,00 €</td><td class="num">− 10,00 €</td></tr>
+            </tbody></table>
+            <div class="p-tot"><div class="big"><span>Total</span><span class="num">110,00 €</span></div></div>
+            <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p><p>Règlement par virement, chèque ou espèces.</p></div>
+            <span class="stamp draft">Brouillon</span>
+            <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+          </div></div>
+          <p class="notes" style="text-align:center">Aperçu. Le numéro est attribué à l'émission.</p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">« Remise » ajoute une ligne négative (fiche 35, Structure 2) : désignation « Remise », sans date, quantité 1, prix unitaire négatif, enregistrée comme les autres lignes par <code>PATCH /api/invoices/{id}</code> <code>{ lines }</code> (L5.3) ; le total affiché (110,00 €) est celui que l'API renvoie. Seul le montant est dessiné : L5 ne connaît qu'un <code>unitPrice</code> par ligne, pas de champ <code>discount</code> ; le pourcentage que cite la fiche est absent du contrat (L5), hors M15. La phrase d'aide sous les liens est ajoutée ici, faute de libellé dans la fiche. Écart : L5 ne marque pas une ligne comme remise (pas de <code>kind</code>) ; la règle « prix négatif refusé hors remise » de la fiche ne peut donc s'appuyer que sur la désignation, à trancher côté API.</p>
+
+  <h3>« Non enregistré »</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="--h: 60px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1><span class="st draft">Brouillon</span>
+      <span class="saved-err" role="status"><i data-i="alert"></i>Non enregistré</span><button class="btn sm ghost">Réessayer</button>
+      <div class="right">
+        <button class="btn danger-outline">Supprimer le brouillon</button>
+        <button class="btn outline"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Échec d'un enregistrement automatique (réseau, <code>5xx</code>) : « Non enregistré » et « Réessayer » prennent la place de « Enregistré à … », dans la même région <code>role="status"</code> (fiche 35, Interactions et Accessibilité). « Réessayer » renvoie le dernier <code>PATCH /api/invoices/{id}</code> ; le champ garde sa valeur saisie. Une erreur <code>422</code> se pose sous son champ et ne passe pas par cet état ; <code>409 INVOICE_ISSUED</code> redirige vers la facture. Seule la barre est dessinée : le reste de l'éditeur est inchangé.</p>
+
+  <h3>Éditeur vide : <code>/facturation/nouvelle</code></h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/nouvelle" data-sub="Nouvelle facture" style="--h: 900px">
+    <div class="ed-head">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1>
+      <div class="right">
+        <button class="btn danger-outline" aria-disabled="true">Supprimer le brouillon</button>
+        <button class="btn outline" aria-disabled="true"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="ed">
+        <div class="panel">
+          <section class="sect">
+            <h2>Patient</h2>
+            <div class="mf focus"><label>Patient</label><span class="ph">Choisir un patient</span><span class="caretline" style="margin-left:-6px"></span><i data-i="down" class="suffix"></i></div>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations</h2>
+            <table class="lines">
+              <thead><tr><th style="width:104px">Date</th><th>Désignation</th><th style="width:44px">Qté</th><th style="width:92px">Prix unitaire</th><th style="width:76px" class="num">Montant</th><th style="width:32px"></th></tr></thead>
+            </table>
+            <div class="add"><a class="off" aria-disabled="true"><i data-i="plus"></i> Ajouter une séance</a><a href="#"><i data-i="plus"></i> Ligne libre</a><a href="#"><i data-i="plus"></i> Remise</a></div>
+          </section>
+
+          <section class="sect">
+            <h2>Date et règlement</h2>
+            <div class="fgrid">
+              <div class="mf"><label>Date de la facture</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+              <div class="mf"><label>Échéance</label>À réception<i data-i="down" class="suffix"></i></div>
+            </div>
+            <label class="check" style="margin-top:16px"><span class="box"></span>Déjà réglée <span class="muted">· le patient a payé en séance</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Mention au bas de la facture <span class="muted">facultatif</span></h2>
+            <div class="mf area"><span class="ph">Par exemple : facture établie pour remboursement par votre mutuelle.</span></div>
+            <div class="banner neutral" style="margin:14px 0 0"><i data-i="lock"></i><div>Rien de clinique n'est repris sur la facture : seules la date et la désignation de la prestation y figurent.</div></div>
+          </section>
+        </div>
+
+        <div class="sticky">
+          <div class="paper-wrap"><div class="paper">
+            <div class="p-head"><div class="p-who"><b>Claire Moreau</b><span>Psychologue clinicienne</span><span>12 rue des Lilas, 75011 Paris</span><span>N° ADELI 75 93 0000 0</span><span>SIRET 000 000 000 00000</span></div><div class="p-title"><b>Facture</b><span class="mono">N° attribué à l'émission</span></div></div>
+            <div class="p-meta"><div class="p-to"><div class="p-k">Adressée à</div><b class="p-empty">—</b></div><dl><dt>Date</dt><dd>22 novembre 2026</dd><dt>Échéance</dt><dd>à réception</dd></dl></div>
+            <table><thead><tr><th>Date</th><th>Désignation</th><th class="num">Qté</th><th class="num">Prix unitaire</th><th class="num">Montant</th></tr></thead><tbody>
+              <tr class="p-none"><td colspan="5">—</td></tr>
+            </tbody></table>
+            <div class="p-legal"><p>TVA non applicable, article 261-4-1° du Code général des impôts.</p><p>Règlement par virement, chèque ou espèces.</p></div>
+            <span class="stamp draft">Brouillon</span>
+            <div class="p-foot">Claire Moreau · Psychologue clinicienne · claire.moreau@example.test · 01 00 00 00 00</div>
+          </div></div>
+          <p class="notes" style="text-align:center">Aperçu. Le numéro est attribué à l'émission.</p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes"><code>/facturation/nouvelle</code> sans <code>?patient=</code> : aucun brouillon côté serveur, aucun <code>POST</code> tant qu'aucun patient n'est choisi (fiche 35, Route et critère 1). Choisir le patient envoie <code>POST /api/invoices</code> <code>{ patientId, lines? }</code> (L5.3) et remplace l'URL par <code>/facturation/brouillons/:id</code> ; quitter avant perd la saisie sans avertissement. Date de la facture : aujourd'hui ; Échéance : le défaut des réglages (<code>payment.dueTerm</code>, L5.1). Pas de statut ni de « Enregistré à » puisque rien n'est enregistré ; « Supprimer le brouillon » et « Aperçu PDF » (<code>GET /api/invoices/{id}/pdf</code>) n'ont pas encore de brouillon et restent inactifs, « Ajouter une séance » attend le patient (<code>?patientId=</code>) : ces trois états inactifs sont un dessin proposé, la fiche ne les décrit pas. « Émettre la facture » reste actif et redit les erreurs de forme (patient absent, aucune ligne). L'aperçu est dessiné par le web (L5.5) : sans facture, seuls l'en-tête du praticien (réglages, <code>GET /api/me/billing-settings</code>), les dates et les mentions sont connus ; destinataire et lignes restent vides, pas de total tant que l'API n'en a pas renvoyé.</p>
+
+  <h3>Sous 900 px</h3>
+  <div class="frame"><div class="app" data-url="psymate.app/facturation/brouillons/8f2c" data-sub="Nouvelle facture" style="width: 860px; --h: 1040px">
+    <div class="ed-head wrap">
+      <a class="icon-btn" href="01-factures.html" title="Retour aux factures"><i data-i="left"></i></a>
+      <h1>Nouvelle facture</h1><span class="st draft">Brouillon</span>
+      <span class="muted s" role="status">Enregistré à 14:32</span>
+      <div class="right">
+        <button class="btn danger-outline">Supprimer le brouillon</button>
+        <button class="btn outline"><i data-i="download"></i>Aperçu PDF</button>
+        <button class="btn primary">Émettre la facture</button>
+      </div>
+    </div>
+    <div class="page">
+      <div class="ed narrow">
+        <div class="panel">
+          <section class="sect">
+            <h2>Patient</h2>
+            <div class="mf"><label>Patient</label><span class="who-card"><span class="av sm">NK</span>Nour Khalil</span><i data-i="down" class="suffix"></i></div>
+            <p class="hint">Adresse de facturation : 8 avenue Parmentier, 75011 Paris · <a href="#">Modifier dans la fiche</a></p>
+            <label class="check" style="margin-top:12px"><span class="switch"></span>Adresser la facture à une autre personne <span class="muted">(parent, employeur, organisme)</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Prestations <span class="muted">2 lignes</span></h2>
+            <table class="lines">
+              <thead><tr><th style="width:120px">Date</th><th>Désignation</th><th style="width:56px">Qté</th><th style="width:110px">Prix unitaire</th><th style="width:90px" class="num">Montant</th><th style="width:32px"></th></tr></thead>
+              <tbody>
+                <tr><td><div class="mf mono s">12/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr><td><div class="mf mono s">19/11/2026</div></td><td><div class="mf">Séance de psychothérapie<i data-i="down" class="suffix"></i></div></td><td><div class="mf">1</div></td><td><div class="mf">60,00<span class="suffix">€</span></div></td><td class="num">60,00 €</td><td><button class="icon-btn" title="Retirer la ligne"><i data-i="close"></i></button></td></tr>
+                <tr class="tot"><td colspan="4">Total</td><td class="num" colspan="2" style="padding-right:40px">120,00 €</td></tr>
+              </tbody>
+            </table>
+            <div class="add"><a href="#"><i data-i="plus"></i> Ajouter une séance</a><a href="#"><i data-i="plus"></i> Ligne libre</a><a href="#"><i data-i="plus"></i> Remise</a></div>
+            <p class="hint">Les deux lignes viennent des séances du 12 et du 19 novembre. Retirer une ligne renvoie la séance dans « À facturer ».</p>
+          </section>
+
+          <section class="sect">
+            <h2>Date et règlement</h2>
+            <div class="fgrid">
+              <div class="mf"><label>Date de la facture</label><span class="mono">22/11/2026</span><i data-i="calendar" class="suffix"></i></div>
+              <div class="mf"><label>Échéance</label>À réception<i data-i="down" class="suffix"></i></div>
+            </div>
+            <label class="check" style="margin-top:16px"><span class="box"></span>Déjà réglée <span class="muted">· le patient a payé en séance</span></label>
+          </section>
+
+          <section class="sect">
+            <h2>Mention au bas de la facture <span class="muted">facultatif</span></h2>
+            <div class="mf area"><span class="ph">Par exemple : facture établie pour remboursement par votre mutuelle.</span></div>
+            <div class="banner neutral" style="margin:14px 0 0"><i data-i="lock"></i><div>Rien de clinique n'est repris sur la facture : seules la date et la désignation de la prestation y figurent.</div></div>
+          </section>
+        </div>
+
+        <div class="panel fold">
+          <i data-i="doc" class="lg muted"></i><span class="muted">Aperçu. Le numéro est attribué à l'émission.</span>
+          <button class="btn outline" aria-expanded="false">Voir l'aperçu<i data-i="down"></i></button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Sous 900 px, l'aperçu passe sous la saisie, replié derrière « Voir l'aperçu » (fiche 35, Accessibilité) ; déplié, la même feuille s'affiche en pleine largeur à cet endroit. La barre de l'éditeur passe sur deux rangs, les trois actions gardent leur ordre. Le bouton porte <code>aria-expanded</code>. La légende de l'aperçu reprend celle de la version large.</p>
 
   <div class="pager"></div>
 </div>

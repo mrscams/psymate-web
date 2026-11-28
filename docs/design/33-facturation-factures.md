@@ -1,8 +1,8 @@
 # Écran 33 · Facturation · Factures (liste et cadre du module)
 
-> **Périmètre tranché par l'utilisateur le 22 novembre 2026 : G Q67**, huit points, rappelés ci-dessous et dans `facturation/index.html` (« Décisions du 22 novembre 2026 »). Le contrat (`contract-v0.14.0`) n'a aucune route de facturation : les routes, champs et codes d'erreur écrits ici sont ce que l'écran attend ; le contrat, une fois écrit, l'emportera. Rien de cette fiche ne s'implémente avant lui. Plan de réalisation (jalon M15, contrat visé, tâches API et web) : `docs/L-plan-facturation.md` ; là où L5 et cette fiche diffèrent (L5.5), L5 l'emporte.
+> **Périmètre tranché par l'utilisateur le 22 novembre 2026 : G Q67**, huit points, rappelés ci-dessous et dans `facturation/index.html` (« Décisions du 22 novembre 2026 »). Contrat visé : L5 de `docs/L-plan-facturation.md` (`contract-v0.17.0`, posé par M15-12) ; la section « Route & API » le suit depuis M15-13. Le contrat fusionné (`docs/api-reference.md`, tiré par M15-14) l'emporte : l'écran note tout écart dans sa PR et corrige la fiche. Plan de réalisation (jalon M15, tâches API et web) : `docs/L-plan-facturation.md`. Décisions du web : G Q68 (feature `billing`), Q69 (montants en centimes venus de l'API, jamais additionnés à l'écran), Q70 (feuille dessinée en HTML).
 
-> Spécification pour agents. Maquette : `facturation/01-factures.html` ; captures : `facturation/captures/01-factures-1.png` (liste), `-2.png` (mobile), variantes `-dark`. Habillage : celui de l'application, par les tokens de `src/theme/tokens.css` (les maquettes sont dessinées avec les valeurs Fluent 2, G Q59, qui ne sont pas encore sur `main` : on en reprend les noms de tokens, jamais une valeur). La barre d'application, le rail et le panneau latéral sont les composants partagés tels qu'ils existent (fiche 00), pas ceux dessinés dans la maquette. Cette fiche porte aussi le cadre commun aux fiches 34 à 39.
+> Spécification pour agents. Maquette : `facturation/01-factures.html` ; captures : `facturation/captures/01-factures-1.png` à `-7.png`, variantes `-dark` (liste en fin de fiche). Habillage : celui de l'application, par les tokens de `src/theme/tokens.css` (depuis M15-13, les maquettes en reprennent les valeurs ; un écran emploie les noms de tokens, jamais une valeur écrite en dur). La barre d'application, le rail et le panneau latéral sont les composants partagés tels qu'ils existent (fiche 00), pas ceux dessinés dans la maquette. Cette fiche porte aussi le cadre commun aux fiches 34 à 39.
 
 ## Objectif
 Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien ai-je encaissé ce mois-ci, qui me doit encore quelque chose, que me reste-t-il à facturer. Puis retrouver une facture et agir dessus sans l'ouvrir quand c'est possible.
@@ -20,7 +20,7 @@ Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien
 ## Cadre du module (commun aux fiches 33 à 39)
 - Feature Angular `billing`, chargée à la demande, avec son `index.ts` ; habillage praticien ; `contentWidth: 'full'`. `admin` ne l'importe jamais.
 - Entrée : carreau « Facture » du rail (`shared/ui/nav-rail`), actif sur `/facturation/**`. Lui donner sa route est une tâche de socle dédiée. Le libellé du carreau ne change pas ; le titre de la page est « Facturation ».
-- **En-tête de module** : bande `surface-raised` identique à l'en-tête patient. Titre « Facturation », bouton plein « Nouvelle facture » (touche `N`) à droite, puis une ligne d'onglets Fluent : **Factures** (`/facturation`), **À facturer** (`/facturation/a-facturer`, fiche 34, avec un compteur si supérieur à zéro), **Paiements** (`/facturation/paiements`, fiche 37) et, au bout de la ligne à droite, **Réglages** (`/facturation/reglages`, fiche 39). Sur Réglages, pas de bouton « Nouvelle facture ».
+- **En-tête de module** : bande `surface-raised` identique à l'en-tête patient. Titre « Facturation », bouton plein « Nouvelle facture » (touche `N`) à droite, puis une ligne d'onglets (même dessin que ceux de l'en-tête patient) : **Factures** (`/facturation`), **À facturer** (`/facturation/a-facturer`, fiche 34, avec un compteur si supérieur à zéro), **Paiements** (`/facturation/paiements`, fiche 37) et, au bout de la ligne à droite, **Réglages** (`/facturation/reglages`, fiche 39). Sur Réglages, pas de bouton « Nouvelle facture ».
 - Autres routes : `/facturation/nouvelle` et `/facturation/brouillons/:id` (éditeur, fiche 35) ; `/facturation/:numero` (facture émise ou avoir, fiche 36), déclarée après les routes fixes. Aucune route sous le dossier patient : `/facturation?patient=:id` en tient lieu (fiche 38).
 - **Statuts** (une icône et un mot, jamais la couleur seule) :
 
@@ -35,17 +35,19 @@ Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien
 | Avoir | le document d'avoir lui-même | contour `border-strong`, `text-secondary`, flèche de retour |
 
 - **Règles communes.** Rien de clinique sur un document comptable (une ligne porte une date et une désignation). Rien de comptable dans le clinique (aucun montant ni statut de paiement hors du module ; seule exception, la ligne « Facturation » de la fiche patient, fiche 38). Une facture émise ne se modifie ni ne se supprime : elle se corrige par un avoir. Numéro, date d'émission, totaux, reste dû, statut et chiffres du bandeau viennent du serveur. Après une écriture, on relit ; on ne recalcule pas.
-- Montants : `Intl.NumberFormat` de la locale, devise EUR, alignés à droite, chiffres tabulaires. Numéros et dates : police à chasse fixe. Dates en UTC en transit.
+- Montants : centimes entiers de l'API (G Q69), affichés par `data/money.ts` (`Intl.NumberFormat` avec la locale de formatage de `core/i18n`), devise EUR, alignés à droite, chiffres tabulaires. Numéros et dates : police à chasse fixe. Dates en UTC en transit.
 
-## Route & API attendue
-- Route : `/facturation`. État dans l'URL : `?statut=draft | due | late | paid | credit` (absent = toutes), `?q=`, `?depuis=AAAA-MM`, `?patient=:id` (liste filtrée sur un patient : puce de filtre, carte du patient à la place du bandeau, colonne Patient masquée ; détail en fiche 38).
-- `GET /api/billing/summary` → `{ collectedThisMonth, paymentCount, outstanding, outstandingCount, overdue, overdueCount, oldestOverdueDays, billableCount, billableAmount, billableWithoutRate }`.
-- `GET /api/invoices?status=&q=&from=&patientId=&cursor=` → `{ items: [{ id, kind: invoice | credit_note, number?, status, overdue, overdueDays?, patient: { id, displayName }, issuedOn?, dueOn?, subject, total, balanceDue, paidWith?, creditNoteNumber?, cancelsNumber? }], nextCursor? }`. Ordre du serveur : brouillons d'abord, puis par date d'émission décroissante. **Le client ne retrie pas.**
-- Actions de ligne : `DELETE /api/invoices/{id}` (brouillon seulement), `GET /api/invoices/{id}/pdf`, et les panneaux des fiches 35 et 36.
+## Route & API
+- Route : `/facturation`. État dans l'URL : `?statut=draft | due | late | paid | credit` (absent = toutes), `?q=`, `?depuis=AAAA-MM`, `?patient=:id` (liste filtrée sur un patient : puce de filtre, carte du patient à la place du bandeau, colonne Patient masquée ; détail en fiche 38). Passage à l'API : `draft`, `due`, `paid` → `status=` ; `late` → `overdue=true` ; `credit` → `kind=credit_note` ; `?depuis=` → `from=` (premier jour du mois) ; `?patient=` → `patientId=` ; `?q=` → `q=` (deux caractères au moins, numéro ou nom affiché).
+- `GET /api/billing/summary` → `{ month, collected, paymentCount, outstanding, outstandingCount, overdue, overdueCount, oldestOverdueDays?, billableCount, billableAmount, billableWithoutRate }` (montants en centimes ; `month` nomme le mois de « Encaissé en {mois} »).
+- `GET /api/invoices?status=&overdue=&kind=&patientId=&q=&from=&cursor=` → `{ items: [InvoiceSummary], nextCursor? }`, avec `InvoiceSummary = { id, kind: invoice | credit_note, number?, status: draft | due | partial | paid | void (issued pour un avoir), overdue, overdueDays?, patient: { id, displayName }, issueDate, dueOn?, subject: { sessionCount, firstOn?, lastOn?, label? }, total, balanceDue, lastPaymentMode?, creditNoteNumber?, cancelsNumber? }`. Ordre du serveur : brouillons d'abord, puis date d'émission décroissante. **Le client ne retrie pas.**
+- Statut affiché (table ci-dessus) : `kind = credit_note` → Avoir ; `draft` → Brouillon ; `void` → Annulée ; `overdue = true` → En retard (avec `overdueDays`) ; sinon `due` → À régler, `partial` → Payée en partie, `paid` → Payée (avec `lastPaymentMode`). Objet : « n séances · dates » depuis `subject.sessionCount`, `firstOn`, `lastOn`, ou `subject.label` ; avoir : « Avoir · annule {cancelsNumber} » ; annulée : `creditNoteNumber` à côté du statut.
+- Actions de ligne : `DELETE /api/invoices/{id}` (brouillon seulement, `204`, ses séances reviennent dans « À facturer » ; `409 INVOICE_ISSUED` sinon) ; `GET /api/invoices/{id}/pdf` (brouillon : filigrane « Brouillon ») ; `POST /api/invoices/{id}/duplicate` (`201`, brouillon) ; les panneaux de la fiche 36 (paiement, avoir, envoi).
+- **Écarts avec la première version de cette fiche** (L5.5) : montants en centimes entiers ; `collectedThisMonth` devient `collected` et `month` ; `issuedOn` devient `issueDate` ; `paidWith` devient `lastPaymentMode` ; `subject` est un objet ; **le contrat n'a aucune route d'export de la liste des factures** : le bouton « Exporter » n'est pas réalisé en M15 (retiré des maquettes).
 
 ## Structure
 1. **Bandeau de chiffres** (carte, quatre cellules séparées par un filet) : *Encaissé en {mois}* (montant, nombre de paiements) ; *À encaisser* (montant, nombre de factures émises) ; *Dont en retard* (montant, nombre, ancienneté de la plus ancienne en jours) ; *À facturer* (nombre de séances, montant estimé, « n sans tarif » s'il y en a, lien « Voir » vers la fiche 34). Bloc de données à part : son squelette et son erreur ne bloquent pas la liste.
-2. **Barre de filtres** : champ « N° de facture ou patient… » (deux caractères au moins, temporisé) ; groupe segmenté *Toutes · Brouillons · À régler · En retard · Payées · Avoirs*, avec un compteur sur Brouillons, À régler et En retard ; à droite « Période » (liste « Depuis {mois} ») et bouton à contour « Exporter ».
+2. **Barre de filtres** : champ « N° de facture ou patient… » (deux caractères au moins, temporisé) ; groupe segmenté *Toutes · Brouillons · À régler · En retard · Payées · Avoirs*, avec un compteur sur Brouillons, À régler et En retard ; à droite « Période » (liste « Depuis {mois} »). Pas de bouton « Exporter » en M15 : le contrat n'a pas de route d'export de la liste.
 3. **Tableau** dans une carte, colonnes : Numéro · Patient (pastille d'initiales, nom) · Émise le · Objet (« 2 séances · 12 et 19 nov. ») · Échéance · Montant · Reste dû · Statut · actions. Lignes de 52 px.
    - Brouillon : « Brouillon » en `text-secondary` à la place du numéro, tirets pour les dates et le reste dû.
    - Payée : reste dû « 0,00 € » en `text-secondary`, mode du dernier paiement à côté du statut.
@@ -60,7 +62,7 @@ Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien
 - Toute la ligne est un lien : vers `/facturation/brouillons/:id` pour un brouillon, vers `/facturation/:numero` sinon. `↑` `↓` choisissent, `Entrée` ouvre, `N` ouvre `/facturation/nouvelle`, `/` va au champ de filtre.
 - Actions révélées au survol et au focus de la ligne : « Encaisser » (si reste dû supérieur à zéro : ouvre le panneau de paiement de la fiche 36), « Télécharger le PDF », puis le menu : Envoyer par e-mail, Dupliquer, Créer un avoir ; pour un brouillon, Supprimer (dialogue de confirmation partagé).
 - Après un paiement, une suppression ou un avoir : la liste et le bandeau sont relus.
-- « Exporter » : fichier produit par l'API pour les filtres courants (même mécanisme que la fiche 19).
+- « Exporter » la liste : hors M15 (aucune route au contrat, L5). Le journal des encaissements, lui, s'exporte (fiche 37).
 - Trois états (`shared/ui/state`) : chargement (squelette de lignes) ; erreur avec « Réessayer », la liste déjà affichée restant visible sous un bandeau ; vide. **Vide à la première ouverture** : « Aucune facture pour l'instant », puis la liste de ce qui manque aux réglages (nom et adresse, SIRET, tarif d'une séance), chaque ligne menant à la fiche 39. « Nouvelle facture » reste actif. Vide sous filtre : « Aucune facture pour ce filtre » et « Tout afficher ».
 
 ## Tokens
@@ -75,6 +77,9 @@ Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien
 - Le groupe segmenté est un groupe de boutons `aria-pressed` ; le compteur est lu avec le libellé.
 - axe-core : 0 violation, thèmes clair et sombre.
 
+## Version arabe
+Règles de `docs/design/arabe.md` dès la première tâche (M16-24 est couverte par M15-15 à M15-20) : propriétés CSS logiques seulement ; montants, numéros de facture et d'avoir, dates en chiffres, SIRET, IBAN, adresses e-mail en `dir="ltr"` (chiffres latins, `--font-mono` gardé pour numéros et dates tout en chiffres) ; dates et montants par la locale de formatage de `core/i18n` (`data/money.ts`), jamais `LOCALE_ID` ; libellés dans `messages.fr.xlf`, `messages.en.xlf` et `messages.ar.xlf` (termes : `arabe-glossaire.md`) ; flèches et chevrons retournés, colonnes des tableaux dans le sens de lecture, montants alignés du côté de fin ; rendu de `/fr/` et `/en/` inchangé. Ici : le nom du patient en `dir="auto"` (dans la ligne, la puce de filtre et la carte du patient) ; le groupe segmenté et les touches ↑ ↓ suivent la section 6 de `arabe.md` ; le pied « Précédent · Suivant » retourne ses chevrons. La feuille de facture (aperçu et PDF) reste en français et de gauche à droite dans les trois langues (conteneur `lang="fr" dir="ltr"`, G Q70) ; seul l'habillage autour est traduit et retourné.
+
 ## Critères d'acceptation
 - [ ] Le carreau « Facture » du rail ouvre `/facturation` ; l'onglet Factures est courant ; `N` ouvre l'éditeur.
 - [ ] Le bandeau affiche les quatre chiffres de `GET /api/billing/summary`, sans calcul côté client ; son erreur n'empêche pas la liste de s'afficher.
@@ -88,8 +93,20 @@ Répondre, à l'ouverture du module, à trois questions dans cet ordre : combien
 - [ ] Sous 600 px : cartes, deux chiffres, « Nouvelle facture » en bas d'écran ; aucun défilement horizontal de la page.
 - [ ] axe-core 0 violation.
 
-## Spécifié ici, pas dessiné dans la maquette
-Le menu de ligne ouvert ; le dialogue de suppression d'un brouillon ; l'état vide sous filtre ; l'export de la liste ; l'erreur propre au bandeau de chiffres. À dessiner avant de développer ces parties.
+## États dessinés (captures)
+Chaque état que la première version de cette fiche spécifiait sans le dessiner l'a été par M15-13 (28 novembre 2026), dans `facturation/01-factures.html`, section « États spécifiés par la fiche ». Captures dans `facturation/captures/`, en clair et en sombre (suffixe `-dark`) :
+
+- `01-factures-1.png` : la liste (sans « Exporter », aucune route au contrat).
+- `01-factures-2.png` : mobile, sous 600 px.
+- `01-factures-3.png` : menu de ligne ouvert sur une facture émise (Envoyer par e-mail, Dupliquer, Créer un avoir).
+- `01-factures-4.png` : menu de ligne ouvert sur un brouillon (Dupliquer, Supprimer ; envoi et avoir absents : `409 INVOICE_NOT_ISSUED`, un avoir ne corrige qu'une facture émise).
+- `01-factures-5.png` : dialogue de confirmation « Supprimer le brouillon ? » (`DELETE /api/invoices/{id}`, les séances reviennent dans « À facturer »).
+- `01-factures-6.png` : vide sous filtre (« Aucune facture pour ce filtre », « Tout afficher »).
+- `01-factures-7.png` : erreur du seul bandeau de chiffres, la liste reste affichée (libellé repris de l'erreur de la liste).
+
+Non dessiné : l'export de la liste : aucune route au contrat (L5), hors M15.
+
+Les libellés que la fiche ne donnait pas et que la maquette propose sont signalés dans la note de chaque cadre (« libellé proposé ») ; une tâche d'écran les reprend tels quels ou les corrige dans sa PR. **Maquettes complétées par M15-13 sans relecture de l'utilisateur.**
 
 ## Hors périmètre
 Feuilles de soins, télétransmission, tiers payant ; paiement en ligne ; facturation d'un rendez-vous non honoré ; onglet Facturation dans le dossier patient ; devis ; factures récurrentes automatiques ; relances automatiques ; plusieurs devises ; statistiques au-delà du bandeau ; export vers un logiciel comptable autre qu'un fichier.

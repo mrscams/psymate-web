@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-28T10:18:33.987Z",
+  "task": "M15-13",
+  "agent": "claude",
+  "status": "done",
+  "summary": "Maquettes de la facturation au design de l'application, états manquants dessinés (46 cadres), fiches 33 à 39 alignées sur L5 avec leur section Version arabe, G Q68 à Q70, CLAUDE.md, couvertures ; maquettes non relues par l'utilisateur",
+  "next": "M15-14 après le tag contract-v0.17.0",
+  "pr": "https://github.com/mrscams/psymate-web/pull/147",
+  "branch": "claude/m15-13-facturation-fiches-maquettes-651414",
+  "checkout": "m15-13-facturation-fiches-maquettes-651414"
+}

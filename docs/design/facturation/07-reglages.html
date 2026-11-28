@@ -20,6 +20,22 @@
   .savebar { display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-top: 1px solid var(--border-subtle); background: var(--surface-raised); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
   .numrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .numrow .mf { min-width: 110px; }
+  /* États spécifiés par la fiche : fragments, cadres recadrés, défilement simulé, version sous 900 px. */
+  .frag { padding: 20px; background: var(--surface-ground); }
+  .frag > .panel { width: 576px; }
+  .app.cut > .viewport { height: var(--h); }
+  .app.scrolled .main { overflow: hidden; }
+  .app.scrolled .main > * { transform: translateY(calc(-1 * var(--y))); }
+  .app.scrolled .toc, .app.scrolled .set > aside { transform: translateY(calc(var(--y) - var(--stick, 111px))); }
+  .app.at5 .toc a.on, .app.at6 .toc a.on { color: var(--text-secondary); font-weight: 400; background: none; }
+  .app.at5 .toc a.on::before, .app.at6 .toc a.on::before { content: none; }
+  .app.at5 .toc a:nth-child(5), .app.at6 .toc a:nth-child(6) { color: var(--text-primary); font-weight: 600; background: var(--surface-sunken); }
+  .app.at5 .toc a:nth-child(5)::before, .app.at6 .toc a:nth-child(6)::before { content: ''; position: absolute; inset-inline-start: 0; top: 9px; bottom: 9px; width: 3px; border-radius: var(--radius-pill); background: var(--primary); }
+  .vars { display: flex; flex-wrap: wrap; gap: 8px; }
+  .app.n900 .set { grid-template-columns: minmax(0, 1fr); }
+  .app.n900 .toc { position: static; display: flex; gap: 4px; overflow-x: auto; }
+  .app.n900 .toc a { flex: none; }
+  .app.n900 .set > aside { position: static !important; width: 360px; }
 </style>
 </head>
 <body>
@@ -30,7 +46,7 @@
   <p class="lede">Ce qui figure sur toutes les factures et ce que le module propose par défaut. On y passe une fois à la première facture, puis quand un tarif change. L'aperçu de droite montre l'effet de chaque réglage sur la feuille.</p>
 
   <h2>La page</h2>
-  <div class="frame"><div class="app" data-url="psymate.app/facturation/reglages" data-sub="Réglages" style="--h: 1560px">
+  <div class="frame"><div class="app" id="reglages" data-url="psymate.app/facturation/reglages" data-sub="Réglages" style="--h: 1560px">
     <div class="mhead" data-tab="reglages"></div>
     <div class="page">
       <div class="set">
@@ -159,6 +175,113 @@
       </ul>
     </div>
   </div>
+
+  <h2>États spécifiés par la fiche</h2>
+
+  <h3>TVA : « Assujettie à la TVA » choisie</h3>
+  <div class="frame"><div class="frag">
+    <div class="panel">
+      <section class="sect">
+        <h2>TVA</h2>
+        <p class="help">Détermine la mention portée sur chaque facture. En cas de doute, demandez à votre comptable.</p>
+        <div class="rcards" role="radiogroup" aria-label="Régime de TVA">
+          <div class="rcard"><span class="radio"></span><b>Exonérée, soins à la personne</b><span class="d">Mention : « TVA non applicable, article 261-4-1° du Code général des impôts ».</span></div>
+          <div class="rcard"><span class="radio"></span><b>Franchise en base</b><span class="d">Mention : « TVA non applicable, article 293 B du Code général des impôts ».</span></div>
+          <div class="rcard on"><span class="radio on"></span><b>Assujettie à la TVA</b><span class="d">Les factures détaillent le hors taxes, la TVA et le toutes taxes. Taux et numéro de TVA à renseigner.</span></div>
+        </div>
+        <div class="fgrid" style="margin-top:20px">
+          <div class="mf"><label>Taux</label>20<span class="suffix">%</span></div>
+          <div>
+            <div class="mf err"><label>N° de TVA intracommunautaire</label></div>
+            <p class="errmsg"><i data-i="alert"></i>Obligatoire pour ce régime.</p>
+          </div>
+        </div>
+      </section>
+      <div class="savebar"><span class="muted s">Modifications non enregistrées : TVA</span><span class="spacer"></span><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></div>
+    </div>
+  </div></div>
+  <p class="notes">Rubrique TVA de la carte (576 px), après « Enregistrer » refusé. Choisir « Assujettie à la TVA » révèle Taux et N° de TVA intracommunautaire (fiche 39, Structure 3). Un seul taux (plusieurs taux : hors périmètre). Taux : <code>vat.rateBp</code> en points de base, affiché en pourcentage (2000 → 20 %) ; N° : <code>vat.vatNumber</code> (L5.1). Le refus <code>422 VAT_NUMBER_REQUIRED</code> s'affiche sous le champ ; <code>422 VAT_RATE_REQUIRED</code> s'affiche de même sous Taux. Le texte d'erreur « Obligatoire pour ce régime. » n'est pas donné par la fiche : libellé neutre proposé ici. La mention de ce régime vient de l'API (<code>vat.mention</code>, L5.1) : son texte n'est écrit ni dans la fiche ni dans L5, il n'est donc pas dessiné ; l'aperçu détaille alors hors taxes, TVA et toutes taxes (fiche).</p>
+
+  <h3>Numérotation avant la première facture émise</h3>
+  <div class="frame"><div class="frag">
+    <div class="panel">
+      <section class="sect">
+        <h2>Numérotation</h2>
+        <p class="help">Les numéros se suivent sans trou, dans l'ordre d'émission. Le format ne se change plus après la première facture émise.</p>
+        <div class="numrow">
+          <div class="mf"><label>Factures</label><span class="mono">F-2026-</span></div>
+          <div class="mf"><label>Avoirs</label><span class="mono">AV-2026-</span></div>
+          <span class="muted">Prochain numéro : <span class="mono" style="color:var(--text-primary)">F-2026-0001</span> · la suite repart à 0001 chaque 1<sup>er</sup> janvier</span>
+        </div>
+        <p class="hint">Modifiables tant qu'aucune facture n'est émise.</p>
+      </section>
+    </div>
+  </div></div>
+  <p class="notes">Même rubrique que dans la page, avant toute émission : <code>numbering.locked</code> vaut <code>false</code>, les deux préfixes sont des champs ordinaires, sans cadenas (fiche 39, Structure 4 ; L5.1). Le prochain numéro est <code>numbering.nextInvoiceNumber</code> ; aucun champ ne permet de le choisir. L5 renvoie aussi <code>nextCreditNoteNumber</code>, que la fiche n'affiche pas : il n'est pas dessiné. Si une première facture est émise entre-temps, <code>409 NUMBERING_LOCKED</code> verrouille les préfixes (état de la page ci-dessus) avec un toast dont la fiche ne donne pas le texte.</p>
+
+  <h3>Modèle d'e-mail</h3>
+  <div class="frame"><div class="app cut scrolled at6" data-clone="#reglages" data-url="psymate.app/facturation/reglages#emails" data-sub="Réglages" style="--h: 760px; --y: 1417px">
+    <div class="scrim"></div>
+    <div class="side-panel" role="dialog" aria-label="Envoi d'une facture">
+      <header><h2>Envoi d'une facture</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body">
+        <div class="mf" style="margin-top:8px"><label>Objet</label>Votre facture {numéro}</div>
+        <div class="mf area focus" style="min-height:168px"><label>Message</label><span>Bonjour,<br><br>Vous trouverez ci-joint la facture {numéro} d'un montant de {montant}. Il reste {reste dû} à régler avant le {échéance}.<span class="caretline"></span><br><br>Claire Moreau</span></div>
+        <div>
+          <div class="flabel">Variables</div>
+          <div class="vars"><span class="chip"><span class="mono">{numéro}</span></span><span class="chip"><span class="mono">{montant}</span></span><span class="chip"><span class="mono">{reste dû}</span></span><span class="chip"><span class="mono">{échéance}</span></span></div>
+        </div>
+      </div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">« Modifier » sur la ligne <i>Envoi d'une facture</i> de la rubrique E-mails ouvre le panneau latéral partagé de 480 px : Objet, Message, variables <code>{numéro}</code>, <code>{montant}</code>, <code>{reste dû}</code>, <code>{échéance}</code> (fiche 39, Structure 7). Données : <code>emailTemplates.invoice</code> <code>{ subject, body }</code> ; la ligne <i>Relance d'une facture en retard</i> ouvre le même panneau sur <code>emailTemplates.reminder</code> (objet « Rappel : facture {numéro} »). Le message reprend, variables à la place des valeurs, celui du dialogue d'envoi (04 · Facture émise). Le titre « Variables » et le pied « Annuler · Enregistrer » ne sont pas donnés par la fiche. Point ouvert : la fiche ne dit pas si ce panneau enregistre tout de suite (comme les prestations) ou alimente la barre d'enregistrement de la page ; L5 porte les modèles dans <code>PUT /api/me/billing-settings</code>, donc avec le reste de la page.</p>
+
+  <h3>Modifier l'IBAN</h3>
+  <div class="frame"><div class="app cut scrolled at5" data-clone="#reglages" data-url="psymate.app/facturation/reglages#reglement" data-sub="Réglages" style="--h: 640px; --y: 1380px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Modifier l'IBAN">
+      <header><h2>Modifier l'IBAN</h2><button class="icon-btn close" title="Fermer"><i data-i="close"></i></button></header>
+      <div class="body" style="gap:20px">
+        <div class="mf" style="margin-top:8px"><label>Nouvel IBAN</label><span class="mono">FR76 0000 0000 0000 0000 0000 034</span></div>
+        <div>
+          <div class="mf err focus"><label>Mot de passe du compte</label><span class="mono">••••••••••</span><span class="caretline"></span></div>
+          <p class="errmsg"><i data-i="alert"></i>Mot de passe incorrect.</p>
+        </div>
+      </div>
+      <footer><button class="btn danger-outline" style="margin-right:auto">Retirer l'IBAN</button><button class="btn outline">Annuler</button><button class="btn primary">Enregistrer</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">« Modifier » à côté de l'IBAN masqué (rubrique Règlement) ouvre ce dialogue : le nouvel IBAN et le mot de passe du compte, comme les réglages de sécurité (fiche 39, Interactions ; fiche 18). Envoi : <code>PUT /api/me/billing-settings/iban</code> <code>{ iban, currentPassword }</code> → <code>204</code> (L5.1) ; la page relue n'affiche que l'IBAN masqué, jamais en clair. Ici le refus <code>403 PASSWORD_INVALID</code>, sous le mot de passe. « Retirer l'IBAN » appelle <code>DELETE</code> sur la même route, mot de passe dans le corps (L5.1 seulement : la fiche ne prévoit pas ce geste, libellé neutre proposé ici). Libellés « Nouvel IBAN », « Mot de passe du compte », « Mot de passe incorrect. » : tirés du sens de la fiche, sans texte donné par elle. Valeurs factices.</p>
+
+  <h3>IBAN refusé</h3>
+  <div class="frame"><div class="frag">
+    <div class="panel" style="width:520px">
+      <div class="pad" style="display:grid;gap:20px;padding-top:24px">
+        <div>
+          <div class="mf err"><label>Nouvel IBAN</label><span class="mono">FR76 0000 0000 0000 0000 0000 035</span></div>
+          <p class="errmsg"><i data-i="alert"></i>IBAN invalide.</p>
+        </div>
+        <div class="mf"><label>Mot de passe du compte</label><span class="mono">••••••••••</span></div>
+      </div>
+    </div>
+  </div></div>
+  <p class="notes">Corps du même dialogue après <code>422 IBAN_INVALID</code> (format et clé mod 97, L5.1) : l'erreur s'affiche sous le champ IBAN (fiche 39, Interactions). Texte « IBAN invalide. » proposé ici, la fiche n'en donne pas.</p>
+
+  <h3>Quitter sans enregistrer ?</h3>
+  <div class="frame"><div class="app cut" data-clone="#reglages" data-url="psymate.app/facturation/reglages" data-sub="Réglages" style="--h: 600px">
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-label="Quitter sans enregistrer ?" style="width:440px">
+      <header style="padding-right:24px"><h2>Quitter sans enregistrer ?</h2></header>
+      <div class="body"><p class="muted">Modifications non enregistrées : N° SIRET</p></div>
+      <footer><button class="btn outline">Annuler</button><button class="btn primary">Quitter</button></footer>
+    </div>
+  </div></div>
+  <p class="notes">Quitter la page (un autre onglet, le rail, le retour du navigateur) avec des modifications en attente ouvre le dialogue de confirmation partagé (<code>pm-confirm-dialog</code> : titre, description, « Annuler », bouton de confirmation, sans croix). Titre de la fiche 39 (Interactions) ; la description reprend la barre d'enregistrement ; le libellé « Quitter » est proposé ici, la fiche n'en donne pas. « Annuler » garde la page et ses saisies.</p>
+
+  <h3>Sous 900 px</h3>
+  <div class="frame"><div class="app n900" data-clone="#reglages" data-url="psymate.app/facturation/reglages" data-sub="Réglages" style="width:860px; --h: 400px"></div></div>
+  <p class="notes">Cadre de 860 px. Le sommaire devient une rangée au-dessus du formulaire, qui défile horizontalement quand elle ne tient pas ; l'aperçu passe sous la carte (fiche 39, Structure, « Sous 900 px »). Rien d'autre ne change : mêmes rubriques, même barre d'enregistrement au pied de la carte, aperçu de 360 px.</p>
 
   <div class="pager"></div>
 </div>

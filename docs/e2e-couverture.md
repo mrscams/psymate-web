@@ -242,6 +242,23 @@ Six écrans par thème sont écrits mais ignorés sans administrateur, et n'ont 
 | 19 | données et export | `export/export.spec.ts` | `arabe/account.spec.ts` |
 | 30 | Profil 360 : quatrième onglet (clic, touche `4`, `aria-current`, pas de bloc de saisie, hors séance et en séance ; squelette en chargement, M13-05, thème clair) | `shell/shell.spec.ts` « quatrième onglet » ; lecture, deux thèmes et sous 820 px : `profil-360/lecture.spec.ts` (M13-06) ; bouton « Ajouter au profil » sur l'onglet 4 seulement, `?ajouter=1`, ajouter, modifier, retirer (confirmation, annulation), relecture, Échap et focus rendu, patient archivé en lecture seule, axe-core panneau ouvert en clair et en sombre : `profil-360/ecriture.spec.ts` (M13-07) | `arabe/profile360.spec.ts`, `arabe/parcours.spec.ts` |
 
+### Facturation (jalon M15, fiches 33 à 39)
+
+Inscrit le 28 novembre 2026 par M15-13 : specs à écrire par les tâches M15-14 à M15-22, contre l'API réelle (seed `small`, qui porte réglages, prestations, factures dans chaque statut et séances à facturer, M15-12 ; e-mails lus dans Mailpit), axe-core en thèmes clair et sombre. Chaque critère d'acceptation d'une fiche a son test nommé. Arabe : les écrans suivent `docs/design/arabe.md` dès leur tâche (M16-24 couverte par M15-15 à M15-20) ; L8 ne prévoit pas de spec `/ar/` dédiée.
+
+| Fiche | Écran (étape du test) | e2e (tâche) | Arabe (`e2e/arabe/`) |
+| --- | --- | --- | --- |
+| 33 | carreau « Facture » du rail, en-tête de module, quatre onglets, `N` | `facturation/socle.spec.ts` (M15-14, à écrire) | — |
+| 33 | liste, bandeau de chiffres, filtres dans l'URL, sept statuts, suppression d'un brouillon, état vide | `facturation/factures.spec.ts` (M15-16, à écrire) | — |
+| 34 | à facturer : groupes, sélection, « Créer n brouillons », « Ne pas facturer », `409` | `facturation/a-facturer.spec.ts` (M15-19, à écrire) | — |
+| 35 | éditeur : création au choix du patient, lignes, émission, `409 INVOICE_NUMBER_CHANGED`, réglages incomplets | `facturation/editeur.spec.ts` (M15-17, à écrire) | — |
+| 36 | facture émise : paiement, avoir, envoi (Mailpit), `?panneau=` | `facturation/facture.spec.ts` (M15-18, à écrire) | — |
+| 37 | journal, totaux, filtres, annulation, export sans nom (fichier lu) | `facturation/paiements.spec.ts` (M15-20, à écrire) | — |
+| 38 | liste filtrée sur un patient, carte du patient, puce | `facturation/patient.spec.ts` (M15-16, à écrire) | — |
+| 38 | fiche patient : tarif, adresse de facturation, « Voir les factures » | `facturation/fiche-patient.spec.ts` (M15-21, à écrire) | — |
+| 38 | clôture de séance : « Ajouter à À facturer », « Réglée en séance » (trois cas) | `facturation/cloture.spec.ts` (M15-22, à écrire) | — |
+| 39 | réglages : identité, TVA, numérotation, prestations, IBAN, quitter sans enregistrer | `facturation/reglages.spec.ts` (M15-15, à écrire) | — |
+
 ### Pages publiques et d'authentification
 
 | Fiche | Écran (étape du test) | Autres e2e avec axe | Arabe (`e2e/arabe/`) |
